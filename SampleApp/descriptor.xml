@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<theKuroBox>
+  <application>
+    <appId>88</appId>
+    <appVerId>888</appVerId>
+    <name>Sample App</name>
+    <cateCodes>2</cateCodes>
+    <cate></cate>
+    <version>1.0</version>
+    <priority></priority>
+    <description>Application description</description>
+    <thumbnailExt>.jpg</thumbnailExt>
+    <entryPoint>app.sampleApp.SampleApp</entryPoint>
+    <webEntryPoint>web.index</webEntryPoint>
+  </application>
+</theKuroBox>
