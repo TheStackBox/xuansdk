@@ -3,7 +3,7 @@ xuansdk
 
 The STACK Box - Xuan Development SDK
 
-Version: Alpha v0.1
+Version: Alpha v0.1 (Licensed under LGPL 3)
 
 Please refer to http://developer.thexuan.com for instructions.
 
