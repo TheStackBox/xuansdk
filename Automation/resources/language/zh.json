@@ -1,0 +1,49 @@
+{
+	"group_speaker_desc_cond":"例子： 当扬声器的播放状态转换...",
+	"group_switch_desc_cond":"例子： 当开关开启或关闭...",
+	"group_door_lock_desc_cond":"例子： 当门上锁或开锁...",
+	"group_hue_desc_cond":"例子： 当Hue照明颜色切换至...",
+	"group_dimmer_desc_cond":"例子： 当调光器等级调至...",
+	"group_horn_desc_cond":"例子： 当喇叭开启...",
+	"group_ipcamera_desc_cond":"",
+	"group_power_strip_desc_cond":"例子： 当所有开关开启或关闭...",
+	"group_sensor_desc_cond":"例子： 当探测到动作...",
+	"group_notification_desc_cond":"例子： 当接收到电邮...",
+	"group_service_desc_cond":"例子： 当要下雨时",
+	
+	"group_speaker_desc_exec":"例子： 播放，停止或静音...",
+	"group_switch_desc_exec":"例子： 开启或关闭...",
+	"group_door_lock_desc_exec":"例子： 开锁或上锁...",
+	"group_hue_desc_exec":"例子： 切换颜色至...",
+	"group_dimmer_desc_exec":"例子： 调整等级至...",
+	"group_horn_desc_exec":"例子： 开启或关闭...",
+	"group_ipcamera_desc_exec":"例子： 拍照...",
+	"group_power_strip_desc_exec":"例子： 开启或关闭所有开关...",
+	"group_sensor_desc_exec":"",
+	"group_notification_desc_exec":"例子： 发送文字信息...",
+	"group_service_desc_exec":"",
+	
+    "error_1095":"Python 翻译器出错",
+    "error_1096":"系统应用出错",
+    "error_1097":"参数相关错误",
+    "error_1098":"组件相关错误",
+    "error_1099":"未知错误",
+    
+    "error_1501":"非法触发参数‘type’",
+    "error_1502":"非法触发参数‘value’",
+
+    "error_1701":"非法JSON格式",
+    "error_1702":"无法创建触发器",
+    "error_1703":"触发参数不存在触发讯息",
+    "error_1704":"规则正在被处理中",
+    "error_1705":"非法指定触发参数",
+    "error_1706":"超越了每条规则允许指令的最大值",
+    "error_1707":"指定的规则已不存在",
+    "error_1708":"已达到规则总数的最大值",
+	
+    "timer.groupLabel":"定时器",
+    "timer.groupDesc":"定时器服务",
+    "timer.dailyTask.label":"现在",
+	"timer.dailyTask.desc":"现在"
+	
+}

@@ -1,0 +1,49 @@
+{
+	"group_speaker_desc_cond":"e.g. when the speaker playback state changed ...",
+	"group_switch_desc_cond":"e.g. when the switch turned off or on ...",
+	"group_door_lock_desc_cond":"e.g. when the door is locked/ unlocked ...",
+	"group_hue_desc_cond":"e.g. when hue color change to ...",
+	"group_dimmer_desc_cond":"e.g when the dimmer to this level ...",
+	"group_horn_desc_cond":"e.g. when horn is on...",
+	"group_ipcamera_desc_cond":"",
+	"group_power_strip_desc_cond":"e.g. when all switches turned off or on ...",
+	"group_sensor_desc_cond":"e.g. when there's motion here...",
+	"group_notification_desc_cond":"e.g. when mail arrive ...",
+	"group_service_desc_cond":"e.g. when It's going to rain",
+	
+	"group_speaker_desc_exec":"e.g. then play, stop or mute the music ...",
+	"group_switch_desc_exec":"e.g. then turn it off or on ...",
+	"group_door_lock_desc_exec":"e.g. then lock or unlock it ...",
+	"group_hue_desc_exec":"e.g. then change hue color  to ...",
+	"group_dimmer_desc_exec":"e.g. then adjust the level to ...",
+	"group_horn_desc_exec":"e.g. then turn it on or off ...",
+	"group_ipcamera_desc_exec":"e.g. then take a snap shoot",
+	"group_power_strip_desc_exec":"e.g. then turn all switches on or off ...",
+	"group_sensor_desc_exec":"",
+	"group_notification_desc_exec":"e.g. then text me at ...",
+	"group_service_desc_exec":"",
+	
+    "error_1095":"Interpreter Exception",
+    "error_1096":"System app is not behaving correctly",
+    "error_1097":"Invalid parameter",
+    "error_1098":"Module Exception",
+    "error_1099":"Unhandled Exception",
+    
+    "error_1501":"Invalid trigger parameter 'type'",
+    "error_1502":"Invalid trigger parameter 'value'",
+
+    "error_1701":"Invalid JSON string",
+    "error_1702":"Unable to create trigger timer",
+    "error_1703":"Trigger object does not have setter information",
+    "error_1704":"Rule is under processing",
+    "error_1705":"Invalid Params Current Value",
+    "error_1706":"Method size exceeded allowed value",
+    "error_1707":"Rule not found",
+    "error_1708":"Total rules amount reached allowed value",
+    
+    "timer.groupLabel":"Timer",
+    "timer.groupDesc":"Timer service",
+    "timer.dailyTask.label":"At this time",
+	"timer.dailyTask.desc":"At this time."
+	
+}

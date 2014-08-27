@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<theKuroBox>
+  <application>
+    <appId>2000300</appId>
+    <appVerId>2000300</appVerId>
+    <name>Automation App</name>
+    <cateCodes>2</cateCodes>
+    <cate></cate>
+    <version>1.0</version>
+    <priority></priority>
+    <description>Python app for automation</description>
+    <thumbnailExt>.png</thumbnailExt>
+    <entryPoint>automationApp.automationApp.AutomationApp</entryPoint>
+    <webEntryPoint>web.index</webEntryPoint>
+  </application>
+</theKuroBox>
