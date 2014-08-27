@@ -1,0 +1,40 @@
+/*global define*/
+
+define([
+    'underscore',
+    'libs/backbone/models/kurobox-model'
+], function (_, KuroboxModel) {
+    'use strict';
+
+    var BoxInfoModel = KuroboxModel.extend({
+        defaults: {
+            id: '',
+        	name: '',
+        	mac_address: '',
+            firmware_version: '',
+        	capabilities: ''
+        },
+
+        fetch: function(options) {
+            console.log(options);
+            this.url = 'get_first_time_login';
+            this.dev_opt = {
+                //url:'json/example.get_first_time_login.json',
+                bypassSession: true,
+                method: 'GET',
+                param:{},
+                redirectLogin: false
+            };
+            KuroboxModel.prototype.fetch.call(this, options);
+        },
+
+        parse: function(data) {
+            return {
+                result: data.response.result,
+                name: data.response.name
+            };
+        }
+    });
+
+    return BoxInfoModel;
+});

@@ -1,0 +1,10 @@
+<div class="bottom-bar centerFlex">
+	<% var icon, label, value, selectClass;
+	_.each(list, function(data, index) {
+		icon = data.icon;
+		label = data.label;
+		value = data.value;
+		selectClass = (index === selected) ? 'icon-menu-on menu-on' : '';
+		%><div class="tab-item icon-menu-<%= icon %> <%= selectClass %>" data-value="<%= value %>"><p><%= label %></p></div><%
+	}) %>
+</div>

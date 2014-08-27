@@ -1,0 +1,3621 @@
+/**
+ * Copyright 2014 Cloud Media Sdn. Bhd.
+ * 
+ * This file is part of Xuan Automation Application.
+ * 
+ * Xuan Automation Application is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This project is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+$kuroboxFont: 'FontKurobox', sans-serif;
+
+// color 
+$primary-color:#fa2283;
+$secondary-color:#92c602;
+$dark-gray:#424242;
+$light-gray:#666;
+$dim:#a7a7a7;
+$controlPanel-color:#8b8b8b;
+$alert-color:#feb501;
+// z-index 
+
+$zProtocolPane:60;
+$zListFloat:90;
+$zNavBar:100;
+$zNavIcon:130;
+$zTopBarThick:101;
+$zDarkLayer:900;
+$zBottomTab:1000;
+$zOptionPane:1001;
+$zMsg:1031;
+$zConfirmBox:1100;
+$zFixBtn:50;
+
+//@import 'sass-bootstrap/lib/bootstrap';
+
+@font-face {
+    font-family: 'FontKurobox';
+    src:url('/system/global/styles/fonts/FontKurobox.eot');
+    src:url('/system/global/styles/fonts/FontKurobox.eot?#iefix') format('embedded-opentype'),
+        url('/system/global/styles/fonts/FontKurobox.woff') format('woff'),
+        url('/system/global/styles/fonts/FontKurobox.ttf') format('truetype'),
+        url('/system/global/styles/fonts/FontKurobox.svg#FontKurobox') format('svg');
+    font-weight: normal;
+    font-style: normal;
+} 
+
+/* =========== Mixin =========== */
+
+@mixin kurobox-icon {
+    font-family: 'FontKurobox', sans-serif;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 25px;
+    display: inline-block;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin dotdot{
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+@mixin dotdot-multiline($line){
+    display: block; /* Fallback for non-webkit */
+    display: -webkit-box;
+    -webkit-line-clamp: $line;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@mixin shape($bL, $bR, $tL, $tR){
+     border-bottom-left-radius:$bL;
+    border-bottom-right-radius:$bR;
+        border-top-left-radius:$tL;
+       border-top-right-radius:$tR; 
+}
+
+@mixin border-radius($radius){
+    -webkit-border-radius: $radius; 
+       -moz-border-radius: $radius; 
+        -ms-border-radius: $radius;
+            border-radius: $radius; 
+}
+
+
+
+@mixin blur($blur){
+    -webkit-filter: blur($blur);
+       -moz-filter: blur($blur);
+         -o-filter: blur($blur);
+         ms-filter: blur($blur);
+            filter: blur($blur);
+    //-webkit-transition: -webkit-filter .50s;
+}
+
+@mixin opacity($value){
+    opacity: #{"." + $value};
+    filter: alpha(opacity=$value);
+    -ms-filter: "alpha(opacity=$value)";
+    -khtml-opacity: #{"." + $value};
+    -moz-opacity: #{"." + $value};
+}
+
+@mixin shadow($hOffset, $vOffset, $blurRadius, $spreadRadius, $color){
+        -moz-box-shadow: $hOffset $vOffset $blurRadius $spreadRadius $color;
+     -webkit-box-shadow: $hOffset $vOffset $blurRadius $spreadRadius $color;
+             box-shadow: $hOffset $vOffset $blurRadius $spreadRadius $color;
+ }
+
+@mixin keyframes($animation-name) {
+      @-webkit-keyframes $animation-name {
+        @content;
+      }
+      @-moz-keyframes $animation-name {
+        @content;
+      }  
+      @-ms-keyframes $animation-name {
+        @content;
+      }
+      @-o-keyframes $animation-name {
+        @content;
+      }  
+      @keyframes $animation-name {
+        @content;
+      }
+}
+
+@mixin animation($str) {
+  -webkit-animation: #{$str};
+  -moz-animation: #{$str};
+  -ms-animation: #{$str};
+  -o-animation: #{$str};
+  animation: #{$str};      
+}
+
+@mixin slider-track(){
+    -webkit-appearance: none;
+    height:1px;
+    background-color:#bbbbbb;
+    border-top: 2px solid #bbbbbb;
+    border-bottom: 2px solid #bbbbbb;
+    border-left: 0px solid transparent;
+    border-right: 0px solid transparent;
+    @include shape(20, 20, 20, 20);
+    padding-left: 0;
+    padding-right: 0;
+    padding: 1px;
+}
+
+@mixin slider-head(){
+    -webkit-appearance: none;
+    position: relative;
+    z-index: 1;
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    border:1px solid grey;
+    @include border-radius(50%);
+}
+
+@mixin disable{
+     -webkit-filter: grayscale(1);
+     -moz-filter: grayscale(1);
+     filter: grayscale(1);
+     opacity:0.2;
+}
+
+@include keyframes(fadeIn-40) {
+  0% { opacity: 0; }
+  40% { opacity: 0.4; }
+}
+
+@include keyframes(fadeIn-70) {
+  0% { opacity: 0; }
+  70% { opacity: 0.7; }
+}
+
+@include keyframes(fadeIn-90) {
+  0% { opacity: 0; }
+  90% { opacity: 0.9; }
+}
+
+
+.browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+/* Space out content a bit */
+body {
+   // padding-top: 20px;
+    margin: 0px;
+    font-size:14pt;
+    background-color: #fcfcfc;
+    font-family: arial;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+button {
+    margin: 10px 0px 0px 10px;
+    float: right;
+    padding:8px 12px 8px 12px;
+    //@include shape(0.5em, 0.5em, 0.5em, 0.5em);
+    @include shape(0px, 0px, 0px, 0px);
+    background-color: #252525!important;
+    color:$primary-color;
+    border: 1px solid transparent;
+    font-size: 0.9em;
+}
+
+select{
+    border: 1px solid #ccc !important;  
+    -webkit-appearance: none;  
+    -moz-appearance: none;
+    appearance:none;
+    background-color: transparent;
+    font-size: 0.9em;
+    color:#2d2d2d;
+    outline:none;
+    height: 45px!important;
+}
+
+a{
+    color: $primary-color;
+}
+
+*:focus {
+    outline: 0;
+}
+
+option:hover,
+option:focus,
+option:active,
+option:checked {
+    background: transparent;
+    outline: none;
+}
+
+[class*="substr"]{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.substr70{
+    width:70%;
+}
+
+.substr80{
+    width:80%;
+}
+
+.substr85{
+    width:85%;
+}
+
+.substr90{
+    width:90%;
+}
+
+.substr95{
+    width:95%;
+}
+
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Custom page header */
+.header {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+    padding-bottom: 19px;
+}
+
+/* Custom page footer */
+.footer {
+    padding-top: 19px;
+    color: #777;
+    border-top: 1px solid #e5e5e5;
+}
+
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+
+/* Supporting marketing content */
+.marketing {
+    margin: 40px 0;
+}
+
+.marketing p + h4 {
+    margin-top: 28px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    .container {
+        max-width: 730px;
+        width:100%;
+    }
+
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 30px;
+    }
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
+    }
+}
+
+
+.sticky-bottom {
+    display: block;
+    position:fixed; 
+    bottom:0; 
+    background-color:#f0f0f0;
+}
+
+.centerFlex {
+    /* Internet Explorer 10 */
+   // display:-ms-flexbox;
+    -ms-flex-pack:center;
+    -ms-flex-align:center;
+    /* Firefox */
+    //display:-moz-box;
+    -moz-box-pack:center;
+    -moz-box-align:center;
+    /* Safari, Opera, and Chrome */
+    display:-webkit-box;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+    /* W3C */
+    //display:box;
+    box-pack:center;
+    box-align:center;
+}
+
+
+
+/* =========== General use =========== */
+.font-s{
+    font-size: 0.8em;
+}
+.btn-1-stretch{
+    button{
+        width:100%;
+        border-left: 0px!important;
+    }
+}
+
+.btn-2-stretch{
+    button{
+        width:50%;
+    }
+}
+
+.btn-2-stretch, .btn-1-stretch{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    float: left;
+    left:0px;
+    z-index: $zFixBtn;
+
+   
+    button{
+        margin: 0px;
+        height: 50px;
+       border-left: 1px solid #666;
+       display: inline-block;
+    }
+
+    button:nth-child(2){
+        border-left:0px;
+    } 
+
+    .disabled{
+        color: #5c5c5c;
+    }
+}
+
+.enabled{
+    color: $primary-color
+}
+
+.margin{
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.transparent-layer {
+    background-color: transparent !important;
+}
+
+[class*="dark-layer"]{
+    position: fixed; 
+    left: 0;
+    top: 0;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    z-index: $zDarkLayer;
+}
+
+.fixfixed .nav, .fixfixed .dark-layer-40{
+    position: absolute;
+    top:0;
+    left:0;
+}
+
+.dark-layer-40{
+   @include opacity(40);
+   @include animation('fadeIn-40 1s');
+   
+}
+
+.dark-layer-70{
+    @include opacity(70);
+    @include animation('fadeIn-70 1s');
+}
+
+.dark-layer-90{
+    @include opacity(90);
+    @include animation('fadeIn-90 1s');
+}
+
+.blur{
+    @include blur(1px);
+}
+
+.not-blur{
+  -webkit-filter: none;//initial;
+}
+
+.arrow-up {
+    color: #ade200;
+    width: 0; 
+    height: 0; 
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;  
+    border-bottom: 7px solid #ade200;
+    position: relative;
+    top:-8px;
+    left:45%;
+}
+
+.arrow-down {
+    color: #ade200;
+    width: 0; 
+    height: 0; 
+    border-left: 15px solid transparent;
+    border-right: 1px solid transparent;
+    border-top: 20px solid $secondary-color;
+    border-bottom-right-radius:0.3em;
+    position: absolute;
+    bottom: -25px;
+    //bottom: -20px;
+    right:0px;
+    text-align: right!important;
+}
+
+.arrow-line:before {
+    font-family: $kuroboxFont;
+    content: "\e61f";
+    padding-left: 13px;
+    font-size: 3.0em;
+    color:#fa2283;
+    top:-25px;
+    position: relative;
+    z-index: 121;
+}
+
+.dialog-box{
+    color: #fff;
+    border-bottom-left-radius:1.5em;
+    border-bottom-right-radius:0.5em;
+    border-top-left-radius:1.5em;
+    border-top-right-radius:1.5em;
+    background-color:$secondary-color;
+    padding: 8px;
+    //height:60px;
+    display: inline-block;
+    text-align: center;
+    position: relative;
+    font-size: 0.7em;
+    line-height: 20px;
+    z-index: 120;
+    width:70px;
+}
+
+/*=========== My Device List ===========*/
+
+.device-itm{
+
+
+    float:left;
+    display: inline-block;
+    border: 1px solid #f3e3e8;
+   // margin: 5px 3% 5px 3%;
+    width:50%;
+    min-width:150px;
+    min-height:150px;
+    max-width:185px;
+    max-height:160px;
+    padding: 20px 5px 5px 5px;
+
+    #device-control{
+        position: absolute;
+    }
+    a{
+        position: relative;
+        top: 95px;
+        width:50px;
+        height: 48px;
+        display: block;
+        float: right;
+        text-decoration: none;
+    }
+
+    #device{
+        display: inline-block;
+        width: 150px;
+        //padding-bottom: 40px;
+    }
+
+    [data-icon]:before{
+     font-family: $kuroboxFont;
+     content: attr(data-icon);
+     font-size:4.3em;
+     color:#fa2283;
+     display: inline-block;
+     padding-left: 5px;
+     padding-top:0px;
+     line-height: 100px;
+     height: 125px;
+
+    }
+}
+
+
+[data-icon]:before{
+     font-family: $kuroboxFont;
+     content: attr(data-icon);
+     font-size:4.3em;
+     color:#fa2283;
+     display: inline-block;
+     padding-left: 5px;
+     padding-top:0px;
+     line-height: 100px;
+     //height: 125px;
+     //padding-top: 10px;
+}
+
+.device-icon-off:before{
+    color:$dim;
+}
+
+/* .device-icon{
+    display: inline-block;
+    border: 1px solid red;
+} */
+
+.device-value{
+    color:#171717;
+    font-size: 0.8em;
+    font-weight: bold;
+    position: relative;
+    top:-50px;
+    left:-5px;
+    z-index: 10;
+    display: block;
+    //width:100px;
+    height:19px;
+    margin-left: 90px;
+    //white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    /* width: 100vw;
+    height: 50vh;
+    margin: auto;
+    font-size: 3vw;
+    text-align: center;*/
+}
+
+.device-name{
+    font-size: 0.6em;
+    color: #4f4f4f;
+    text-align: left;
+    padding-left:85px;
+    top:-50px;
+    position: relative;
+    margin: 0px; 
+    height:30px;
+
+    .itm-name{
+        overflow:hidden;
+        height:30px;
+        display: inline-block;
+        width:65px;
+        //width: 42%;
+        position: relative;
+        top: -40px;
+       
+    }
+ }
+
+ .device-icon-option:before{
+    font-family: $kuroboxFont;
+    font-size: 0.8em;
+    content: "\e69a"; 
+    position: absolute;
+    display:inline-block;
+    top: 1px;
+    left: 4px;
+    color: #fa2283;
+    z-index: 11;
+}
+
+.device-cirle-option{
+    width:25px;
+    height:25px;
+    border: 1px solid #ccc;
+    @include border-radius(50%);
+    display:inline-block;
+    position: absolute;
+    right:5px;
+    //top:30px;
+    //top: 15px;
+    float: right;
+    z-index: 10;
+}
+
+.device-empty{
+
+    span{
+        float:left;
+        font-size: 0.7em;
+    }
+
+    p{
+        width:160px;
+    }
+
+    div{
+        margin-bottom: 30px;
+    }
+
+    .num{
+       color: $primary-color;
+    }
+
+    section{
+        color:#757575;
+        font-size: 0.8em;
+    }
+} 
+
+.device-empty-start{
+    z-index: 1040;
+    position: fixed;
+    top:40px;
+    right:40px;
+    //right:85px;
+
+    .dialog-box{
+        left:20px;
+        top:-40px;
+    }
+
+    #nav-add{
+        right:-30px;
+        top:-32px;
+    }
+
+    .nav-circle-add{
+        background-color: #fff;
+    }
+}
+/*=========== Rule Option Pane ===========*/
+.rule-option-pane{
+    z-index: $zOptionPane;
+    width:100%;
+    background-color: #e0e0e0;
+    height:220px;
+    border-top: 1px solid #fff;
+    position: fixed; 
+    bottom: 0;
+    left:0;
+
+    section{
+        margin:20px;
+        color:#8b8b8b;
+        font-size: 0.9em;
+        
+        div:first-child{
+            color: $primary-color;
+        }
+
+        div:nth-child(2){
+            font-size: 0.7em;
+        }
+    }
+}
+
+.option-title{
+    text-transform: uppercase;
+    margin: 10px 0px 10px 20px;
+    text-align: center;
+}
+
+
+/*=========== Top bar black thick ===========*/
+ .top-bar-nav{
+    z-index: $zNavBar;
+}
+
+.top-bar-thick{
+    z-index: $zTopBarThick;
+}
+.top-bar-thick, .top-bar-nav{
+    min-height: 55px;
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    background-color: $dark-gray;
+    padding-top: 5px;
+    
+    
+    .nav-back, .nav-home{
+         font-family: $kuroboxFont;
+         font-size:1.5em;
+         color: #747273;
+         position: absolute;
+         width: 40px;
+         height: 100%;
+         text-align: center;
+         padding-top: 5px;
+         display: inline-block;
+         top:0px;
+         bottom: 0px;
+        z-index: $zNavIcon;
+    }
+
+    .nav-icon{
+       position: absolute;
+        width:60px;
+        height:60px;
+        display: inline-block; 
+        z-index: $zNavIcon; 
+    }
+
+    .nav-home:before {
+        //@include nav-icon(1.3em, 0px, 0px);
+        content: "\e004";
+    }
+
+    .seperator{
+        display: inline-block;
+        position: absolute;
+        height: 75%;
+        bottom:20px;
+        top:13px;
+        left:40px;
+        width:1px;
+        background-color:#525252;
+    }
+
+    .section{
+        min-height: 35px;
+        display: inline-block;
+        padding-left: 60px;
+        width:100%;
+
+        .title{
+            color:#cdcdcd;
+            font-size:1.1em;
+            text-transform: capitalize;
+        }
+
+        .icon{
+            font-family: $kuroboxFont;
+            line-height: 35px;
+            position: relative;
+            top:5px;
+            font-size: 1.2em;
+            color: $primary-color;
+        }
+
+        .desc1{
+            position: relative;
+            top:-3px;
+            font-size:0.9em;
+            color:#ebebeb;
+            height: 25px;
+            @include dotdot();
+        }
+
+        .desc2{
+            height: 40px; /* Fallback for non-webkit */
+            font-size:0.8em;
+            color:#959595;
+            line-height: 20px;
+            @include dotdot-multiline(2);
+        }
+
+        .desc2-extend{
+            font-size:0.8em;
+            color:#6a6a6a;
+            line-height: 20px;
+        }
+
+        .nav-icon-gp{
+            position: absolute;
+            top:-5px;
+            right:10px;
+
+            span{
+               position: relative;
+               display: inline-block;
+               margin-right: 5px;
+               top: -2px;
+            }
+
+            .nav-icon{
+                position: relative;
+                top:-10px;
+                width:50px;
+                height:50px;
+                text-align: center;
+                padding: 10px;
+                display: inline-block;
+            }
+        }
+    }
+    
+
+    .arrow{
+        color: #fff;
+        width: 0; 
+        height: 0; 
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;  
+        border-bottom: 7px solid #fff;
+        position: relative;
+        left:34px;
+    }
+}
+
+
+#setting-content {
+    position: relative;
+    top:60px;
+}
+
+.setting-content {
+    position: relative;
+    top:60px;
+}
+
+/*=========== Device explorer ===========*/
+.device-explorer{
+    display: block;
+    width: 100%;
+    height: 80px;
+    border-bottom: 1px solid #e2e2e2;
+    margin:15px 0px 0px 0px;
+    //padding: 10px;
+
+    span{
+        display: inline-block;
+        float: left;
+    }
+
+    span:nth-child(2){
+        width:70%;
+    }
+
+    h4{
+        font-size: 0.9em;
+        color: #202020;
+        height:20px;
+        margin: 0px;
+        font-weight: normal;
+        @include dotdot();
+    }
+
+    div{
+        font-size: 0.8em;
+        color: #9d9d9d;
+        display: block;
+        height: 48px;
+        overflow:hidden;
+    }
+
+    .icon{
+        @include kurobox-icon();
+        font-size: 2.5em;
+        //color: #cfcdce;
+        color:$primary-color;
+        text-align: center;
+        margin: 8px 10px 0px 0px;
+    }
+
+}
+
+.device-explorer:after{
+    @include kurobox-icon();
+    font-size:1.5em;
+    color:$primary-color;
+    content: '\e000';
+    position: relative;
+    float: right;
+    top:22px;
+}
+
+.device{
+    .icon{
+         margin-top: 20px;
+    }
+    span{
+        height: 48px;
+        margin-top: 25px;
+    }
+
+    div{
+        height: 0px;
+    }
+}
+
+
+/*=========== Rule Setting ===========*/
+.rule-setting-item{
+    width:100%;
+    height:110px;
+    display: block;
+    border-bottom: 1px solid #e2e2e2;
+    border-left: 8px solid #dbdbdb;
+    padding: 10px 10px 10px 20px;
+
+    .rule-setting-tri-line{
+        width:100%;
+        display: inline-block;
+        font-size: 0.8em;
+
+        h4{
+            font-size: 1.1em;
+            color: #202020;
+            height:20px;
+            margin: 0px;
+            @include dotdot();
+            padding-right:20px;
+        }
+
+        div{
+            margin: 0px;
+            padding-right:20px;
+        }
+
+        div:nth-child(1){
+            @include dotdot();
+        }
+
+        div:nth-child(2){
+            font-size: 0.9em;
+            color: #9d9d9d;
+            height:40px;
+            line-height: 20px;
+            @include dotdot-multiline(2);
+        }
+
+        div:nth-child(3){
+            margin-top:10px;
+            font-size:1em;
+            color: $primary-color;
+
+            span:nth-child(2){
+                font-size: 0.8em;
+                font-style: italic;
+                color: #bdbdbd;
+                float: right;
+                margin-right: 5px;
+                margin-top: 5px;
+                position: absolute;
+                right:20px;
+            }
+        }
+
+        .color-bar{
+            display:block; 
+            width:50px;
+            height:8px;
+            margin-top: 20px;
+        }
+    }
+
+    .rule-setting-tri-line:after{
+        position: absolute;
+        @include kurobox-icon();
+        font-size:1.5em;
+        color:$primary-color;
+        content: '\e000';
+        position: relative;
+        float: right;
+        top:-58px;
+        right:10px;
+    }
+}
+
+.rule-status-enabled{
+    border-left: 8px solid $secondary-color!important;
+}
+
+/*=========== Rule Time component ===========*/
+// force chg mbsc-mobiscroll style color
+#time-container{
+    // remove bg color
+    .dwwr{
+        background-color: transparent!important;
+    }
+
+    // chg border color for selected
+    .dwwol{
+        border-top: 1px solid $primary-color;
+        border-bottom: 1px solid $primary-color;
+    }
+    // chg all text to light grey
+    .dw-i{
+        color: #888;
+    }
+
+    // added new color for selected text
+    .dw-sel{
+         .dw-i{
+            color: $dark-gray;
+         }
+    }
+}
+
+
+/*=========== Option Pane ===========*/
+.option-pane{
+    z-index: $zOptionPane;
+    width:100%;
+    background-color: #e0e0e0;
+    height:120px;
+    border-top: 1px solid #fff;
+    position: fixed; 
+    bottom: 0;
+    left:0;
+    //-webkit-box-shadow: 0 0px 15px 5px #9f9c9c;
+    //   -moz-box-shadow: 0 0px 15px 5px #b3b3b3;
+    //        box-shadow: 0 0px 15px 5px #cccccc;
+
+    div {
+        text-align: center;
+        margin-top:7px;
+        color: #5c5c5c;
+    }
+
+    p{
+        color: #000;
+        font-size: 0.6em;
+        text-align: center;
+        position: relative;
+        margin: 0px;
+        padding: 0px;
+        top:-5px;
+        bottom: 0px;
+    }
+
+    span {
+       // border: 1px solid red;
+    }
+
+    .nav-icon-back:before{
+        padding-top: 12px;
+        left: -1px;
+    }
+
+    .close-circle-outline{
+        //margin-top: 25px!important;
+      /*  margin-top: 25px!important;
+       right: 15px!important; */
+    }
+}
+
+.option-pane .centerFlex span{
+   // margin: 0px 7px 0px 8px ;
+   margin: 20px;
+}
+
+.close-circle-outline{
+    width:30px;
+    height:30px;
+    @include border-radius(50%);
+    display:inline-block;
+    border: 1px solid #ccc;
+    position: absolute;
+    top:5px;
+    right:10px;
+    z-index: 10;
+}
+
+.icon-close:before {
+    @include kurobox-icon();
+    font-size: 0.6em;
+    content: "\e005";
+    position: absolute;
+    display:box;
+    top:2px;
+    left:9px;
+    color:$primary-color;
+}
+
+
+[class*="icon-option-"]{
+    display:box;//inline-block;//-webkit-box;
+    text-align: center;
+    font-family: $kuroboxFont;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 25px;
+    display: inline-block;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-option-delete:before{
+    content: "\e605"; 
+    font-size: 1.8em;
+    color:$primary-color;
+}
+
+.icon-option-info:before{
+    content: "\e699"; 
+    font-size: 1.8em;
+    color:$primary-color;
+}
+
+.icon-option-setting:before{
+    content: "\e618"; 
+    font-size: 1.8em;
+    color:$primary-color;
+}
+
+.icon-option-disable:before{
+    content: "\e698"; 
+    font-size: 1.8em;
+    color:$primary-color;
+}
+
+.icon-option-enable:before{
+    content: "\e697"; 
+    font-size: 1.8em;
+    color:$primary-color;
+}
+
+.icon-option-edit:before{
+    content: "\e695"; 
+    font-size: 1.8em;
+    color:$primary-color;
+}
+
+.icon-off:before{
+    //color:#a7a7a7!important;
+    color:#5c5c5c!important;
+}
+
+/*=========== Login box ===========*/
+.login-box{
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 30px !important;
+    z-index: $zOptionPane;
+    width:100%;
+    height:300px;
+    background-color: #e0e0e0;
+    border-top: 1px solid #fff;
+    position: fixed; 
+    bottom: 0;
+    left:0;
+    text-align: center;
+    
+    div {
+        padding-top: 0 !important;
+    }
+
+    div:first-child{
+        display:inline-block;
+        max-width:500px;
+        width:100%;
+    } 
+
+    h4{
+        color: #444 !important;
+        text-align: left;
+    }
+}
+
+/*=========== Confirm box ===========*/
+
+.confirm-box{
+    background-color: white;
+    position: fixed;
+    bottom:0;
+    left: 0;
+    width:100%;
+    z-index: $zConfirmBox; 
+    padding-top: 10px;
+
+    p{
+        color: #666;
+        font-size: 0.8em;
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+
+    button{
+        float:none !important;
+        text-align: center;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    div, p {
+        text-align: center;
+    }
+}
+
+/*=========== Navigation element ===========*/
+.nav {
+  /*   padding-top: 5px;
+    position: fixed;
+    z-index: $zNavBar;
+    width:100%;
+    top:0;
+    left:0px;
+    background-color: $dark-gray;
+    height: 50px;
+    border-bottom: 1px solid #ccc; */
+
+   /*  span{
+       position: relative;
+       display: inline-block;
+       margin-right: 5px;
+       top: -2px;
+    } */
+}
+
+/* .nav-header{
+    font-size: 0.8em;
+    text-align: center;
+    width:70%;
+    margin: 10px 50px 5% 10%;
+    float:left;
+    position: absolute;
+    @include dotdot();
+    text-transform:uppercase;
+} */
+
+
+/*===========  cirle outline  ===========*/
+
+
+[class*="nav-circle-"]{
+    width:40px;
+    height:40px;
+   @include border-radius(50%);
+    display:inline-block;
+    border: 1px solid #959595;
+    position: absolute;
+}
+
+@mixin nav-circle($top, $left, $right, $depth){
+    top:$top;
+    left:$left;
+    right:$right;
+    z-index: $depth;
+}
+
+/* .nav-circle-home{
+    @include nav-circle(3px, 5px, null, 20);
+}
+
+.nav-circle-add{
+    @include nav-circle(3px, null, null, 21);
+}
+
+.nav-circle-edit{
+    @include nav-circle(3px, null, null, 22);
+}
+
+.nav-circle-done{
+    @include nav-circle(3px, null, null, 22);
+} */
+
+.nav-circle-outline{
+    @include nav-circle(3px, null, null, 20);
+}
+
+[class*="nav-icon-"]{
+    font:{
+        family: $kuroboxFont;
+        style: normal;
+        weight: normal;
+        variant: normal;
+    }
+    speak: none;
+    text-transform: none;
+    line-height: 25px;
+    display: inline-block;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+//declare default value: arg:default
+@mixin nav-icon($fontSize, $top, $left,$color:$primary-color){
+    font-family: $kuroboxFont;
+    font-size:$fontSize;
+    top:$top;
+    left:$left;
+    color:$color;
+    position: absolute;
+    display:inline-block;
+}
+
+.nav-icon-home:before {
+    @include nav-icon(1.3em, 0px, 0px);
+    content: "\e004";
+    background-image: none !important;
+}
+
+/* .nav-icon-home:before {
+    @include nav-icon(1.3em, 5px, 7px);
+    content: "\e004";
+    background-image: none !important;
+} */
+
+.nav-icon-edit:before {
+    @include nav-icon(1.1em, 7px, 9px);
+    content: "\e695";
+}
+
+.nav-icon-add:before {
+    @include nav-icon(1.0em, 6px, 10px);
+    content: "\e696";
+}
+
+.nav-icon-back:before {
+    @include nav-icon(1.5em, 10px, 5px, #a4a6a5);
+    content: "\e003";
+}
+
+.nav-icon-done:before {
+    @include nav-icon(1.1em, 6px, 8px);
+    content: "\e619";
+}
+
+.nav-icon-refresh:before {
+    @include nav-icon(1.1em, 6px, 10px);
+    content: "\e625";
+}
+
+.nav-icon-advance:before{
+    @include nav-icon(1.1em, 6px, 10px);
+     content: "\e67b";
+}
+
+/* .nav span .nav-button{
+    width:100%;
+    border: 1px solid #ccc;
+} */
+
+/*=========== Bottom Bar  ===========*/
+
+.bottom-bar{
+    background-color: #383838;
+    border-bottom: 3px solid #1b1b1b;
+    position: fixed;
+    bottom:0;
+    left: 0;
+    width:100%;
+    z-index: $zBottomTab; 
+    padding-top: 10px;
+
+    a{
+        margin: 0px 7px 0px 8px ;
+        text-decoration: none;
+    }
+
+    div{
+        width:60px;
+        display: block;
+    }
+
+    p{
+        color: #d9d9d9;
+        font-size: 0.6em;
+        text-align: center;
+        position: relative;
+        margin: 0px;
+        padding: 0px;
+        top:-5px;
+        bottom: 0px;
+    }
+}
+
+[class*="icon-menu-"]{
+    display:box;//inline-block;//-webkit-box;
+    text-align: center;
+    @include kurobox-icon();
+}
+.icon-menu-rules:before{
+    font-size: 1.7em;
+    content: "\e616";
+    color:#808080;
+}
+
+.icon-menu-devices:before{
+    font-size: 1.7em;
+    content: "\e617";
+    color:#808080;
+}
+
+.icon-menu-on:before{
+    color:$primary-color;
+}
+
+.menu-on{
+    color:#ec174f!important;
+    background-color:#0c0c0c;
+    @include shadow(0px, 0px, 0px, 15px, #0c0c0c);
+}
+
+/*=========== Edit Device Info  ===========*/
+
+#preview-icon[data-icon]:before{
+     font-family: $kuroboxFont;
+     content: attr(data-icon);
+     font-size:7.0em;
+     color:$primary-color;
+     display: inline-block;
+     margin: 0px;
+     padding: 10px 0px 0px 0px;
+
+}
+
+.preview-icon-off:before{
+    color:#a7a7a7 !important;
+}
+
+.icon-edit{
+    position: relative!important;
+    top:0px !important;
+    left:2px !important;
+}
+
+#edit-icon{
+    text-align: center;
+    margin-top:20px;
+    padding-top: 2px;
+    width: 60px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*=========== Icon Picker  ===========*/
+
+.icon-picker-item[data-icon]:before{
+    font-family: 'FontKurobox', sans-serif;
+    content: attr(data-icon);
+    font-size:3.5em;
+    color:$primary-color;
+    display: inline-block;
+    margin: 0px;
+    padding-bottom: 20px;
+    width:80px;
+}
+
+.icon-picker-item{
+    margin: 45px 0px;
+    margin-left: -10px;
+    border-bottom: 1px solid #f5c6d2;
+    padding-bottom: 20px;
+    height:120px;
+}
+
+.icon-picker-pane{
+    z-index: $zOptionPane;
+    width:100%;
+    background-color: #e0e0e0;
+    height:300px;
+    border-top: 1px solid #fff;
+    position: fixed; 
+    bottom: 0;
+    left:0;
+}
+
+.icon-picker-pane div {
+    text-align: center;
+    margin-top:7px;
+    color: #5c5c5c;
+}
+
+.icon-picker-pane p {
+   overflow-y: auto;
+   -webkit-overflow-scrolling: touch;
+   width:100%;
+   height: 250px;
+}
+
+/*=========== Protocol  =========== */
+.protocol{
+    height: 140px;
+}
+
+.protocol-pane{
+    height:140px;
+    background-color: #ebebeb;
+    //margin-top: 6px;
+    //margin: 0px;
+    padding: 0px;
+    width:100%;
+    position: fixed;
+    left:0px;
+    z-index: $zProtocolPane;
+
+    .protocol-wrapper {
+        overflow-x:scroll;
+        //-webkit-overflow-scrolling: touch;
+        position: relative;
+        margin-top: 15px;
+    }
+
+    .protocol-item{
+        width:105px;
+        text-align: center;
+        height: 125px;
+
+        .disable {
+            color: #1f1f1f!important;
+        }
+
+        p{
+            font-size: 0.7em;
+            color: #212121;
+            position: relative;
+            margin-top: 0px;
+            padding-top: 0px;
+            //line-height: 10px;
+            top:-8px;
+            @include dotdot();
+        }
+
+        span[data-icon]:before{
+             font-family: $kuroboxFont;
+             content: attr(data-icon);
+             font-size:4.5em;
+             color:#5d5d5d;
+             display: inline-block;
+             position: relative;
+             top:-5px;
+        }
+
+        .arrow-up {
+            top:-12px !important;
+            position: relative;
+            //padding-top:13px;
+        }
+    }
+}
+
+.protocol-itm-select:before{
+    color:$primary-color !important;
+}
+
+.protocol-status{
+    border-bottom: 4px solid #ade200;
+}
+
+#protocol-setup{
+    @extend .margin;
+
+    p{
+        font-size:0.8em;
+        color:#949494;
+        line-height: 150%;
+    }
+
+    h4{
+        font-size:1em;
+        line-height: 150%;
+    }
+
+    section{
+        text-align: center;
+    }
+
+    button{
+        //float:none !important;
+       // margin-top: 15px;
+        //margin-bottom: 15px;
+    }
+
+    .list{
+        padding: 0!important;
+    }
+
+    .list-float{
+        @extend .list;
+        position: absolute;
+        z-index: $zListFloat;
+        top: 0px;
+        background-color: white;
+        left: 0px;
+        padding: 0px 20px!important;
+    }
+
+    .scan-list{
+        p{
+            position: relative;
+        }
+
+        span:nth-child(2){
+            float:right;
+            right:0;
+        }
+
+        .nav-circle-outline{
+            top: -15px !important;
+            border: 1px soild red;
+        }  
+    }
+    .icon-sad, .icon-smile{
+        @include kurobox-icon();
+        color: $primary-color;
+        font-size: 5em;
+        text-align: center;
+        width:100%;
+    }
+
+    .icon-smile{
+        color: $secondary-color;
+    }
+}
+
+.general{
+    position: relative;
+    top: -145px;
+
+    p{
+        line-height: 22px;
+    }
+
+    h4{
+        line-height: 20px;
+        margin: 0px;
+
+    }
+    .dialog-box{
+        top:-20px;
+        left:20px;
+    }
+    .arrow-line:before {
+        top:-10px !important;
+    }
+}
+
+
+.msg-overlay{
+    z-index:$zMsg;
+    color:#737373;
+    position: absolute;
+    width:300px;
+    top:5%;
+}
+
+.device-added-success{
+    width: 100% !important;
+    text-align: center;
+    @extend .msg-overlay;
+
+    p , h4 {
+        position: relative;
+        font-size: 0.8em !important;
+    }
+
+    h4{
+        color:#fff;
+        padding:0;
+        margin: 0;
+    }
+
+    .device-icon-success:before{
+        font-family: 'FontKurobox', sans-serif;
+        content: '\e001';
+        font-size: 5em;
+        color: #b5d22d;
+    }
+
+    button {
+        float:none !important;
+        position: relative;
+        border: 1px solid #4e4f4f;
+    }
+}
+
+.z-wave{
+    .dialog-box{
+        top:-40px;
+        left:20px;
+    }
+
+    div{
+        font-size: 0.8em !important;
+        color:#f30f7a;
+        padding-top: 20px;
+    }
+} 
+div.z-wave-pair, div.z-wave-unpair, div.z-wave-fail{
+     padding-top:5%!important; 
+}
+.z-wave-pair, .z-wave-unpair, .z-wave-fail{
+    @extend .msg-overlay;
+    width: 95% !important;
+    text-align: center;
+
+    span {
+        color:$primary-color;
+        padding-top: 10px;
+    }
+
+    div{
+        text-align: center;
+        padding-top:2%!important; 
+        margin-top: 0px!important;
+    }
+
+    h4{
+        color:#fff;
+        font-size: 0.8em !important;
+        padding:0;
+        margin: 0;
+    }
+
+    h6{
+       padding: 0;
+       margin: 0;
+       color:#284a7f;
+       text-align: center;
+    }
+
+    img{
+       // width: 45%;
+    }
+
+    b{
+        color:$primary-color;
+        text-align: left !important;
+        display: block;;
+    }
+
+    p{
+        text-align: left !important;
+    }
+
+    section{
+        float: none!important;
+        margin-top: 20px;
+    }
+
+    button{
+        float: none!important;
+        border: 1px solid #4e4f4f;
+    }
+    .icon-sad,  .icon-smile{
+        @include kurobox-icon();
+        color: $primary-color;
+        font-size: 5em;
+        text-align: center;
+        width:100%;
+    }
+
+    .icon-smile{
+        color: $secondary-color;
+    }
+}
+
+.z-wave-detected {
+    @extend .msg-overlay;
+    width: 95% !important;
+    text-align: center;
+
+    h4, p{
+        text-align: center;
+        //padding-right: 15px;
+    }
+
+    h4{
+        color:#fff;
+        font-size: 0.8em !important;
+        padding:0;
+        margin: 0;
+    }
+    button{
+        float: none!important;
+        border: 1px solid #4e4f4f;
+    }
+}
+
+/*=========== x10 =========== */
+.pair-initial-instruction{
+    width: 100%;
+    text-align: center;
+
+    h4{
+        text-align: left;
+    }
+
+    p{
+        text-align: left;
+        font-size: 0.8em;
+        color: #8a8a8a;
+    }
+
+    section{
+        display: inline-block;
+        margin:0 0 20px 20px;
+    }
+
+    .dialog-box{
+        top:-40px;
+        left:20px;
+    }
+
+}
+.device-pair, .device-pair-fail{
+    @extend .msg-overlay;
+    width: 95% !important;
+    text-align: center;
+
+    span {
+        color:$primary-color;
+        padding-top: 10px;
+    }
+
+    div{
+        text-align: center;
+    }
+
+    h4{
+        color:#fff;
+        font-size: 0.8em !important;
+        padding:0;
+        margin: 0;
+    }
+
+    h6{
+       padding: 0;
+       margin: 0;
+       color:#284a7f;
+       text-align: center;
+    }
+
+    img{
+       // width: 45%;
+    }
+
+    b{
+        color:$primary-color;
+        text-align: left !important;
+        display: block;;
+    }
+
+    p{
+        text-align: left !important;
+    }
+}
+
+.x10-instruction{
+    width: 100%;
+    text-align: center;
+
+    h4{
+        text-align: left;
+    }
+
+    p{
+        text-align: left;
+        font-size: 0.8em;
+        color: #8a8a8a;
+    }
+
+    section{
+       /*  margin-left: auto;
+        margin-right: auto; */
+        display: inline-block;
+        margin:0 0 20px 20px;
+    }
+
+    div{
+        display: block;
+    }
+
+   /*  button{
+        position: fixed;
+        bottom: 0px;
+        z-index: $zBottomTab;
+        float: none !important;
+        text-align: center;
+        margin-top: 40px;
+    } */
+
+    .icon{
+        @include kurobox-icon();
+        font-size: 5em;
+        text-align: center; 
+        margin-top: 20px;
+        
+
+        span{
+            width:120px;
+            color: #f07b99;
+            height: 70px;
+            display: inline-block;
+        }
+
+        span:first-child{
+            color: #8a8a8a;
+        }
+    }
+    .label{
+        color: #232323;
+        margin-left: 5px;
+
+        span{
+            width:120px;
+            font-size: 0.8em;
+            text-align: center; 
+            color: grey;
+            display: inline-block;
+        }
+        span:first-child{
+            margin-right: 30px;
+        }
+    }
+
+    .input-gp{
+        margin-top: 20px;
+        margin-left: 5px;
+        .input{
+            border: 1px solid #999;
+            @include shape(0.4em,0.4em,0.4em,0.4em);
+            width: 40px;
+            height:40px;
+            display: inline-block;
+            padding-top: 5px;
+        }
+        span:first-child{
+            margin-right: 110px;
+        }
+
+        span:nth-child(2){
+            width:2px !important;
+        }
+    }
+
+    .vline-holder{
+        position: relative;
+    }
+
+    .vline{
+        border-left: 1px solid #ccc;
+        height: 100px;
+        width:1px;
+        position: absolute;
+        top: -50px;
+        left: -55px;
+    }
+}
+
+
+/*=========== Option or setting =========== */
+
+[class*="opt-"]{
+    float:left;
+    padding:13px 0px 13px 0px;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+ }
+
+.opt-label{
+    padding-right:10px;
+    min-width:100px;
+    width:40%;
+    text-transform: capitalize;
+ }
+
+ .opt-value:after, .opt-list:after{
+    font-family: 'FontKurobox', sans-serif;
+    font-size:1.2em;
+    color:$primary-color;
+    content: '\e000';
+    padding-left: 10px;
+    position: relative;
+    margin:0px;
+    top:3px;
+}
+
+.opt-value, .opt-list{
+    background-image:none !important;
+    position: relative;
+   // top:-5px;
+}
+
+ .opt-list:after{
+    display: inline-block;
+    float: right;
+}
+
+.opt-value{
+    min-width:140px;
+    width:57%;
+    text-align:right;
+    color:#696969;
+ }
+
+.opt-list{
+    min-width:130px;
+    width:100%;
+}
+
+.opt-value-display{
+    color:#696969;
+    float:right;
+    min-width:150px;
+    width:53%;
+    text-align:right;
+ }
+
+ .opt-label-full{
+    min-width:160px;
+    width:75%;
+    text-transform: capitalize;
+ }
+
+ .opt-toggle{
+    float:right;
+    width:46px;
+    padding-top:7px;
+ }
+
+ .opt-toggle-label{
+    padding-right:10px;
+    min-width:160px;
+    width:65%;
+    text-transform: capitalize;
+ }
+
+ .opt-2line-style{
+    @include kurobox-icon();
+    font-size:1.2em;
+    color:$primary-color;
+    display: block;
+    //right: 10px;
+    right: 0px;
+    position: absolute;
+    top:0;
+}
+
+.opt-2line:after{
+    @extend .opt-2line-style;
+    content: '\e000';
+}
+
+.opt-2line{
+    min-width:300px;
+    width:100%;
+    position: relative;
+    margin: 10px 10px 0 0;
+    padding: 0px;
+    span{
+        display: block;
+        width:95%;
+        font-size: 1em;
+    }
+
+    label{
+        font-weight: normal;
+    }
+    span:nth-child(2){
+        margin-top: 3px;
+        color:#696969;
+        font-size: 0.8em;
+        @include dotdot();
+    }
+}
+
+ /*=========== input icon =========== */
+ input , textarea{
+    font-size: 0.8em;
+    border: 1px solid #999;
+    background-color:transparent;
+    color: #000;
+    border-bottom-left-radius:0.4em;
+    border-bottom-right-radius:0.4em;
+    border-top-left-radius:0.4em;
+    border-top-right-radius:0.4em;
+    padding:5px 5px 5px 40px;
+    height: 50px;
+    width:100%;
+    margin: 5px 0px 10px 0px;
+    box-sizing:border-box;
+}
+
+
+/* input[placeholder] {
+    //line-height: 1em;
+   // color: grey;
+}
+
+input::-webkit-input-placeholder { 
+  line-height: 1em;
+} */
+
+/* @mixin input-icon{
+    position: absolute;
+    padding-left: 10px;
+    padding-top: 10px;
+    display: inline-block;
+} */
+
+[class*="input-icon-"]{
+    font-family: 'FontKurobox', sans-serif;
+    font-size:1.3em;
+    color:$primary-color;
+}
+
+.input-icon-tag:before {
+    position: absolute;
+    padding-left: 10px;
+    padding-top: 15px;
+    content: '\e61a';
+}
+
+/* .input-icon-time:before {
+    @include input-icon();  
+    content: '\e62b';
+} */
+
+ /*=========== Rule List =========== */
+
+.rule-itm{
+    margin-bottom: 20px;
+
+    section{
+        color: #2d2d2d;
+        font-size: 0.8em !important;
+        margin-bottom: 3px;
+    }
+
+    .device-option{
+        position: relative;
+        float: right;
+        top:-55px;
+        //right:10px;
+        //background-color: #ebebeb;
+        background-color:#fcfcfc;
+        width:50px;
+        height: 50px;
+        //border: 1px solid red;
+        //@include shadow(-10px, 0px, 3px, 0px, #ebebeb);
+        @include shadow(-10px, 0px, 3px, 0px, #fcfcfc);
+    }
+
+    .error{
+        font-family: $kuroboxFont;
+        color:$alert-color;
+       // font-size: 0.8em;
+    }
+}
+
+.clip{
+    overflow: scroll;
+    width: 300px;
+    border: 1px solid red;
+    display: inline-block;
+    height: 40px;
+ }
+
+ .rule-opt{
+    display: inline-block;
+    height:20px;
+    width:20px;
+    border: 1px solid red;
+ }
+
+.rule-icon-option:after{
+    font-family: $kuroboxFont;
+    font-size: 0.8em;
+    content: "\e69a"; 
+    position: relative;
+    display:inline-block;
+    top:-3px;
+    left:4px;
+    color: #fa2283;
+}
+
+.rule-cirle-option{
+    width:25px;
+    height:25px;
+    border: 1px solid #ccc;
+    @include border-radius(50%);
+    display:inline-block;
+    position: absolute;
+    top:10px;
+    right:10px;
+}
+
+.disable {
+    span, b, section{
+        opacity:0.3;
+    }
+}
+
+.rule-row{
+    opacity:1 !important;
+    //background-color: #ebebeb;
+    //@include shape(0.3em, 0.3em, 0.3em, 0.3em);
+    padding: 5px 0px;
+    border-bottom: 1px solid #e9e9e9;
+    -moz-box-shadow:    0px 1px 0px 0px #fff;
+    -webkit-box-shadow: 0px 1px 0px 0px #fff;
+    box-shadow:         0px 1px 0px 0px #fff;
+
+    .icon{
+         font-family: $kuroboxFont;
+         font-size:1.8em;
+         color:$primary-color;
+         display: inline-block;
+         padding: 0px;
+         position: relative;
+        // top:-5px;
+    }
+    
+    b{
+         font-family: $kuroboxFont;
+         font-size:1em;
+         color:$secondary-color;
+         display: inline-block;
+         padding:0 3px 0 3px;
+         position: relative;
+         bottom: 3px;
+         font-weight: normal;
+    }
+
+    .off{
+        color: $dim;
+    }
+
+    [class*="iconClip-"]{
+        overflow: hidden;
+        height:40px;
+        display: inline-block;
+    }
+
+    .iconClip-0{
+        width:115px;
+    }
+
+    .iconClip-1{
+        width:155px;
+    }
+
+    .iconClip-2{
+        width:195px;
+    }
+}
+
+/* option list */
+.list ul , ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width:100%;
+    font-size: 0.9em;
+
+}
+.list li{
+    font-size: 1em;
+    list-style: none;
+    //padding:15px 5px 10px 5px;
+    padding:10px 5px 10px 0px!important;
+    border-bottom: 1px solid #e9e9e9;
+    -moz-box-shadow:    0px 1px 0px 0px #fff;
+    -webkit-box-shadow: 0px 1px 0px 0px #fff;
+    box-shadow:         0px 1px 0px 0px #fff;
+    display:block-inline;
+}
+/* .list ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width:100%;
+}
+
+.list li{
+    list-style: none;
+    padding:15px 5px 10px 5px;
+    border-bottom: 1px solid #e9e9e9;
+    @include shadow(0px, 1px, 0px, 0px, #fff);
+    display:block-inline;
+    width:100%;
+    font-size: 0.9em;
+    text-transform:capitalize;
+} */
+
+/*=========== Rule Page =========== */
+.rule-nav{
+
+    div{
+        float: left;
+        position: relative;
+        margin-right: 10px;
+    }
+
+    div:nth-child(2){
+        position: relative!important;
+        top:-13px;
+    }
+
+    h2{
+        font-weight: normal;
+    }
+
+   
+
+    .nav-circle-add{
+        width:60px;
+        height:60px;
+        top: 10px !important;
+        left:0px !important;
+        position: relative!important;
+        margin-bottom: 20px;
+        
+    }
+
+    .ifthen-desc{
+        font-size: 0.7em;
+        color:$dark-gray;
+        position: absolute;
+        left:-30px;
+        width: 120px;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    a.icon-add{
+         @include nav-icon(1.5em, 0px, 0px);
+         font-family: $kuroboxFont;
+         padding: 10px 10px 15px 15px;
+         text-decoration: none;
+    }
+
+    .arrow-down{
+        left:0px;
+        border-left: 1px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom-left-radius:0.5em;
+    }
+
+    .dialog-box{
+         border-bottom-left-radius:0.5em;
+         border-bottom-right-radius:1.5em;
+         position: absolute;
+         left:35px;
+         top:-30px;
+    }
+}
+
+ .rule-device{
+    height:500px;
+} 
+/* To Use new Device Explorer need to disable below Rule device style*/
+/*=========== Old Device Explorer =========== */
+/* .rule-device{
+    height:160px;
+
+    h4{
+        text-align: center;
+        font-size: 0.8em;
+        margin: 0;
+    }
+
+    p{
+        position: relative;
+        top:-40px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        width:100px;
+    }
+
+
+    .scroll-pane{
+         overflow-x:auto;
+         -webkit-overflow-scrolling: touch;
+         position: relative;
+         height:130px;
+    }
+
+    .icon{
+         font-family: $kuroboxFont;
+         font-size:4em;
+         color:$primary-color;
+         margin: 0 5px;
+         top:-25px;
+         position: relative;
+    }
+
+    .close-circle-outline{
+       
+        //margin-top: 25px!important;
+       //right: 15px!important;
+    }
+}   */
+
+/*=========== Rule summary =========== */
+.rule-action-gp{
+    div section > div{
+        margin: 10px 0px;
+    }
+
+    .device{
+        border-bottom: 1px solid #ebebeb;
+        span{
+            height:30px;
+        }
+    }
+    
+    .error{
+        font-family: $kuroboxFont;
+        color: $alert-color;
+        top: -5px;
+        position: relative;
+    }
+
+    .icon{
+         font-family: $kuroboxFont;
+         font-size:2em;
+         color:$primary-color;
+         width:50px;
+         display: inline-block;
+         text-align: center;
+         line-height: 0.8em;
+         padding: 0px !important;
+         height:30px;
+    } 
+
+    .device span:nth-child(4){
+        position: relative;
+        display: inline-block;
+        float: right;
+    } 
+
+    .icon + span{
+        font-size:0.9em;
+        color:$primary-color;
+        position: relative;
+        top:5px;
+        width: 70%;
+        overflow: hidden;
+        display: inline-block;
+        @include dotdot();
+    } 
+
+    .nav-circle-delete{
+        width:30px;
+        height:30px;
+        @include nav-circle(3px, -40px, null, 20);
+        position: absolute !important;
+        float: right;
+        margin-right:10px;
+        z-index: 10;
+    } 
+
+    a.icon-delete{
+        @include nav-icon(12pt,null, null, null);
+
+         text-decoration: none;
+         position: relative;
+         padding-left: 6px;
+         padding-top: 3px;
+         color:$primary-color;
+    }
+    .rule-action-container{
+        //padding-left: 50px;
+        
+
+        .rule-action-item{
+             /* background-color: #ebebeb;
+             @include shape(0.3em, 0.3em, 0.3em, 0.3em); */
+             border-bottom: 1px solid #ebebeb;
+             padding: 15px 0px 0px 10px;
+             margin-bottom: 5px;
+            .action-gp-item{
+                display: block;
+                height: 20px;
+                font-size:0.9em;
+                color: #484848;
+
+            }
+
+            .error{
+                font-family: $kuroboxFont;
+                color: $alert-color;
+                top: -4px;
+            }
+
+            span{  
+                 font-size:0.8em;
+                 color:#000;
+                 position: relative;
+                 top:-5px;
+                 
+            }
+            span:nth-child(2){
+                 //margin-right: 45px;
+                  padding-left: 50px;
+                 display: inline-block;
+                 margin-top: 7px;
+            }
+            span:first-child{
+                 float: right;
+            }
+            
+        }
+
+        .itm-expand{
+            overflow: visible;
+        }
+
+        .itm-chop{
+             overflow: hidden;
+             text-overflow:ellipsis;
+             white-space: nowrap;
+             width:80%;
+        }
+    }
+}
+
+/*=========== End Rule summary =========== */
+
+/*=========== Rule Settinge =========== */
+#setting-content{
+
+     /*=========== Slider =========== */
+    input[type="range"] {
+    @include slider-track();
+    margin-left: 0!important;
+    padding-top: 0px !important;
+    margin-top: 0px !important;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        @include slider-head();
+    }
+
+    .range-bar{   
+        background-color: $primary-color;
+        height:5px;
+        @include shape(0.5em, 0.5em, 0.5em, 0.5em);
+    }
+
+    .range-gp{
+        position: relative;
+        top:20px;
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    #rangevalue{
+        font-size: 1.2em;
+        position: relative;
+        top:15px;
+        color: $primary-color;
+        font-weight: bold;
+        margin-left: 5px;
+    }
+
+    .min{
+        font-size: 0.8em;
+        color: $light-gray;
+        float: left;
+    }
+
+    .max{
+        font-size: 0.8em;
+        color: $light-gray;
+        float: right;
+    }
+
+
+}
+
+/*=========== OLD Rule Settinge =========== */
+
+.rule-setting{
+    .list{
+        position: relative;
+    }
+    .list .selected:after{
+        font-size:18pt;
+        color:$secondary-color;
+        font-family: $kuroboxFont;
+        content: "\e002";
+        position: absolute;
+        right:0px;
+    }
+
+    p{
+        font-family: $kuroboxFont;
+        font-size:4em;
+        color:$primary-color;
+        text-align: center;
+        line-height: 70px;
+        margin-bottom: 10px;
+
+    }
+
+    .color-gp{
+        width:30px;
+        height:30px;
+        float: right;
+        position: relative;
+        display: inline-block;
+        padding-top: 10px;
+
+        .color-status{
+            width:25px;
+            height:25px;
+            @include border-radius(50%);
+            background-color: red;
+            z-index:1000;
+        }
+        .color-pin:after{
+            @include kurobox-icon();
+            content: "\e69f";
+            font-size: 2em;
+            color: white;  
+            position: absolute;
+            left:-5px;
+        }
+    }
+
+    .rule-control{
+        background-color: #ebebeb;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top:180px;
+        bottom:0px;
+        font-size: 0.9em;
+        color: #2d2d2d;
+
+        .checkbox{
+            padding-right: 10px;
+            padding-left: 0;
+        }
+        a{
+            text-decoration: none;
+            color: #2d2d2d;
+        }
+        span{
+            float: left;
+            padding-left: 10px;
+        }
+
+        input[type=checkbox]{
+            display: none;
+            height: 60px;
+        }
+
+        label { 
+            display: inline-block;
+            top:3px;
+            position: relative;
+            width: 25px; height:25px;
+            border: 3px solid #ccc;
+            @include border-radius(50%);
+        }
+
+        input[type=checkbox]:not(:checked) +label:before{
+            display: none;
+        }
+
+       /*  input[type=checkbox]:checked +label:before{
+            font-family: $kuroboxFont;
+            content: "\e635"; 
+            font-size: 0.8em;
+            color: #0deac1;
+            border-right:5px solid transparent;
+            border-top:5px solid #87ead5;
+            border-left:5px solid #87ead5;
+            border-bottom:5px solid #87ead5;
+            border-radius: 5px;
+            background-color: #ebebeb;
+            -moz-border-radius: 30px;
+            -webkit-border-radius: 30px;
+            top:-3px;
+            left:-3px;
+            position: relative;
+        } */
+         input[type=checkbox]:checked +label:before{
+            font-family: $kuroboxFont;
+            content: "\e6a7"; 
+            font-size: 1.8em;
+            color: $primary-color;
+            width:40px;
+            height: 40px;
+            background-color: #ebebeb;
+            top:-11px;
+            left:-7px;
+            position: relative;
+        }
+
+        .opt-toggle{
+            float: right;
+        }
+
+        #rangevalue{
+            font-size: 1em;
+            position: relative;
+            top:-5px;
+            text-align: right;
+        }
+
+        .slider{
+            padding-left: 38px;
+        }
+
+        .textBox, .textarea, .options, .time-date{
+            padding-left: 38px;
+        }
+        .opt-list{
+             padding-left: 35px;
+        }
+
+        .optionGp{
+            padding-top: 10px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            height:1px;
+            background-color:transparent;
+            border-top: 3px solid #bbbbbb;
+            border-bottom: 0px solid transparent;
+            border-left: 0px solid transparent;
+            border-right: 0px solid transparent;
+            @include shape(0, 0, 0, 0);
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            position: relative;
+            top: -7px;
+            z-index: 1;
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border:1px solid grey;
+            @include border-radius(50%);
+        }
+
+        input[type="text"], input[type="time"], textarea, select{
+            padding-left: 10px!important;
+            width:100%;
+            background-image: url('');
+           // margin: 0;
+        }
+        input[type="date"]{
+            -webkit-appearance: none;
+            padding-left: 10px!important;
+            width:100%;
+        }
+
+
+    }
+}
+
+/*=========== msg icon =========== */
+.msg{
+    position: absolute;
+    text-align: center;
+    z-index: 1200;
+    width: 100%;
+    //height: 100%;
+    left: 0;
+    top: 0;
+
+    div{
+        padding-top: 20%;
+    }
+
+    h4{
+       color: #fff;
+    }
+
+    p{
+        font-size: 0.8em;
+        color: #fff;
+    }
+    button{
+        float:none !important;
+        border: 1px solid #4e4f4f;
+    }
+
+    [class*="status-icon"]{
+        font-family: $kuroboxFont;
+        font-size:3em;
+        color:$primary-color;
+    }
+
+    .status-icon-update:before{  
+        content: '\e625';
+    }
+
+    .status-icon-success:before{
+        content: '\e001';
+    }
+
+    .status-icon-error:before{
+        content: '\e64f';
+    }
+
+    .status-icon-mail:before{
+        content: '\e633';
+    }
+}
+
+.tick{
+    float:right;
+    width:auto;
+    height:auto;
+
+}
+
+.tick:after{
+    font-size:18pt;
+    font-weight: normal;
+    color:#85b501;
+    font-family: 'FontKurobox', sans-serif;
+    content: "\e002";
+    padding-left:5px;
+    
+}
+
+/*=========== control Panel generic =========== */
+.control-panel{
+    background-color: #e5e5e5;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0px;
+    bottom:0px;
+
+    .icon{ 
+        position: relative;
+        padding-top: 100px;
+        width:100%;
+        height: 170px;
+        @include kurobox-icon();
+        font-size: 3.5em; 
+        color: $primary-color;
+        text-align: center;
+        background-color: white;
+        z-index: 40;
+    }
+
+    .cover-art{
+        position: relative;
+        display: block;
+        //background: url("../images/cd_cover.jpg");
+        background-repeat:no-repeat !important;
+        background-position:top center!important;
+        background-size: cover !important;
+        width: 100%;
+        height: 215px;
+        background-color: #d8d8d8;
+
+    }
+
+    .cover-default{
+        text-align: center;
+        @include kurobox-icon();
+        font-size: 5.5em;
+        padding-top: 60px;
+        color: #979797;
+    }
+
+    .power-icon{
+        @include kurobox-icon();
+        color: $primary-color;
+        position: relative; 
+        font-size: 2.5em !important;  
+        top: 9px;   
+        left: -1px;  
+    }
+
+    .cirle-power{
+        width:55px;
+        height:55px;
+        border: 5px solid #ccc;
+        @include border-radius(50%);
+        display:inline-block;
+        position: absolute;
+        left:10px;
+    }
+
+    .disabled{
+        color:$controlPanel-color !important;
+    }
+
+    input[type="range"] {
+        @include slider-track();
+        margin-left: 0!important;
+        padding-top: 0px !important;
+        margin-top: 0px !important;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        @include slider-head();
+    }
+
+    .range-bar{   
+        background-color: $primary-color;
+        height:6px;
+        @include shape(0.5em, 0.5em, 0.5em, 0.5em);
+    }
+
+    .loader{
+        width: 0px;
+        margin: 150px auto;
+    }
+
+    .control-msg{
+        width: 100%;
+        text-align: center;
+        margin-top: 70px;
+        font-size: 0.9em;
+        color: $controlPanel-color;
+
+        button{
+            text-align: center;
+            float: none!important;
+        }
+    }
+} 
+
+/*=========== control speaker =========== */
+
+.control-extended{
+    height: 150px!important;
+}
+
+.song-info {
+    position: relative;
+    top:-58px;
+    background-color: rgba(255,255,255,.5);
+    height:60px;
+    width:100%;
+
+    section{
+        padding-top: 10px;
+        float: left;
+        width:80%;
+    }
+    span{ 
+        display: block;
+        width: 100%;
+        font-size: 0.8em;
+        line-height: 22px;
+    }
+    .icon-speaker{
+        @include kurobox-icon();
+        font-size: 2.5em; 
+        color:$primary-color;
+        width:50px;
+        line-height: 55px;
+        padding-top: 5px;
+    }
+
+    #artist{
+        font-size: 0.7em;
+        color: #353233;
+    }
+}
+
+.speaker-control{
+    position: relative;
+    top:-60px;
+    width:100%;
+    height:100%;
+    background-color: #e5e5e5;
+    color: $controlPanel-color;
+    //-webkit-box-shadow: 0 0 0px 10px #e5e5e5;
+
+    div{
+        width:100%;
+        text-align: center;
+    }
+
+    section{
+        padding: 0px;
+        margin: 0px;
+    }
+    
+    input[type="range"] {
+        margin-left: 25px!important;
+        margin-left: 50px;
+    }
+
+    .range-gp{
+        position: relative;
+        float: right;
+        margin-right: 35px;
+        width:140px;
+        top: 80px;
+    }
+
+    .range-bar{
+        width:140px;
+    }
+
+    .volume-gp{
+        float: right;
+        margin-right: 15px;
+        margin-top: 50px;
+        width: 185px;
+
+        .volume{
+            width:140px;
+            float: left;
+        }
+    }
+
+    .volume-gp:before{
+        @include kurobox-icon();
+        font-size: 1.3em;
+        content: "\e67c"; 
+        position: relative;
+        top:16px;
+        display: block!important;
+        width: 20px;
+    }  
+
+    .volume-gp:after{
+        @include kurobox-icon();
+        font-size: 1.3em;
+        content: "\e672"; 
+        position: relative;
+        top:-10px;
+        display: block!important;
+        width: 20px;
+        float: right;
+    }  
+
+    .extra-icon{
+        @include kurobox-icon();
+        font-size: 1.5em;  
+        position: relative; 
+        width: 100%;
+        margin-top: 10px;
+
+        div{
+            display: inline-block;
+        }
+        div:first-child{
+            text-align: left;
+            width:30px;
+        }
+        div:nth-child(2){
+            text-align: right;
+            width:150px;
+            float: right;
+            margin-right: 10px;
+        }
+        span{
+            margin-left:5px;
+        }  
+        div:nth-child(2) span:first-child, div:nth-child(2) span:nth-child(2){
+            color: $primary-color;
+        }
+    }
+
+    .playback-icon{
+        @include kurobox-icon();
+        font-size: 1.5em; 
+        margin-top: 60px; 
+        text-align: center;
+        width:100%;
+
+        .progress-holder{
+            position:relative;
+
+            .cirle-progress{
+                width:160px;
+                height:160px;
+                @include border-radius(50%);
+                -webkit-box-shadow: inset 0 0 0px 10px #dedede;
+                position: absolute;
+                top:-63px;
+                //z-index: 20;
+                margin-left: 10px;
+            }
+        }
+
+       .play-pause-icon{
+            position: relative;
+            font-size: 1.5em;
+            margin: 0px 70px 0px 70px;
+            top:13px;
+            left:-3px;
+
+        }
+
+        .play:before{
+            @extend .play-pause-icon;
+            content: "\e670"; 
+        }
+
+        .pause:before{
+            @extend .play-pause-icon;
+            content: "\e674"; 
+        }
+
+        .playtime{
+            text-align: center;
+            position: relative;
+            top:5px;
+
+            span{
+                font-size: 0.5em;
+            }
+            span:first-child{
+                font-size: 0.5em;
+                color: $primary-color
+            }
+        }
+    }
+}
+
+/*=========== control dimmer =========== */
+.dimmer-control{
+    position: relative;
+    color: $controlPanel-color;
+    padding-top: 10px;
+
+    .step-control{
+         width: 100%;
+         text-align: center;
+         margin-top:70px;
+         .value{
+            font-size: 2em;
+            color: #595959;
+            width: 150px;
+            height: 60px;
+            border-bottom: 1px solid #959595;
+            margin: 0px auto 0px auto;
+            text-align: center;
+        }
+
+        .icon-act{
+            span{
+               @include kurobox-icon();
+                color:$primary-color;
+                margin: 20px 0px;
+                font-size: 3em; 
+            }
+        }
+    }
+   
+    .dimmer-gp{
+        text-align: center;
+        margin-top: 100px;
+        width: 100%;
+        display: block;
+
+        .dimmer{
+            //width:200px;
+            width:70%;
+            margin-left: 20px;
+            color: $controlPanel-color;
+        }
+
+        div:before{
+            @include kurobox-icon();
+            font-size: 1.3em;
+            content: "\e682"; 
+            position: relative;
+            //display: block!important;
+            width: 20px;
+            top:7px;
+            left:-10px;
+        }  
+
+        div:after{
+            @include kurobox-icon();
+            font-size: 1.3em;
+            content: "\e683"; 
+            position: relative;
+           // display: block!important;
+            width: 20px;
+            top:7px;
+            left:6px;
+        }   
+    } 
+
+    .range-gp{
+        position: relative;
+        top: 123px;
+        //width: 200px;
+        width:70%;
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .slide-label {
+        position: relative;
+        font-size: 0.7em;
+        //width: 245px;
+        width:70%;
+        top: 105px;
+        display: block;
+        margin-left:auto;
+        margin-right:auto;
+    }
+   
+}
+
+/*=========== control Power Switch =========== */
+
+.power-switch-control{
+    position: relative;
+    color: $controlPanel-color;
+    padding-top: 10px;
+
+    
+    .status-main{
+        margin-top: 10px;
+        margin-left: 90px;
+        float: left;
+        font-size: 0.8em;
+        color:#b6b6b6;
+    }
+
+    .status{
+        float: left;
+        font-size: 0.8em;
+        color:#b6b6b6;
+        width:80%;
+        margin-right: 20px;
+        display: inline-block;
+
+        div{
+            height: 25px;
+        }
+    }
+
+    section{
+        position: relative;
+        width: 90%;
+        //border-bottom: 1px solid #b6b6b6;
+        //height: 85px;
+        margin: 10px auto;
+
+        .switch-name{
+            padding-top:10px;
+            width:80%;
+        }
+    }
+
+    .h-line{
+        height:5px;
+        width:100%;
+        border-bottom: 1px solid #b6b6b6;
+        clear:both;
+    } 
+
+    .power-icon-small{
+        @include kurobox-icon();
+        color: $primary-color;
+        position: relative; 
+        font-size: 2.0em !important;  
+        top: 6px;   
+        left: 1px; 
+    }
+
+    .cirle-power-small{
+        width:48px;
+        height:48px;
+        border: 5px solid #ccc;
+        @include border-radius(50%);
+        display:inline-block;
+        position: absolute;
+        //top:-20px;
+        right:0px;
+    }
+
+
+}
+/*=========== control Horn =========== */
+
+.horn-control{
+    position: relative;
+    padding-top: 10px;
+    text-align: center;
+
+    .horn-icon-big{
+        @include kurobox-icon();
+        color: $primary-color;
+        font-size: 8em;  
+        position: relative; 
+        top: 72px;   
+        left: -1px;  
+    }
+
+    .cirle-horn-big{
+        width:200px;
+        height:200px;
+        border: 15px solid #ccc;
+        @include border-radius(50%);
+        display:inline-block;
+        position: relative;
+        top: 50px;   
+    }
+}
+
+/*=========== control Switch =========== */
+
+.switch-control{
+    position: relative;
+    padding-top: 10px;
+    text-align: center;
+
+    .power-icon-big{
+        @include kurobox-icon();
+        color: $primary-color;
+        font-size: 8em;  
+        position: relative; 
+        top: 72px;   
+        left: -1px;  
+    }
+
+    .cirle-power-big{
+        width:200px;
+        height:200px;
+        border: 15px solid #ccc;
+        @include border-radius(50%);
+        display:inline-block;
+        position: relative;
+        top: 50px;   
+    }
+}
+
+
+/*=========== control Lock =========== */
+
+.lock-control{
+    position: relative;
+    color: $controlPanel-color;
+    padding-top: 10px;
+    text-align: center;
+
+
+    .cirle-lock{
+        width:200px;
+        height:200px;
+        border: 15px solid #ccc;
+        @include border-radius(50%);
+        display:inline-block;
+        position: relative;
+        top: 30px;   
+
+        .lock-icon{
+            @include kurobox-icon();
+            position: relative; 
+            color: $primary-color;
+            font-size: 8em;  
+            top: 72px;   
+            left: -1px;  
+        }
+    }
+
+    .battery{
+        width:200px;
+        float: right;
+        text-align: right !important;
+        padding-right: 10px;
+        position: relative;
+
+        div:nth-child(2){
+            position: absolute;
+            width: 20px;
+            height:8px;
+            right: 20px;
+            float: right;
+            top:6px;
+        }
+        span:first-child{
+            font-size: 0.8em;
+            position: relative;
+            top:-10px;
+        }
+
+        span{
+            display: inline-block;
+        }
+
+        .battery-icon{
+            @include kurobox-icon();
+            font-size: 2em;
+        }
+
+        .battery-bar{
+            background-color: $secondary-color;
+            width:20px;
+            height: 7px;
+            position: absolute !important;
+            left: 0px;
+            top: 3px !important;
+        }
+    }
+}
+
+/*=========== control Hue =========== */
+
+.hue-control{
+    margin-top: 10px;
+    background-color: #e5e5e5;
+    bottom: 0px;
+    color: $controlPanel-color;
+
+    .extra-icon{
+        @include kurobox-icon();
+        font-size: 1.5em;  
+        position: relative; 
+        width: 100%;
+        display: inline-block;
+        text-align: right;
+        float: right;
+        margin-right: 10px;
+    }
+
+    #picker{
+        margin-top: 30px;
+    }
+
+    .icon-reset{
+        @include kurobox-icon();
+        font-size: 2em;
+        margin-top: 240px;
+    }
+}
+
+.farbtastic {
+  position: relative;
+
+    #output{
+        position: absolute;
+        background-color: yellow;
+        width:30px;
+        height: 30px;
+        top:13px;
+        left:210px;
+    }
+
+    .selected {
+      top:120px;
+      left: 83px;
+    } 
+
+    .wheel {
+        background: url(../images/wheel.png) no-repeat;
+        background-position:top center!important;
+        background-size: cover !important;
+    }
+
+    .marker {
+        width: 67px;
+        height: 67px;
+        margin: -12px 0 0 -12px;
+        overflow: hidden; 
+        background: url(../images/marker.png) no-repeat;
+    }
+
+    .color, .overlay{
+        width: 0px;
+        height: 0px;
+    }
+
+    /*.overlay {
+      background: url(../images/mask.png) no-repeat;
+      background-position:top center!important;
+      background-size: cover !important;
+    }*/
+
+}
+
+.farbtastic * {
+  position: absolute;
+  cursor: crosshair;
+}
+.farbtastic, .farbtastic .wheel {
+  width: 250px;
+  height: 250px;
+}
+
+.textBox{
+    input{
+        padding-left: 10px !important;
+    }
+}
+
+.inline-msg{
+    font-size: 0.6em; 
+    position: relative;
+    top:-10px;
+}
+
+.error-data + span:after{
+    content: attr(data)!important;
+    color: red !important;
+    @extend .inline-msg;
+}
+
+.error-ref {
+    color: #696969;
+    font-size: 0.65em !important;
+    margin-top: 4px;
+}
+
+
+
+
+
+
+
+
+
+

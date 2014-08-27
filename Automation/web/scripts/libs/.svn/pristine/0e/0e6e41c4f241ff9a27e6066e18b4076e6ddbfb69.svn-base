@@ -1,0 +1,33 @@
+/*global define*/
+
+define([
+    'underscore',
+    'libs/backbone/models/kurobox-model'
+], function (_, KuroboxModel) {
+    'use strict';
+
+    var CheckVersionModel = KuroboxModel.extend({
+        defaults: {
+            minWrapperVersion: ''
+        },
+
+        fetch: function(options) {
+            this.url = 'get_min_wrapper_version';
+            this.dev_opt = {
+                //url:'json/example.check_version.json',
+                bypassSession: true,
+                method: 'GET',
+                param:{}
+            };
+            KuroboxModel.prototype.fetch.call(this, options);
+        },
+
+        parse: function(data) {
+            return {
+                minWrapperVersion: data.response.minWrapperVersion
+            };
+        }
+    });
+
+    return CheckVersionModel;
+});

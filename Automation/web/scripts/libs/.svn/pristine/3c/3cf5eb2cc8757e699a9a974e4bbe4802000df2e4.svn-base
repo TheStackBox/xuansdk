@@ -1,0 +1,48 @@
+/*global define*/
+
+define([
+    'underscore',
+    'libs/backbone/models/kurobox-model',
+    'libs/backbone/models/kurobox-collection'
+], function (_, KuroboxModel, KuroboxCollection) {
+    'use strict';
+
+    var LocationModel = KuroboxModel.extend({
+        idAttribute: 'id',
+        defaults: {
+            longitude:0,
+            name:'',
+            id:0,
+            latitude:0,
+            country:''
+        },
+
+    });
+
+    var LocationCollection = KuroboxCollection.extend({
+        url: 'get_matching_location_name',
+        model: LocationModel,
+        fetch: function(location, options) {
+            this.dev_opt = {
+                //url: 'json/example.get_matching_location_name.json',
+                method: 'GET',
+                app_id: '2000100',
+                bypassSession: true,
+                param:{location:location, module:'weather_module'} 
+            }
+            KuroboxCollection.prototype.fetch.call(this, options);
+        },
+
+        parse: function(data) {
+            console.log('data >> ', data)
+            return data.response.matchingLocationName;
+        }
+    })
+
+    var SearchLocationBundle = {
+        model: LocationModel,
+        collection: LocationCollection
+    }
+
+    return SearchLocationBundle;
+});

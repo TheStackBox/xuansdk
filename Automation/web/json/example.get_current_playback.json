@@ -1,0 +1,17 @@
+{
+  "theKuroBox": {
+    "response": {
+    	"current_time": 0,
+    	"total_time": 10000,
+    	"status": "play/stop/pause",
+    	"id3": {
+    		"album": "Wonderful world",
+	      	"song": "My first song",
+	      	"artist": "Weirdo",
+	      	"album_art": "data:images/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD//gBZRmlsZSBzb3VyY2U6I..."
+    	}
+    },
+    "returnValue": 100,
+    "returnMessage": "Ok"
+  }
+}

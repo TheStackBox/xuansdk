@@ -1,0 +1,20 @@
+<div id="control" class="power-switch-control">
+	<div class="cirle-power"><span id="power-btn" class="power-icon<%= (info[0].switch=='OFF') ? ' disabled' : ''%>" data-id="<%= info[0].index %>">&#xe66d</span>
+	</div>
+	<div class="status-main">
+		<div><%= (info[0].meter === '') ? '<span> </span>' : 'Today Usage: <span>' + info[0].meter + '</span>' %>
+		</div>
+	</div>
+	<br><br><br>
+
+	<% for(var i=1; i<info.length; i++) {%>
+	<section class="clear">
+		<div class="cirle-power-small"><span id="power-btn" class="power-icon-small<%= (info[i].switch=='OFF') ? ' disabled' : ''%>" data-id="<%= info[i].index %>" >&#xe66d</span></div>
+		<div>Switch <%= info[i].index %></div>
+		<div class="status">
+			<div><%= (info[i].meter === '' ) ? '<span> </span>' : 'Today Usage: <span>' + info[i].meter + '</span>' %></div>
+		</div>
+		<div class="h-line"></div>
+	</section>
+	<%}%>
+</div>

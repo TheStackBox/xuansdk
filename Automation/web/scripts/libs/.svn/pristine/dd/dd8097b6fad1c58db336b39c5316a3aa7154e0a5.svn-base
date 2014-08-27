@@ -1,0 +1,85 @@
+/*global define*/
+
+define([
+    'underscore',
+    'libs/backbone/models/kurobox-model',
+    'libs/backbone/models/kurobox-collection'
+], function (_, KuroboxModel, KuroboxCollection) {
+    'use strict';
+
+    var RecipientModel = KuroboxModel.extend({
+        idAttribute: "email",
+        defaults: {
+            email: ''
+        },
+
+        fetch: function() {
+        },
+
+        parse: function() {
+        },
+
+        save: function(key, val, options) {
+        	this.url = 'add_smtp_recipient';
+        	this.dev_opt = {
+                //url: 'json/example.set_timezone.json',
+                bypassSession: true,
+                method: 'GET',
+                app_id: '2000100',
+                param_attr: {email:'email'},
+                param: {module:'smtp_module'}
+            };
+            KuroboxModel.prototype.save.call(this, key, val, options);
+        },
+
+        delete: function(email, options) {
+            this.url = 'remove_smtp_recipient';
+            this.dev_opt = {
+                    //url: 'json/example.set_timezone.json',
+                    bypassSession: true,
+                    method: 'GET',
+                    app_id: '2000100',
+                    param: { email: email , module:'smtp_module'}
+                };
+            KuroboxModel.prototype.fetch.call(this, options);
+        }
+
+    });
+
+    var RecipientCollection = KuroboxCollection.extend({
+        model: RecipientModel,
+        fetch: function(options) {
+            this.url = 'get_smtp_recipient';
+            this.dev_opt = {
+                //url: 'json/example.get_smtp_recipient.json',
+                method: 'GET',
+                app_id: '2000100',
+                bypassSession: true,
+                param:{module:'smtp_module'}
+            }
+            KuroboxCollection.prototype.fetch.call(this, options);
+        },
+        edit: function(targetEmail, newEmail, options) {
+            this.url = 'change_smtp_recipient';
+            this.dev_opt = {
+                //url: 'json/example.set_timezone.json',
+                bypassSession: true,
+                method: 'GET',
+                app_id: '2000100',
+                param: {targetEmail:targetEmail, newEmail:newEmail, module:'smtp_module'}
+            };
+            KuroboxCollection.prototype.fetch.call(this, options);
+        },
+        parse: function(data) {
+            console.log('data >> ', data)
+            return data.response.recipient;
+        }
+    });
+
+    var RecipientBundle = {
+        model: RecipientModel,
+        collection: RecipientCollection
+    };
+
+    return RecipientBundle;
+});

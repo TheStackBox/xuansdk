@@ -1,0 +1,17 @@
+<!-- TODO: if it's hidden, mark it and hide the whole div -->
+<% 
+
+if (typeof is_user_value === 'undefined') {
+	var is_user_value = (method.get('is_user_value') === true);
+} 
+
+if (typeof hidden === 'undefined') {
+	var hidden = false;
+}
+console.log('method', pArg)
+%>
+<div class="rule-control-item clear <%= (is_user_value) ? ' enable' : '' %>" <%= (hidden) ? 'style="display:none"' : '' %>>
+	<span class="checkbox">
+		<input type="checkbox" class="item-activation" id="<%= method.get('func') %>_<%= pArg.get('name') %>" <%= (is_user_value) ? 'checked' : '' %>/>
+		<label for="<%= method.get('func') %>_<%= pArg.get('name') %>"></label>
+	</span>

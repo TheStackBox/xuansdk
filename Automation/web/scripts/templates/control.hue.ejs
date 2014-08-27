@@ -1,0 +1,19 @@
+<div class="control-panel" id="hue-control">
+	<div class="icon"><%= device.get('icon') || '&#xe664' %></div>
+	<div id="main_content" style="display:none">
+		<div id="control" class="hue-control">
+			<div class="cirle-power" style="z-index:10"><span id="power-btn" class="power-icon">&#xe66d</span></div>
+			<div class="extra-icon"><!--<span id="scene-btn">&#xe684</span>--></div>
+			<section class="centerFlex clear">
+				<div id="picker"></div>
+				<div class="icon-reset">&#xe649</div>
+			</section>
+
+		</div>
+	</div>
+	<div id="main_loader" class="loader"></div>
+	<div id="main_message" class="control-msg" style="display:none">
+		<p lang="df">msg_device_disabled</p>
+		<button id="refresh-btn" lang="df">btn_refresh</button>
+	</div>
+</div>

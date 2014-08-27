@@ -1,0 +1,158 @@
+<% 
+var pConfig = pArg.get('component_config');
+
+if (pArg.get('label') === undefined || pArg.get('label') === '') {
+	// fixes for single arg
+	if (model !== undefined) {
+		pArg.set('label', model.get('label'));
+	}
+}
+
+switch (pArg.get('component_type')) {
+	case 'kbxBoolean':
+		// toogle
+		var on_val = pConfig.on || true;
+		var off_val = pConfig.off || false;
+		var on_val_label = pConfig.kbxParamTrueLabel || '';
+		var off_val_label = pConfig.kbxParamFalseLabel || '';
+		var valueDisplay = (pConfig.user_value) ? pConfig.user_value : pConfig.kbxParamDefaultValue || false;
+		%><div class="opt-toggle-label"><%= (pArg.get('label') === '') ? 'No label' : pArg.get('label') %></div>
+		<div class="opt-toggle">
+			<input type="checkbox" class="toggleswitch rule-component" id="toggleswitch" name="<%= pArg.get('name') %>" data-on="<%= on_val %>" data-on-label="<%= on_val_label %>" data-off-label="<%= off_val_label %>" data-off="<%= off_val %>" data-func="<%= model.get('func') %>"<%= (valueDisplay === on_val) ? ' checked' : '' %>/></input>
+		</div><%
+		break;
+
+	case 'kbxRange':
+		// slider
+		var min_val = pConfig.kbxParamMinValue || 0;
+		var max_val = pConfig.kbxParamMaxValue || 100;
+		var val = pConfig.kbxParamDefaultValue || min_val;
+		var usr = pConfig.user_value;
+		var step = pConfig.kbxParamStep || 1;
+		%><div class="opt-toggle-label"><%= (pArg.get('label') === '') ? 'No label' : pArg.get('label') %></div>
+		<div class="opt-toggle"><output id="rangevalue"><%= (usr) ? usr : val %></output></div>
+		<div class="slider">
+			<input type="range" name="<%= pArg.get('name') %>" min="<%= min_val %>" max="<%= max_val %>" step="<%= step %>" value="<%= (usr) ? usr : val %>" class="rule-component slider-comp" data-func="<%= model.get('func') %>"></input>
+		</div><%
+		break;
+
+	case 'kbxString':
+	case 'kbxNumber':
+		var val = pConfig.kbxParamDefaultValue || '';
+		var placeholder = pConfig.kbxParamPlaceholder || '';
+		var usr = pConfig.user_value;
+		if (pArg.type === 'kbxNumber' || pConfig.kbxParamMultiLine === false) {
+
+			// text 
+			%><div class="opt-label-full"><%= (pArg.get('label') === '') ? 'No label' : pArg.get('label') %></div>
+			<div class="textBox">
+				<input type="text" name="<%= pArg.get('name') %>" class="rule-component text" value="<%= (usr) ? usr : val %>" placeholder="<%= placeholder %>" data-func="<%= model.get('func') %>" data-min="<%= pConfig.kbxParamMinLength %>" data-max="<%= pConfig.kbxParamMaxLength%>">
+			</div><%
+		} else {
+			// api does not response to following rows and cols
+			var rows = pConfig.rows || 3;		
+			var cols = pConfig.cols || 80;
+			var usr = pConfig.user_value;
+			%><div class="opt-label-full"><%= (pArg.get('label') === '') ? 'No label' : pArg.get('label') %></div>
+			<div class="textarea">
+				<textarea class="text rule-component" name="<%= pArg.get('name') %>" placeholder="<%= placeholder %>" rows="<%= rows %>" cols="<%= cols %>" data-func="<%= model.get('func') %>" data-min="<%= pConfig.minLength %>" data-max="<%= pConfig.maxLength%>"><%= (usr) ? usr : val %></textarea>
+			</div><%
+		}
+		break;
+
+	case 'kbxOption':
+		// options
+		var options;
+		if (pConfig.kbxParamItems) {
+			options = pConfig.kbxParamItems;
+			var selected_idx;
+
+			if (pConfig.kbxParamDefaultValue === null) {
+				selected_idx = 0;
+			} else {
+				// iterate to get index
+				_.each(pConfig.kbxParamItems, function(data, index) {
+					if (data.kbxItemValue === pConfig.kbxParamDefaultValue) {
+						selected_idx = index;
+					}
+				});
+
+				if (!selected_idx) {
+					console.warn('Unable to match default value with itemlist');
+					selected_idx = 0;
+				}
+			}
+
+			options[selected_idx].selected = true;
+		} else {
+			options = [{'label': 'No options', 'value': '', 'selected': true}];
+		}
+		var usr = pConfig.user_value;
+		var select;
+		%><div class="opt-label-full"><%= (pArg.get('label') === '') ? 'No label' : pArg.get('label') %></div>
+		<div class="options">
+			<select class="options rule-component" name="<%= pArg.get('name') %>" data-func="<%= model.get('func') %>">
+			<%_.each(options, function(option){
+					select = (usr) ? (option.value === usr) : option.selected;
+					%><option value="<%= option.kbxItemValue%>"<%= (select) ? ' selected' : '' %>><%= option.kbxItemLabel %></option><%
+				})%>
+			</select>
+		</div><%
+		break;
+
+	case 'kbxDateTime':
+		var type = pConfig.formatType || 'date';
+		var val = pConfig.kbxParamDefaultValue || '';
+		var usr = pConfig.user_value;
+		%><div class="opt-label-full"><%= (pArg.get('label') === '') ? 'No label' : pArg.get('label') %></div>
+		<div class="time-date">
+			<input type="<%= type %>" class="rule-component" name="<%= pArg.get('name') %>" data-func="<%= model.get('func') %>" value="<%= (usr) ? usr : val %>"></div><%
+		break;
+
+	case 'kbxColor':
+		var val = pConfig.user_value || pConfig.kbxParamDefaultValue || '#ffffff';
+		%><div class="opt-label-full"><%= (pArg.get('label') === '') ? 'No label' : pArg.get('label') %></div>
+		<div class="rule-component color-gp" id="color-summary" data-component-type="color" name="<%= pArg.get('name') %>" data-func="<%= model.get('func') %>" value="<%= val %>">
+			<%if(val){%>
+				<span class="color-pin color-status" style="background: <%= val %>"></span>
+			<%}%>
+		<!-- <div class="rule-component" id="color-summary" data-component-type="color" name="<%= pArg.get('name') %>" data-func="<%= model.get('func') %>" value="<%= val %>" style="display:block;width:100px; height:100px; background: <%= val %>"> -->
+		</div><%
+		break;
+
+	case 'kbxDateTimeRange':
+		var val = pConfig.user_value || pConfig.kbxParamDefaultValue || '';
+		%><div class="opt-label-full rule-component" id="datetime-range" data-component-type="datetime" data-delimiter="<%= pConfig.kbxParamDelimiter %>" name="<%= pArg.get('name') %>" data-func="<%= model.get('func') %>" value="<%= val %>"><%= (pArg.get('label') === '') ? 'No label' : pArg.get('label') %></div><%
+		break;
+
+	case 'extended-args':
+		var section = pConfig.section;
+		var id = pConfig.id;
+		var index = pConfig.index;
+		%><div class="optionGp"><a href="#/rule/add?section=<%= section %>&action=select&did=<%= id %>&func=<%= model.get('func') %>">
+			<div class="opt-list"><%= model.get('label') %></div>
+			<% if (model.get('editor_display_value') !== undefined) { %><div class="opt-value" data-func="<%= model.get('func') %>"><%= render_editor_value(model) %></div><%}%>
+		</a></div><%
+		break;
+
+	case 'label-only':
+		%><div class="opt-label-full"><%= (model.get('label') === '') ? 'No label' : model.get('label') %><%
+		break;
+
+	case 'label-only':
+		%><div class="opt-label-full"><%= (model.get('label') === '') ? 'No label' : model.get('label') %><%
+		break;
+
+	case 'empty': 
+		%><div class="opt-label-full"><%= (model.get('label') === '') ? 'No label' : model.get('label') %>
+		<input class="rule-component" name="<%= pArg.get('name') %>" data-func="<%= model.get('func') %>" type="hidden" data-empty-arg="true"></div>
+		<%
+		break;
+
+	case 'kbxHidden':
+		var val = pConfig.kbxParamDefaultValue || '';
+		%><!-- <div class="opt-label-full"><%= (model.get('label') === '') ? 'No label' : model.get('label') %> -->
+		<input class="rule-component" name="<%= pArg.get('name') %>" data-func="<%= model.get('func') %>" type="hidden" value="<%= val %>"><%
+		break;
+}
+%>

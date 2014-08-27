@@ -1,0 +1,36 @@
+/*global define*/
+
+define([
+    'underscore',
+    'libs/backbone/models/kurobox-model'
+], function (_, KuroboxModel) {
+    'use strict';
+
+    var BoxInfoModel = KuroboxModel.extend({
+        defaults: {
+            status: '',
+            progress: ''
+        },
+
+        fetch: function(options) {
+            this.url = 'get_fw_update_status';
+            this.dev_opt = {
+                //url: 'json/example.get_fw_update_status.json',
+                bypassSession: true,
+                method: 'GET',
+                param:{}
+            };
+            KuroboxModel.prototype.fetch.call(this, options);
+        },
+
+
+        parse: function(data) {
+            return {
+                status: data.response.status,
+                progress: data.response.progress,
+            };
+        }
+    });
+
+    return BoxInfoModel;
+});

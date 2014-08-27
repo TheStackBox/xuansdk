@@ -1,0 +1,24 @@
+define([
+    'underscore',
+    'backbone',
+    'libs/backbone/models/kurobox-core'
+], function (_, Backbone, Core) {
+    'use strict';
+
+    var t = {
+        initialize: function() {
+            // event listeneing
+            this.on('remove', function(model, collection, options) {
+                this.destroy(options);
+            })
+        }
+    }
+
+    // extending with core
+    _.extend(t, Core.prototype);
+
+    // later extend with backbone's model
+    var KuroboxModel = Backbone.Model.extend(t);
+
+    return KuroboxModel;
+});

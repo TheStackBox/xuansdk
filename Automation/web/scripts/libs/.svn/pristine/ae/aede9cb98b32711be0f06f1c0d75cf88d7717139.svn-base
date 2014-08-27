@@ -1,0 +1,57 @@
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'libs/backbone/models/kurobox-model',
+    'Kurobox'
+], function ($, _, KuroboxModel) {
+    'use strict';
+    var CloudHeartbeat = KuroboxModel.extend({
+
+        initialize: function(session){
+            this.session = session || '';
+            Kurobox.cloudhost = Kurobox.cloudhost || 'https://user.thexuan.com';
+            this.url = 'server_request';
+            this.dev_opt = {
+                method: 'GET',
+                //url: 'json/example.cloud_login_success.json',
+                bypassSession: true,
+                param: {}
+            }
+        },
+
+        //login
+        fetch: function(options) {
+            Kurobox.native('getLanguage', function(lang){
+                var paramObj = {};
+                paramObj.sapi = '1.0';
+                paramObj.lang = lang;
+
+                //generate url
+                var str = '';
+                for (var v in paramObj) {
+                    if (str != '') {
+                        str += '&';
+                    }
+                    str += v + '=' + paramObj[v];
+                }
+                this.dev_opt.param.url = Kurobox.cloudhost+'/c/client/heartbeat?'+str;
+                
+                //generate sum
+                var a = [];
+                for (var i in paramObj) {
+                    a.push(paramObj[i]);
+                }
+                this.dev_opt.param.concate = a.sort().join('');
+
+                //call
+                console.log(options);
+                KuroboxModel.prototype.fetch.call(this, options);
+            }.bind(this), null, 'en')
+        }
+
+    });
+
+    return CloudHeartbeat;
+});

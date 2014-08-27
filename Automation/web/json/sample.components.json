@@ -1,0 +1,331 @@
+{
+  "theKuroBox": {
+    "response": {
+      "data": [
+        {
+          "kbxGroupId": 27,
+          "kbxMethodAppId": 2000100,
+          "kbxMethodTag": [
+            "automation_action"
+          ],
+          "kbxMethodParams": [
+            {
+              "kbxParamCom": "kbxTextInput",
+              "kbxParamType": "kbxString",
+              "kbxParamName": "text",
+              "kbxParamIsRequired": false,
+              "kbxParamMinLength": 10,
+              "kbxParamMaxLength": 100,
+              "kbxParamLabel": "Sample component label",
+              "kbxParamDesc": null,
+              "kbxParamDefaultValue": null,
+              "kbxParamPlaceholder": "Place holder text here",
+              "kbxParamSuggestions": null,
+              "kbxParamInputType": "text"
+            }
+          ],
+          "kbxMethodDisplayDetail": "kbxInputText",
+          "kbxGroupName": "1_UUID:93B2ABAC-CB6A-4857-B891-0019F58281D4",
+          "kbxMethodDesc": "Input Text",
+          "kbxModuleName": "device_manager.speaker_controller",
+          "kbxMethodId": 0,
+          "kbxMethodDisplaySummary": "Play %url%",
+          "kbxMethodStatus": 0,
+          "kbxMethodName": "input_txt",
+          "kbxGroupDesc": "UPNP Speaker",
+          "kbxTagId": 2,
+          "kbxMethodLabel": "kbxInputText"
+        },
+
+        {
+          "kbxGroupId": 27,
+          "kbxMethodAppId": 2000100,
+          "kbxMethodTag": [
+            "automation_action"
+          ],
+          "kbxMethodParams": [
+            {
+              "kbxParamCom": "kbxOption",
+              "kbxParamType": "kbxLiat",
+              "kbxParamName": "option",
+              "kbxParamIsRequired": false,
+              "kbxParamMinSize": 2,
+              "kbxParamMaxSize": 3,
+              "kbxParamLabel": "Sample component label",
+              "kbxParamDesc": null,
+              "kbxParamDefaultValue": [
+                "1", "2", "3"
+              ],
+              "kbxParamItems": [
+                {
+                  "kbxItemLabel": "First choice",
+                  "kbxItemValue": "1"
+                },
+                {
+                  "kbxItemLabel": "Second choice",
+                  "kbxItemValue": "2"
+                },
+                {
+                  "kbxItemLabel": "Third choice",
+                  "kbxItemValue": "3"
+                },
+                {
+                  "kbxItemLabel": "Forth choice",
+                  "kbxItemValue": "4"
+                },
+                {
+                  "kbxItemLabel": "Five choice",
+                  "kbxItemValue": "5"
+                }
+              ]
+            }
+          ],
+          "kbxMethodDisplayDetail": "kbxInputText",
+          "kbxGroupName": "1_UUID:93B2ABAC-CB6A-4857-B891-0019F58281D4",
+          "kbxMethodDesc": "Option list",
+          "kbxModuleName": "device_manager.speaker_controller",
+          "kbxMethodId": 1,
+          "kbxMethodDisplaySummary": "Play %url%",
+          "kbxMethodStatus": 0,
+          "kbxMethodName": "option_list",
+          "kbxGroupDesc": "UPNP Speaker",
+          "kbxTagId": 2,
+          "kbxMethodLabel": "kbxOption"
+        },
+
+        {
+          "kbxGroupId": 27,
+          "kbxMethodAppId": 2000100,
+          "kbxMethodTag": [
+            "automation_action"
+          ],
+          "kbxMethodParams": [
+            {
+              "kbxParamCom": "kbxToggle",
+              "kbxParamType": "kbxLiat",
+              "kbxParamName": "toggle",
+              "kbxParamIsRequired": false,
+              "kbxParamLabel": "Sample component label",
+              "kbxParamDesc": null,
+              "kbxParamDefaultValue": "11",
+              "kbxParamTrueValue": "11",
+              "kbxParamFalseValue": "00",
+              "kbxParamTrueLabel": "Yes, sir",
+              "kbxParamFalseLabel": "No, sir"
+            }
+          ],
+          "kbxMethodDisplayDetail": "kbxMethodDisplayDetail",
+          "kbxGroupName": "1_UUID:93B2ABAC-CB6A-4857-B891-0019F58281D4",
+          "kbxMethodDesc": "Toggle",
+          "kbxModuleName": "device_manager.speaker_controller",
+          "kbxMethodId": 2,
+          "kbxMethodDisplaySummary": "Play %url%",
+          "kbxMethodStatus": 0,
+          "kbxMethodName": "test_toggle_method",
+          "kbxGroupDesc": "UPNP Speaker",
+          "kbxTagId": 2,
+          "kbxMethodLabel": "kbxToggle"
+        },
+
+        {
+          "kbxGroupId": 27,
+          "kbxMethodAppId": 2000100,
+          "kbxMethodTag": [
+            "automation_action"
+          ],
+          "kbxMethodParams": [
+            {
+              "kbxParamCom": "kbxTextArea",
+              "kbxParamType": "kbxLiat",
+              "kbxParamName": "text_area",
+              "kbxParamIsRequired": false,
+              "kbxParamLabel": "Sample component label",
+              "kbxParamDesc": null,
+              "kbxParamMinLength": 15,
+              "kbxParamMaxLength": 200,
+              "kbxParamDefaultValue": "default value",
+              "kbxParamPlaceholder": "Placeholder here"
+            }
+          ],
+          "kbxMethodDisplayDetail": "kbxMethodDisplayDetail",
+          "kbxGroupName": "1_UUID:93B2ABAC-CB6A-4857-B891-0019F58281D4",
+          "kbxMethodDesc": "Text area",
+          "kbxModuleName": "device_manager.speaker_controller",
+          "kbxMethodId": 3,
+          "kbxMethodDisplaySummary": "Play %url%",
+          "kbxMethodStatus": 0,
+          "kbxMethodName": "test_text_area",
+          "kbxGroupDesc": "UPNP Speaker",
+          "kbxTagId": 2,
+          "kbxMethodLabel": "kbxTextArea"
+        },
+
+        {
+          "kbxGroupId": 27,
+          "kbxMethodAppId": 2000100,
+          "kbxMethodTag": [
+            "automation_action"
+          ],
+          "kbxMethodParams": [
+            {
+              "kbxParamCom": "kbxSlider",
+              "kbxParamType": "kbxLiat",
+              "kbxParamName": "slide_int",
+              "kbxParamIsRequired": false,
+              "kbxParamLabel": "Sample component label",
+              "kbxParamDesc": null,
+              "kbxParamDefaultValue": 0,
+              "kbxParamMinValue": 0,
+              "kbxParamMaxValue": 100,
+              "kbxParamStep": 0.01,
+              "kbxParamDecimal": 2
+            }
+          ],
+          "kbxMethodDisplayDetail": "kbxMethodDisplayDetail",
+          "kbxGroupName": "1_UUID:93B2ABAC-CB6A-4857-B891-0019F58281D4",
+          "kbxMethodDesc": "Slider",
+          "kbxModuleName": "device_manager.speaker_controller",
+          "kbxMethodId": 4,
+          "kbxMethodDisplaySummary": "Play %url%",
+          "kbxMethodStatus": 0,
+          "kbxMethodName": "test_slider",
+          "kbxGroupDesc": "UPNP Speaker",
+          "kbxTagId": 2,
+          "kbxMethodLabel": "kbxSlider"
+        },
+
+        {
+          "kbxGroupId": 27,
+          "kbxMethodAppId": 2000100,
+          "kbxMethodTag": [
+            "automation_action"
+          ],
+          "kbxMethodParams": [
+            {
+              "kbxParamCom": "kbxTime",
+              "kbxParamType": "kbxLiat",
+              "kbxParamName": "time",
+              "kbxParamIsRequired": false,
+              "kbxParamLabel": "Sample component label",
+              "kbxParamDesc": null,
+              "kbxParamDefaultValue": 0,
+              "kbxParamMinValue": 0,
+              "kbxParamMaxValue": 100,
+              "kbxParamStep": 0.01,
+              "kbxParamDecimal": 2
+            }
+          ],
+          "kbxMethodDisplayDetail": "kbxMethodDisplayDetail",
+          "kbxGroupName": "1_UUID:93B2ABAC-CB6A-4857-B891-0019F58281D4",
+          "kbxMethodDesc": "Time",
+          "kbxModuleName": "device_manager.speaker_controller",
+          "kbxMethodId": 5,
+          "kbxMethodDisplaySummary": "Play %url%",
+          "kbxMethodStatus": 0,
+          "kbxMethodName": "test_time",
+          "kbxGroupDesc": "UPNP Speaker",
+          "kbxTagId": 2,
+          "kbxMethodLabel": "kbxTime"
+        },
+
+        {
+          "kbxGroupId": 27,
+          "kbxMethodAppId": 2000100,
+          "kbxMethodTag": [
+            "automation_action"
+          ],
+          "kbxMethodParams": [
+            {
+              "kbxParamCom": "kbxColor",
+              "kbxParamType": "kbxLiat",
+              "kbxParamName": "color",
+              "kbxParamIsRequired": false,
+              "kbxParamLabel": "Sample component label",
+              "kbxParamDesc": null,
+              "kbxParamDefaultValue": {
+                "r": 255,
+                "g": 0,
+                "b": 255
+              }
+            }
+          ],
+          "kbxMethodDisplayDetail": "kbxMethodDisplayDetail",
+          "kbxGroupName": "1_UUID:93B2ABAC-CB6A-4857-B891-0019F58281D4",
+          "kbxMethodDesc": "Color",
+          "kbxModuleName": "device_manager.speaker_controller",
+          "kbxMethodId": 6,
+          "kbxMethodDisplaySummary": "Play %url%",
+          "kbxMethodStatus": 0,
+          "kbxMethodName": "test_time",
+          "kbxGroupDesc": "UPNP Speaker",
+          "kbxTagId": 2,
+          "kbxMethodLabel": "kbxColor"
+        },
+
+        {
+          "kbxGroupId": 27,
+          "kbxMethodAppId": 2000100,
+          "kbxMethodTag": [
+            "automation_action"
+          ],
+          "kbxMethodParams": [
+            {
+              "kbxParamCom": "kbxColor",
+              "kbxParamType": "kbxLiat",
+              "kbxParamName": "color",
+              "kbxParamIsRequired": false,
+              "kbxParamLabel": "kbxColor",
+              "kbxParamDesc": "Color",
+              "kbxParamDefaultValue": {
+                "r": 255,
+                "g": 0,
+                "b": 255
+              }
+            },
+            {
+              "kbxParamCom": "kbxTextInput",
+              "kbxParamType": "kbxString",
+              "kbxParamName": "text",
+              "kbxParamIsRequired": false,
+              "kbxParamMinLength": 10,
+              "kbxParamMaxLength": 100,
+              "kbxParamLabel": "kbxTextInput",
+              "kbxParamDesc": "Input Text",
+              "kbxParamDefaultValue": null,
+              "kbxParamPlaceholder": "Place holder text here",
+              "kbxParamSuggestions": null,
+              "kbxParamInputType": "text"
+            }
+          ],
+          "kbxMethodDisplayDetail": "kbxMethodDisplayDetail",
+          "kbxGroupName": "1_UUID:93B2ABAC-CB6A-4857-B891-0019F58281D4",
+          "kbxMethodDesc": "All is optional",
+          "kbxModuleName": "device_manager.speaker_controller",
+          "kbxMethodId": 7,
+          "kbxMethodDisplaySummary": "Play %url%",
+          "kbxMethodStatus": 0,
+          "kbxMethodName": "test_opt_args",
+          "kbxGroupDesc": "UPNP Speaker",
+          "kbxTagId": 2,
+          "kbxMethodLabel": "Optional Multiple Arguments"
+        }
+
+
+
+      ],
+      "group": {
+        "kbxGroupAppId": 2000100,
+        "kbxGroupIcon": "&#xe62d",
+        "kbxGroupId": 27,
+        "kbxGroupParentId": 3,
+        "kbxGroupDesc": "UPNP Speaker",
+        "kbxGroupLabel": "Jongo ",
+        "kbxGroupName": "1_UUID:93B2ABAC-CB6A-4857-B891-0019F58281D4",
+        "enabled": true
+      },
+      "totalCount": 5
+    },
+    "returnValue": 100,
+    "returnMessage": "Ok"
+  }
+}

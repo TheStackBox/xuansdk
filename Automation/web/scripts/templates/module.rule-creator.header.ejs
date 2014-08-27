@@ -1,0 +1,24 @@
+
+<div style="margin-top:10px; position:relative">
+	<div class="title" lang="df"><%= mode === 'add' ? 'create_rule' : 'edit_rule' %></div>
+	<div class="nav-icon-gp">
+		<div class="nav-icon"><span class="nav-circle-outline nav-icon-edit"></span></div>
+    </div> 
+	<div class="desc2" lang="df">rule_creator_desc</div>		
+	
+	
+	<div style="display:none;">
+		<div class="clear options">
+			<span class="opt-label" >Trigger On</span>
+			<span class="opt-value" id="trigger-setting" data-value="<%= config.get('trigger').type %>"><%= (config.get('trigger').type === 0) ? 'Event' : search_collection(trigger_options, config.get('trigger').type) %></span>
+	   </div>
+	   <div class="options" id="option-interval">
+			<span class="opt-label">Repeat Every</span>
+			<span class="opt-value" id="on-interval" data-value="<%= (config.get('trigger').type === 2) ? config.get('trigger').value : interval_options.at(0).get('value') %>"><%= search_collection(interval_options, config.get('trigger').value) %></span>
+	   </div>
+	   <div id="trigger-time" class="clear">
+	   		<span class="input-icon-time"></span>
+	   		<input type="time" value="<%= (config.get('trigger').type === 1) ? config.get('trigger').value : '00:00'%>"/>
+	   </div>
+	</div>
+</div>

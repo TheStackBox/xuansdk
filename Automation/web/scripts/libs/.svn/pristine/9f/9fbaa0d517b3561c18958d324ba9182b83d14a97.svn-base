@@ -1,0 +1,32 @@
+/*global define*/
+
+define([
+    'underscore',
+    'libs/backbone/models/kurobox-model'
+], function (_, KuroboxModel) {
+    'use strict';
+
+    var BoxInfoModel = KuroboxModel.extend({
+        defaults: {
+        },
+
+        fetch: function(Url, options) {
+            this.url = 'update_firmware';
+            this.dev_opt = {
+                //url: 'json/example.update_firmware.json',
+                bypassSession: true,
+                method: 'GET',
+                param:{url: Url}
+            };
+            KuroboxModel.prototype.fetch.call(this, options);
+        },
+
+
+        parse: function(data) {
+            return {
+            };
+        }
+    });
+
+    return BoxInfoModel;
+});

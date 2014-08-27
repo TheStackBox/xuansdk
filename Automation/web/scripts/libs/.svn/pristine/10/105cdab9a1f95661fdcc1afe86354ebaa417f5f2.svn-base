@@ -1,0 +1,30 @@
+/*global define*/
+
+define([
+    'underscore',
+    'libs/backbone/models/kurobox-model'
+], function (_, KuroboxModel) {
+    'use strict';
+
+   var ListAppModel = KuroboxModel.extend({
+        fetch: function(options) {
+            this.url = 'list_current_running_app';
+            this.dev_opt = {
+                //url: 'json/list_app_status.json',
+                method: 'GET',
+                bypassSession: true,
+                app_id: '2000100',
+                param:{module:'application_manager'}                   
+            }
+            KuroboxModel.prototype.fetch.call(this, options);
+        },
+
+        parse: function(data) {
+            return {
+                apps: data.response.apps
+            }
+        }
+    });
+
+    return ListAppModel;
+});

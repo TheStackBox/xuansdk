@@ -1,0 +1,52 @@
+/*global define*/
+
+define([
+    'underscore',
+    'libs/backbone/models/kurobox-model'
+], function (_, KuroboxModel) {
+    'use strict';
+
+    var model = KuroboxModel.extend({
+        defaults: {
+            access: false,
+            user: ''
+        },
+
+        fetch: function(options) {
+            this.url = 'get_remote_access';
+            this.dev_opt = {
+                //url: 'json/example.get_remote_access.json',
+                bypassSession: true,
+                method: 'GET',
+                param:{}
+            };
+            KuroboxModel.prototype.fetch.call(this, options);
+        },
+
+        save: function(access, user, options) {
+            this.url = 'set_remote_access';
+            this.dev_opt = {
+                //url: 'json/example.set_timezone.json',
+                bypassSession: true,
+                method: 'GET'
+            };
+
+            if(user){
+                this.dev_opt.param = {access:access, user:user};
+            }else{
+                this.dev_opt.param = {access:access};
+            }
+
+            KuroboxModel.prototype.fetch.call(this, options);
+        },
+
+        parse: function(data) {
+            return {
+                access: (data.response.access === true),
+                user: data.response.user
+            };
+        }
+    });
+
+    return model;
+});

@@ -1,0 +1,94 @@
+/*global define*/
+
+define([
+    'underscore',
+    'libs/backbone/models/kurobox-model',
+], function (_, KuroboxModel) {
+    'use strict';
+
+    var UserModel = KuroboxModel.extend({
+        defaults: {
+        	username: 'admin'
+        },
+
+        fetch: function(options) {
+        },
+
+        save: function (key, val, options) {
+            this.url = 'create_user';
+            this.dev_opt = {
+                bypassSession: true,
+                method: 'GET',
+                param_attr: {username: 'username', password: 'password'}
+            };
+
+            KuroboxModel.prototype.save.call(this, key, val, options);
+        },
+
+        change_user: function (key, val, options) {
+            this.url = 'change_user';
+            this.dev_opt = {
+                bypassSession: true,
+                method: 'GET',
+                param_attr: {old_username: 'old_username', old_password: 'old_password', new_username: 'new_username', new_password: 'new_password'}
+            };
+
+            KuroboxModel.prototype.save.call(this, key, val, options);
+        },
+
+        delete: function (username, options) {
+            this.url = 'remove_user';
+            this.dev_opt = {
+                bypassSession: true,
+                method: 'GET',
+                param: {username: username}
+            };
+
+            KuroboxModel.prototype.save.call(this, options);
+        },
+
+        login_as_anonymous: function (options) {
+            this.url = 'login';
+            this.dev_opt = {
+                bypassSession: true,
+                method: 'GET',
+                redirectLogin: false,
+                param: {username: 'anonymous', password: 'anonymous'}
+            };
+
+            KuroboxModel.prototype.fetch.call(this, options);   
+        },
+
+        login: function (username, password, options) {
+            this.url = 'login';
+            this.dev_opt = {
+                bypassSession: true,
+                method: 'GET',
+                redirectLogin: false,
+                param: {username: username, password: password}
+            };
+
+            KuroboxModel.prototype.fetch.call(this, options);   
+        },
+
+        testing:function (username) {
+            console.log('testomg!!!');
+        },
+
+        logout: function (username, options) {
+            this.url = 'logout';
+            this.dev_opt = {
+                bypassSession: true,
+                method: 'GET',
+                param: {username: username}
+            };
+
+            KuroboxModel.prototype.fetch.call(this, options);
+        },        
+
+        parse: function(data) {
+        }
+    });
+
+    return UserModel;
+});

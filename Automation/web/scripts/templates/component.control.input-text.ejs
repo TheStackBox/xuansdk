@@ -1,0 +1,5 @@
+<div class="textBox container">
+	<br>
+	<input type="<%= type %>" id="textinput" class="rule-component text" value="<%= model.get('value') %>" placeholder="<%= model.get('extra').kbxParamPlaceholder %>" maxlength="<%= model.get('extra').kbxParamMaxLength %>" pattern=".{<%= model.get('extra').kbxParamMinLength || 1 %>,<%= model.get('extra').kbxParamMaxLength || '' %>}">
+	<span title="" data="Required at least <%= model.get('extra').kbxParamMinLength || 1 %>" data-empty="No value has being entered"></span>
+</div>
