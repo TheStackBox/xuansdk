@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,7 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class DriverManagerService(object):
@@ -29,12 +28,12 @@ class DriverManagerService(object):
     def list_connected_driver(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get a list of connected drivers
-        Return:Dictionary :eg-
+        return:Dictionary :eg-
         {"drivers":
             {
                 "dust":
                 {
-                    "driver":"dust",
+                    "driver":"dust"
                 },
                 "bluetooth":
                 {
@@ -49,7 +48,9 @@ class DriverManagerService(object):
     def get_is_driver_connected(driverId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Check whether a driver is connected
-        Return:Dictionary :eg-
+        driverId:String - the driver Id
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-
         {"connected":true, "driver":{ "driver":"dust" }}
         '''
         pass

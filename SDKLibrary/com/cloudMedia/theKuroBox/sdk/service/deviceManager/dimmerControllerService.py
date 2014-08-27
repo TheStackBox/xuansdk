@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,18 +17,29 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class DimmerControllerService():
 
     @staticmethod
     def get_capabilities(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        Get device capabilities.
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success":true}
+        '''
         pass
     
 
     @staticmethod
     def get_status(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        get door lock status.
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-  {"success":true}
+        '''
         pass
     
 
@@ -36,7 +47,8 @@ class DimmerControllerService():
     def set_on(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Turn on dimmer.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": "true"}
         '''
         pass
@@ -46,7 +58,8 @@ class DimmerControllerService():
     def set_off(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Turn off dimmer.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": "true"}
         '''
         pass
@@ -56,8 +69,9 @@ class DimmerControllerService():
     def set_dim_level(pairedDeviceId, level, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Set dim level.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
-        level:Number :- 0-99
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        level:Number - 0-99
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": "true"}
         '''
         pass
@@ -67,7 +81,8 @@ class DimmerControllerService():
     def get_dim_level(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Set dim level.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"level": 20}
         '''
         pass
@@ -77,7 +92,8 @@ class DimmerControllerService():
     def get_dimmer_status(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get current dimmer status.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": "true"}
         '''
         pass

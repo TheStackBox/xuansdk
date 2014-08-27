@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,16 +17,11 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 class Event(object):
+  
+    ###Application Manager
     '''
-    Store any event relate information
-    '''
-
-    '''
-    Event Tag
-    '''
-
-    '''
-    Application Manager
+    Raise when application is started.
+    eventData:{}
     '''
     EVENT_APP_LAUNCH_STARTING = "APP_LAUNCH_STARTING"
     EVENT_APP_LAUNCH_COMPLETE = "APP_LAUNCH_COMPLETE"

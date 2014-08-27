@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,7 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class WemoService():
@@ -26,6 +25,7 @@ class WemoService():
     def discover_devices(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Discover wemo devices on the network
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"devices": [{"usn": "uuid:Insight-1_0-221351K120023F::upnp:rootdevice", "port": "49153", 
                                             "type": "Insight", "location": "http://192.168.0.76:49153/setup.xml", 
                                             "ip": "192.168.0.76"}]}
@@ -38,6 +38,7 @@ class WemoService():
         '''
         Turn on WeMo Insight Switch
         hostname:String :- The IP Address and Port number of Insight Switch scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
@@ -48,6 +49,7 @@ class WemoService():
         '''
         Turn off WeMo Insight Switch
         hostname:String :- The IP Address and Port number of Insight Switch scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
@@ -58,6 +60,7 @@ class WemoService():
         '''
         Get the state of WeMo Insight Switch
         hostname:String :- The IP Address and Port number of Insight Switch scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"InsightState": "ON"}
         '''
         pass
@@ -68,6 +71,7 @@ class WemoService():
         '''
         Get friendly name of the WeMo Insight Switch
         hostname:String :- The IP Address and Port number of Insight Switch scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"friendlyName": "Wemo Insight"}
         '''
         pass
@@ -79,6 +83,7 @@ class WemoService():
         Set new friendly name for the WeMo Insight Switch
         hostname:String :- The IP Address and Port number of Insight Switch scanned from discover_devices()
         newDeviceName:String :- New friendly name for the WeMo Insight Switch
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"newFriendlyName": "WeMo Insight"}
         '''
         pass
@@ -89,6 +94,7 @@ class WemoService():
         '''
         Retrieve WeMo Insight extra informations such as 
         hostname:String :- The IP Address and Port number of Insight Switch scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"insightParams": {"wattsUsedNow": "0", "energyUsedTotal": "0.000000", 
                                                   "lastTurnOn": "2014-06-03 06:24:34", "energyUsedToday": "0"}}
         '''
@@ -100,6 +106,7 @@ class WemoService():
         '''
         Turn on WeMo Switch
         hostname:String :- The IP Address and Port number of WeMo Switch scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
@@ -110,6 +117,7 @@ class WemoService():
         '''
         Turn off WeMo Switch
         hostname:String :- The IP Address and Port number of WeMo Switch scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
@@ -120,6 +128,7 @@ class WemoService():
         '''
         Retrieve current WeMo Switch state
         hostname:String :- The IP Address and Port number of WeMo Switch scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"switchState": "OFF"}
         '''
         pass
@@ -130,6 +139,7 @@ class WemoService():
         '''
         Retrieve the current friendly name for the WeMo Switch
         hostname:String :- The IP Address and Port number of WeMo Switch scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"switchFriendlyName": "My Switch"}
         '''
         pass
@@ -141,6 +151,7 @@ class WemoService():
         Assign a new friendly name for the Wemo Switch
         hostname:String :- The IP Address and Port number of WeMo Switch scanned from discover_devices()
         newDeviceName:String :- New friendly name of Wemo Switch
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"newSwitchFriendlyName": "Wemo Switch"}
         '''
         pass
@@ -151,6 +162,7 @@ class WemoService():
         '''
         Retrieve Wemo Switch informations
         hostname:String :- The IP Address and Port number of WeMo Switch scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"switchInformation": "08863BC2D1A4|WeMo_US_2.00.4494.PVT|1|49153|0|Wemo Switch"}
         '''
         pass
@@ -161,6 +173,7 @@ class WemoService():
         '''
         Retrieve Wemo Insight/Wemo Switch/Wemo Motion information
         hostname:String :- The IP Address and Port number of WeMo Motion scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"deviceInformation": "08863BC2D1A4|WeMo_US_2.00.4494.PVT|1|49153|0|My Switch"}
         '''
         pass
@@ -171,6 +184,7 @@ class WemoService():
         '''
         Retrieve Wemo Motion current state
         hostname:String :- The IP Address and Port number of WeMo Motion scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"motionState": "Motion Detected"}
         '''
         pass
@@ -181,6 +195,7 @@ class WemoService():
         '''
         Retrieve current friendly name of Wemo Motion
         hostname:String :- The IP Address and Port number of WeMo Motion scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"motionFriendlyName": "Wemo Motion"}
         '''
         pass
@@ -190,8 +205,9 @@ class WemoService():
     def set_motion_friendly_name(hostname, newDeviceName, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Assign a new friendly name to a Wemo Motion
-        newDeviceName:String :- New friendly name for Wemo Motion
         hostname:String :- The IP Address and Port number of WeMo Motion scanned from discover_devices()
+        newDeviceName:String :- New friendly name for Wemo Motion
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"newMotionFriendlyName": "my Wemo Motion"}
         '''
         pass
@@ -202,6 +218,7 @@ class WemoService():
         '''
         Retrieve current Wemo Motion information
         hostname:String :- The IP Address and Port number of WeMo Motion scanned from discover_devices()
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"motionInformation": "EC1A5968002C|WeMo_US_2.00.4494.PVT|1|49153|0|Wemo Motion"}
         '''
         pass

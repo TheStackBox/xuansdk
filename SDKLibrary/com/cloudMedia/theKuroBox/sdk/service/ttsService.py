@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,8 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
-from com.cloudMedia.theKuroBox.service.ttsService import TTSService as TS
 
 class TTSService(object):
 
@@ -26,8 +24,10 @@ class TTSService(object):
     def speak(text, pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Speak a given piece of text.
-        text:String :- Words to tts
-        pairedDeviceId:Number :- Paired id from get_paired_device_list
+        
+        text:String - [Required] Text to speak out.
+        pairedDeviceId:Number - [Required] Paired device id from get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -36,8 +36,10 @@ class TTSService(object):
     def get_speech_url(text, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get speech url of given piece of text.
-        text:String :- Words to tts
-        Returns:URL of the speech in string. eg http://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=hello
+        
+        text:String - [Required] Text to speak out.
+        language:String - [Optional] Preferred language. Default is en.
+        return:String :eg- {"value":"http://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=hello"}
         '''
         pass
     

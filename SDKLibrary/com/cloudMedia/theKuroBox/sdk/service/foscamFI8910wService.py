@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,11 +17,7 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 
-import re
-
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
-from com.cloudMedia.theKuroBox.sdk.ex.systemException import SystemException
 
 
 class FoscamFI8910wService(object):
@@ -61,6 +57,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"userLoginDetail": {"pwd": "admin", "pri": "3", "user": "admin"}}
         '''
         pass
@@ -74,6 +71,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"snapshot": "http://192.168.0.10/snapshot.cgi?user=admin&pwd=admin"}
         '''
         pass
@@ -89,6 +87,7 @@ class FoscamFI8910wService(object):
         password:String :- Password of the user account
         videoStreamResolution:String :- 8 : 320x240, 32 : 640x480
         videoStreamRate:String :- 0 :full speed, 1 : 20 fps, 3 : 15 fps, 6 : 10 fps, 11 :5 fps, 12 : 4 fps, 13 : 3 fps, 14 : 2 fps, 15 : 1 fps, 17 : 1 fp/2s, 19 : 1 fp/3s, 21 : 1 fp/4s, 23 : 1 fp/5s
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"jpegVideoStream": "http://192.168.0.10/videostream.cgi?user=admin&pwd=admin&rate=0&resolution=32"}
         '''
         pass
@@ -117,6 +116,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"deviceStatus": {"upnp_status": "1", "now": "1401765438", "id": "00626E4641CB", "tridro_error": "", 
                                                   "alias": "Foscam8910", "p2p_local_port": "22097", "wifi_status": "0", "alarm_status": "0", 
                                                   "msn_status": "0", "app_ver": "2.0.10.3", "oray_type": "0", "ddns_host": "", "sys_ver": "11.37.2.49", 
@@ -133,6 +133,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraParameters": {"resolution": "32", "flip": "1", "contrast": "3", "mode": "1", "fps": "0", "brightness": "30"}} 
         '''
         pass
@@ -146,6 +147,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraTurnUp": "ok."}
         '''
 
@@ -161,6 +163,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraTurnDown": "ok."}
         '''
 
@@ -176,6 +179,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraTurnLeft": "ok."}
         '''
 
@@ -190,6 +194,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraTurnRight": "ok."}
         '''
 
@@ -205,6 +210,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraCenter": "ok."}
         '''
 
@@ -219,6 +225,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"patrolUpDown": "ok."}
         '''
 
@@ -234,6 +241,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg-  {"patrolLeftRight": "ok."}
         '''
 
@@ -248,6 +256,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"stopPatrolLeftRight": "ok."}
         '''
 
@@ -263,6 +272,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"stopPatrolUpDown": "ok."}
         '''
 
@@ -278,9 +288,9 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"moveUpperLeft": "ok."}
         '''
-
         pass
 
 
@@ -293,9 +303,9 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"moveUpperRight": "ok."}
         '''
-
         pass
 
 
@@ -308,6 +318,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"moveDownLeft": "ok."}
         '''
 
@@ -323,6 +334,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"moveDownRight": "ok."}
         '''
 
@@ -338,6 +350,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"motorTest": "ok."}
         '''
 
@@ -355,6 +368,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         resolutionValue:String :- 2 : qqvga, 8 : qvga, 32 : vga
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"resolutionStatus": "ok."} 
         '''
 
@@ -370,6 +384,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         brightnessValue:String :- 0 - 255
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"brightnessStatus": "ok."}
         '''
 
@@ -385,6 +400,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         contrastValue:String :- 0 -6 
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"contrastStatus": "ok."}
         '''
 
@@ -400,6 +416,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         modeValue:String :- 0 : 50hz, 1 : 60hz, 2 : outdoor
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"modetStatus": "ok."}
         '''
 
@@ -415,6 +432,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         patrolValue:String :- 0 : initial, 1 : vertical patrol, 2 : horizontal patrol, 3 : vertical patrol + horizontal patrol
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"patrolStatus": "ok."}
         '''
 
@@ -429,6 +447,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"rebootStatus": "ok."}
         '''
 
@@ -443,6 +462,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"factoryRestoreStatus": "ok."}
         '''
 
@@ -457,6 +477,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"deviceSettingParameter": {"dev3_host": "", "user1_name": "admin", "mail_user": ""}}
         '''
 
@@ -472,6 +493,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         aliasName:String :- New name for the camera
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"aliasNameStatus": "ok."}
         '''
 
@@ -491,6 +513,7 @@ class FoscamFI8910wService(object):
         ntp_enable:String :- 0 : disable ntp proofread time, 1 : enable
         daylight_saving_time:String :- Set the different seconds between daylight saving time and the standard time
         ntp_svr:String :- Ntp server length <= 64
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"dateTimeStatus": "ok."}
         '''
 
@@ -506,6 +529,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         isEnableUpnp:String :- 0 : disable, 1 : enable
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"upnpSettingStatus": "ok."}
         '''
 
@@ -530,6 +554,7 @@ class FoscamFI8910wService(object):
         upload_interval:String :- alarm_upload_interval(seconds)0-65535
         schedule_enable:String :- schedule_enable or not 1:enable or 0:disable
         schedule_sun_0:String :- Sunday arm plan.24hours/day. Divided 24hours to 96 time district,each district for 15 munites. bit0-95
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"alarmStatus": "ok."}
         '''
 
@@ -545,6 +570,7 @@ class FoscamFI8910wService(object):
         password:String :- Password of the user account
         schedule_enable:String :- schedule_enable or not 1:enable or 0:disable
         schedule_sun_0:String :- Sunday arm plan.24hours/day. Divided 24hours to 96 time district,each district for 15 munites. bit0-95
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"forbiddenStatus": "ok."}
         '''
         
@@ -558,6 +584,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"forbiddenSchedule": {"schedule_thu_0": "1", "schedule_thu_1": "1", "schedule_thu_2": "1", "schedule_sat_1": "1", 
                                                        "schedule_sat_0": "1", "schedule_sat_2": "1", "schedule_mon_2": "1", "schedule_mon_1": "1", 
                                                        "schedule_mon_0": "1", "schedule_fri_0": "1", "schedule_fri_1": "1", "schedule_fri_2": "1", 
@@ -577,6 +604,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account.
         ledValue:String :- 0:mode1, 1:mode2, 2:shut off the led
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"ledModeStatus": "ok."}
         '''
 
@@ -591,6 +619,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         onStartValue:String :- 0:Disable or :Enable
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"centerOnStart": "ok."}
         '''
 
@@ -605,6 +634,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         hRoundValue:String :- 0 to infinity
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"patrolHorizontalRoundStatus": "ok."}
         '''
 
@@ -619,6 +649,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         vRoundValue:String :- 0 to infinity
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"patrolVerticalRoundStatus": "ok."}
         '''
 
@@ -633,6 +664,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         patrolRate:String :- 0-100 >fast
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"patrolSpeedStatus": "ok."}
         '''
 
@@ -647,6 +679,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         isEnablePreset:String :- 0 : disable, 1 :enable
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"disablePresetStatus": "ok."}
         '''
 
@@ -661,6 +694,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         isEnablePresetOnStart:String :- 0: disable, 1 : enable
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"presetOnStartStatus": "ok."}
         '''
 
@@ -674,6 +708,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraParameter": {"ptz_patrol_up_rate": "6", "ptz_auto_patrol_interval": "0", "ptz_patrol_right_rate": "6", 
                                                      "ptz_patrol_h_rounds": "10", "ptz_preset_onstart": "1", "led_mode": "1", "ptz_disable_preset": "1", 
                                                      "ptz_patrol_v_rounds": "10", "ptz_patrol_down_rate": "6", "ptz_auto_patrol_type": "0", "ptz_patrol_rate": "15", 
@@ -691,6 +726,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         baudValue:String :- 9:B1200, 11:B2400, 12:B4800, 13:B9600, 14:B19200, 15:B38400, 4097:B57600, 4098:B115200
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"decoderStatus": "ok."}
         '''
 
@@ -704,6 +740,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"wifiScanStatus": "ok."}
         '''
 
@@ -717,6 +754,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"wifiScanResult": {"ap_ssid": "new Array()", "ap_bssid": "new Array()", "ap_mode": "new Array()", 
                                                     "ap_number": "10", "ap_security": "new Array()"}}
         '''
@@ -731,6 +769,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"logResult": {"log_text": "aaa"}}
         '''
 
@@ -745,6 +784,7 @@ class FoscamFI8910wService(object):
         username:String :- Username of the user account
         password:String :- Password of the user account
         macAddress:String :- MAC Address without any separator. e.g.: 0006DC970533
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"macAddressStatus": "ok."}
         '''
 
@@ -758,6 +798,7 @@ class FoscamFI8910wService(object):
         hostPort:String :- Port 0 - 65535
         username:String :- Username of the user account
         password:String :- Password of the user account
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"factoryDdnsSetting": "ok."}
         '''
 

@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,7 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class SYBPlayerService():
@@ -26,6 +25,7 @@ class SYBPlayerService():
     def player_start(url, playerType, startWithState, analyzer, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Start playback.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
@@ -34,6 +34,7 @@ class SYBPlayerService():
     def player_pause(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Pause playback.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
@@ -110,6 +111,7 @@ class SYBPlayerService():
     def player_get_status(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get current player status.
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -117,6 +119,7 @@ class SYBPlayerService():
     def player_get_media_info(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get media info.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"mediaInfo": {"CurrentURI": "http://23.23.136.93/alsghoaeiw/test.mp3", "MediaDuration": "0:02:53"}}
         '''
         pass
@@ -125,6 +128,7 @@ class SYBPlayerService():
     def player_get_device_info(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get device info.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"deviceInfo":{"DeviceType":"bluetooth" , "DeviceId": "", "Analyzer":1}}
         '''
         pass
@@ -133,6 +137,7 @@ class SYBPlayerService():
     def player_get_position_info(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get position info.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"positionInfo": {"RelTime": "0:01:41", "AbsTime": "0:01:41", "TrackURI": "http://23.23.136.93/alsghoaeiw/test.mp3", "TrackDuration": "0:02:53"}}
         '''
         pass
@@ -141,6 +146,7 @@ class SYBPlayerService():
     def player_get_transport_info(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get transport info.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"transportInfo": {"CurrentSpeed": "1.0", "CurrentTransportState": "PLAYING"}}
         '''
         pass
@@ -149,6 +155,7 @@ class SYBPlayerService():
     def player_get_spectrum(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get spectrum.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"spectrum": {"magnitude": "-1", "frequency": "-1"}}
         '''
         pass

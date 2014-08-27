@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -18,7 +18,6 @@
 ##############################################################################################
 
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class StorageManagerService():
@@ -30,6 +29,7 @@ class StorageManagerService():
         group:String :- group of the data.
         key:String :- the id of the data.
         value:String :- the value of the data
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"lastRowId": 1}
         '''
         pass
@@ -42,6 +42,7 @@ class StorageManagerService():
         key:String :- the id of the data.
         limit:Number :- limit of data to get
         offset:Number :- offset of data to get
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"totalRecord": 1, "data": [{"appId": 2222222, "id": 1, "appDataKey": "1", "appDataGroup": "99", "appDataValue": "test"}]}
         '''
         pass
@@ -52,6 +53,7 @@ class StorageManagerService():
         permanent delete persistent storage key and data
         group:String :- the group of data.
         key:String :- the id of the data.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass

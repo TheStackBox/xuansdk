@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,7 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class ZWaveService():
@@ -26,6 +25,7 @@ class ZWaveService():
     def reset(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Reset Z-Wave Controller Stick.
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -34,6 +34,15 @@ class ZWaveService():
     def network_add(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Network Add.
+        language:String - [Optional] Preferred language. Default is en.
+        '''
+        pass
+    
+    
+    @staticmethod
+    def network_classic_add(language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        Network Classic Add.
         '''
         pass
     
@@ -141,6 +150,7 @@ class ZWaveService():
         User code get.
         node:String :- return from API network_list
         user:String :- 
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -150,6 +160,7 @@ class ZWaveService():
         '''
         Switch multilevel get.
         node:String :- return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -160,6 +171,7 @@ class ZWaveService():
         Switch multilevel set.
         node:String :- return from API network_list
         duration:Number :- duration
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -169,6 +181,7 @@ class ZWaveService():
         '''
         Switch multilevel supported get.
         node:String :- return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -183,6 +196,7 @@ class ZWaveService():
         secondarySwitchDirection:String :- 
         secondarySwitchStep:String :- 
         duration:String :- 
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -192,6 +206,7 @@ class ZWaveService():
         '''
         Switch multilevel stop.
         node:String :-  return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -201,6 +216,7 @@ class ZWaveService():
         '''
         Meter capabilities get.
         node:String :-  return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -211,6 +227,7 @@ class ZWaveService():
         Meter get.
         node:String :-  return from API network_list
         unit:String :-  meter unit
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -220,6 +237,7 @@ class ZWaveService():
         '''
         Meter reset.
         node:String :-  return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -229,6 +247,7 @@ class ZWaveService():
         '''
         Alarm setup.
         node:String :-  return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -241,6 +260,7 @@ class ZWaveService():
         vendorType:String :- 
         zwaveType:String :- 
         zwaveEvent:String :- 
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -252,6 +272,7 @@ class ZWaveService():
         node:String :-  return from API network_list
         zwaveType:String :- 
         status:String :- 
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -261,6 +282,7 @@ class ZWaveService():
         '''
         Alarm supported get.
         node:String :-  return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -271,6 +293,7 @@ class ZWaveService():
         Alarm setup.
         node:String :-  return from API network_list
         alarmType:String
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -280,6 +303,7 @@ class ZWaveService():
         '''
         Binary sensor get.
         node:String :-  return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -289,6 +313,7 @@ class ZWaveService():
         '''
         Binary switch get.
         node:String :-  return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -298,6 +323,7 @@ class ZWaveService():
         '''
         Binary switch set.
         node:String :-  return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -309,6 +335,7 @@ class ZWaveService():
         node:String :- return from API network_list
         sensorType:String :-  sensor type.
         unit:String :-  sensor unit.
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -318,6 +345,7 @@ class ZWaveService():
         '''
         Switch multilevel supported get sensor.
         node:String :-  return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -328,6 +356,7 @@ class ZWaveService():
         Switch multilevel supported scale get scale.
         node:String :-  return from API network_list
         scaleType:String :- 
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -337,6 +366,7 @@ class ZWaveService():
         '''
         Battery get status.
         node:String :-  return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -346,6 +376,7 @@ class ZWaveService():
         '''
         Wakeup get.
         node:String :-  return from API network_list
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -357,6 +388,7 @@ class ZWaveService():
         node:String :-  return from API network_list
         receiveNode:String :- 
         interval:String :- 
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -367,6 +399,7 @@ class ZWaveService():
         Configuration get.
         node:String :-  return from API network_list
         parameter:String :- 
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -380,6 +413,7 @@ class ZWaveService():
         size:String :- 
         default:String :- 
         value:String :- 
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -408,6 +442,7 @@ class ZWaveService():
         Association get.
         node:String :-  return from API network_list
         group:String
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -419,6 +454,7 @@ class ZWaveService():
         node:String :-  return from API network_list
         group:String :- 
         setNode:String :- 
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -430,5 +466,6 @@ class ZWaveService():
         node:String :-  return from API network_list
         group:String :- 
         removeNode:String :- 
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass

@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,7 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class TwitterService():
@@ -27,6 +26,7 @@ class TwitterService():
         '''
         get the twitter callback url to get the verifier to add twitter sender
         callbackURL:String :- Callback URL
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"twitterCallbackURL": "http://goo.gl/uKpTfc"}
         '''
         pass
@@ -39,6 +39,7 @@ class TwitterService():
         oauthToken:String :- get the authenticated token from get_twitter_callback_url
         verifier:String :- get the authenticated verifier from get_twitter_callback_url
         isRecipient:Boolean :- add target sender to the recipient list
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"sender": [{"screenName": "sss"}]}
         '''
         pass
@@ -50,6 +51,7 @@ class TwitterService():
         send the twitter notification with the provided screenName
         screenName:String :-twitter screenName without prefix @ (must a twitter follower from sender)
         text:String :- sending text, not more than 160 character
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"returnMessage": "", "data": {}, "success": true}
         '''
         pass
@@ -59,6 +61,7 @@ class TwitterService():
     def get_twitter_recipient(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         get twitter recipeint from the system
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"recipient": [{"screenName": "OverTheLineAUS"}]}
         ''' 
         pass
@@ -88,6 +91,7 @@ class TwitterService():
     def get_twitter_sender(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         get twitter sender from the system
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"sender": [{"screenName": "SamuelDiMaria"}]}
         ''' 
         pass
@@ -98,7 +102,8 @@ class TwitterService():
         '''
         remove twitter sender from the system by twitter screenName
         screenName:String :- twitter screenName without prefix @
-        return:Dictionary :eg- {"response":{"sender": [{"screenName": "aaa"}]}
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"sender": [{"screenName": "aaa"}]}
         '''
         pass
     
@@ -108,7 +113,8 @@ class TwitterService():
         '''
         remove twitter recipient from the system by twitter screenName
         screenName:String :- twitter screenName without prefix @
-        return:Dictionary :eg- {"response":{"recipient": [{"screenName": aaa"}]}
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"recipient": [{"screenName": "aaa"}]}
         '''
         pass
         
@@ -117,6 +123,7 @@ class TwitterService():
     def remove_all_twitter_recipient(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         remove all twitter recipient from the system.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"response":{"recipient": [{"screenName": "aaa"}]}}
         '''
         pass
@@ -127,6 +134,7 @@ class TwitterService():
         '''
         add twitter recipient to the system with twitter screenName
         screenName:String :- twitter screenName without prefix @
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"recipient": [{"screenName": "OverTheLineAUS"}]}
         '''
         pass
@@ -136,6 +144,7 @@ class TwitterService():
     def set_service_status(status, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         status:Boolean :- Turn on/off the service. 0 = On  1 = Off
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"response":{"status": 1}}
         '''
         pass
@@ -145,6 +154,7 @@ class TwitterService():
     def get_service_status(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         get twitter service current status
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"response":{"status": 1}}
         '''
         pass
@@ -154,6 +164,7 @@ class TwitterService():
     def on_twitter_message_received(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         get twitter notification when twitter account received new tweet
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"response":{"value":true}}
         '''
         pass

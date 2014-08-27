@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,7 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 class SetupService():
 
@@ -25,6 +24,7 @@ class SetupService():
     def set_temperature_unit(temperatureUnit=None, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Set temperature unit to celcius, kelvin, fahrenheit.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"response":{}}
         '''
         pass
@@ -33,6 +33,7 @@ class SetupService():
     def get_temperature_unit(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get temperature unit from setup.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"temperatureUnit":"celcius"}
         '''
         pass

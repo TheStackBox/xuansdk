@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -29,6 +29,9 @@ class KBXLang(object):
     def set_default_lang(lang):
         '''
         Set the default language to use if preferred language is not available.
+        
+        Params:
+        lang:String - [Required] Default language.
         '''
         pass
 
