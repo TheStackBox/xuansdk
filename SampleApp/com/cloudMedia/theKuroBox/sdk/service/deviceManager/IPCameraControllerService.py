@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,16 +17,37 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class IPCameraControllerService(object):
-
+    
+    @staticmethod
+    def get_capabilities(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        Get device capabilities.
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success":true}
+        '''
+        pass
+    
+    @staticmethod
+    def get_status(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        Get device status.
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success":true}
+        '''
+        pass
+    
     @staticmethod
     def get_camera_stream_configuration(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get Camera Stream Configuration
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"streamConfiguration":}
         '''
         pass
     
@@ -35,7 +56,9 @@ class IPCameraControllerService(object):
     def set_snapshot(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Set Snapshot
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"snapshot":}
         '''
         pass
     
@@ -44,7 +67,9 @@ class IPCameraControllerService(object):
     def get_snapshot_list(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get Snapshot List
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"snapshotList":}
         '''
         pass
     
@@ -53,7 +78,9 @@ class IPCameraControllerService(object):
     def get_preset_angle_list(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get preset angle list
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"presetList":}
         '''
         pass
     
@@ -62,8 +89,10 @@ class IPCameraControllerService(object):
     def set_preset_angle(pairedDeviceId, presetName, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Set Preset Angle
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
-        presetName:String :- Preset name
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        presetName:String - Preset name
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success":true}
         '''
         pass
     
@@ -72,8 +101,10 @@ class IPCameraControllerService(object):
     def set_night_mode(pairedDeviceId, mode, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Set Night Mode
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
-        mode:Number :- 0 to off and 1 to on
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        mode:Number - 0 to off and 1 to on
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success":true}
         '''
         pass
     
@@ -82,7 +113,9 @@ class IPCameraControllerService(object):
     def set_zoom_in(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Set Zoom in
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success":true}
         '''
         pass
     
@@ -91,7 +124,9 @@ class IPCameraControllerService(object):
     def set_zoom_out(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Set Zoom out
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success":true}
         '''
         pass
     
@@ -100,8 +135,10 @@ class IPCameraControllerService(object):
     def set_camera_move(pairedDeviceId, moveTo, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Set camera move
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
-        moveTo:String :- move to 
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        moveTo:String - move to 
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success":true}
         '''
         pass
     

@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,7 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class X10Service():
@@ -27,7 +26,8 @@ class X10Service():
         '''
         Turn on x10 device
         address:String :- Address of the X10 device eg. a1
-        return:Dictionary :eg- {"response": {}, "returnValue": 100, "returnMessage": "Ok"},"returnValue":100,"returnMessage":"Ok"}}
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"response": {}, "returnValue": 100, "returnMessage": "Ok"}
         '''
         pass
     
@@ -37,7 +37,8 @@ class X10Service():
         '''
         Turn off x10 device
         address:String :- Address of the X10 device eg. a1
-        return:Dictionary :eg- {"response": {}, "returnValue": 100, "returnMessage": "Ok"},"returnValue":100,"returnMessage":"Ok"}}
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"response": {}, "returnValue": 100, "returnMessage": "Ok"}
         '''
         pass
     
@@ -48,6 +49,7 @@ class X10Service():
         Turn on horn
         address:String :- Address of the X10 device eg. a1
         modelId: PH508, SH10A, PSH01, PSH02
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"response": {}, "returnValue": 100, "returnMessage": "Ok"}
         '''
         pass
@@ -58,6 +60,7 @@ class X10Service():
         '''
         Turn off horn
         address:String :- Address of the X10 device eg. a1
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"response": {}, "returnValue": 100, "returnMessage": "Ok"}
         '''
         pass
@@ -68,7 +71,8 @@ class X10Service():
         '''
         Dim lamp
         address:String :- Address of the X10 device eg. a1
-        return:Dictionary :eg- {"response":{"returnMessage": "Ok", "returnValue": 100, "response": {}},"returnValue":100,"returnMessage":"Ok"}}
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"returnMessage": "Ok", "returnValue": 100, "response": {}}
         '''
         pass
     
@@ -78,7 +82,8 @@ class X10Service():
         '''
         Brighten lamp
         address:String :- Address of the X10 device eg. a1
-        return:Dictionary :eg- {"returnMessage": "Ok", "returnValue": 100, "response": {}},"returnValue":100,"returnMessage":"Ok"}}
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"returnMessage": "Ok", "returnValue": 100, "response": {}}
         '''
         pass
     
@@ -87,8 +92,9 @@ class X10Service():
     def scanning(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Scan for motion detection
-        return:Dictionary :eg- {'model_id': 'MS10A', 'event': 'Scanning', 'address': '01:00:00', 'model_name': 'P. I. R. Motion Detector'}, 
-                                'eventTag': 'X10_SCANNING_EVENT', 'parameter': {}}
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"model_id": "MS10A", "event": "Scanning", "address": "01:00:00", "model_name": "P. I. R. Motion Detector", 
+                                "eventTag": "X10_SCANNING_EVENT", "parameter": {}}
         '''
         pass
     
@@ -99,7 +105,8 @@ class X10Service():
         Set brightness level
         address: device address
         level: 0-10
-        return:Dictionary :eg- {"returnMessage": "Ok", "returnValue": 100, "response": {}},"returnValue":100,"returnMessage":"Ok"}}
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"returnMessage": "Ok", "returnValue": 100, "response": {}}
         '''
         pass
     
@@ -108,6 +115,7 @@ class X10Service():
     def get_driver_status(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get driver status
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {}
         '''
         pass

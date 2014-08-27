@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,8 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
-from com.cloudMedia.theKuroBox.sdk.ex.systemException import SystemException
 
 
 class FoscamF19821wService(object):
@@ -74,6 +72,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"imageSettings": {"CGI_Result": {"hue": "50", "saturation": "45", "sharpness": "50", 
                                 "denoiseLevel": "50", "result": "0", "contrast": "50", "brightness": "30"}}}
         '''
@@ -91,6 +90,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         brightnessValue:String :- 1 - 100
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setBrightnessStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -107,6 +107,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         constrastValue:String :- 1 - 100
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setContrastStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -123,6 +124,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         hueValue:String :- 1 - 100
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setHueStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -139,6 +141,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         saturationValue:String :- 1 - 100
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setSaturationStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -155,6 +158,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         sharpnessValue:String :- 1 - 100
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setSharpnessStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -170,6 +174,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"resetImageSettingStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -185,6 +190,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"mirrorAndflipSetting": {"CGI_Result": {"result": "0", "isMirror": "0", "isFlip": "0"}}}
         '''
         pass
@@ -201,6 +207,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         isMirror:String :- 0 disable, 1 enable
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"mirrorVideoStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -217,6 +224,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         isFlip:String :- 0 disable, 1 enable
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"flipVideoStatus": {"CGI_Result": {"result": "0"}}} 
         '''
         pass
@@ -233,6 +241,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         frequencyValue:String :- 0 : 60 HZ, 1 : 50 HZ
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setSensorPowerFrequencyStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -248,6 +257,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getVideoStream": {"CGI_Result": {"GOP2": "30", "GOP3": "60", "GOP0": "30", "GOP1": "30", 
                                                                     "resolution1": "0", "resolution0": "0", "resolution3": "0", 
                                                                     "resolution2": "0", "result": "0", "frameRate1": "30", "frameRate0": "30", 
@@ -273,6 +283,7 @@ class FoscamF19821wService(object):
         bitRate:String :- Bit rate of stream type N (20480~2097152)
         frameRate:String :- Frame rate of stream type N
         GOP:String :- P frames between I frame of stream type N The suggest value is: X * frameRate
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setVideoStreamStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -288,6 +299,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getVideoStreamStatus": {"CGI_Result": {"result": "0", "streamType": "2"}}}
         '''
         pass
@@ -303,6 +315,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getSubVideoStreamStatus": {"CGI_Result": {"result": "0", "streamType": "3"}}}
         '''
         pass
@@ -319,6 +332,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         streamType:String :- 0-3
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setMainVideoStreamtypeStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -335,6 +349,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         videoFormat:String :- 0:H264,  1:MotionJPEG
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setSubVideoStreamtypeStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -350,6 +365,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getMotionJpeg": "http://192.168.0.82:88/cgi-bin/CGIStream.fcgi?usr=admin&cmd=GetMJStream&pwd=admin"}
         '''
         pass
@@ -365,6 +381,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"osdSettings": {"CGI_Result": {"result": "0", "isEnableDevName": "1", "isEnableOSDMask": "0", 
                                                 "isEnableTimeStamp": "1", "dispPos": "0"}}}
         '''
@@ -385,6 +402,7 @@ class FoscamF19821wService(object):
         isEnableDevName:String :- 0 to disable and 1 to enable
         dispPos:String :- display position of camera, 0 to disable and 1 to enable
         isEnableOSDMask:String :- 0 to disable and 1 to enable
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setOSDSettingStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -400,6 +418,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"osdMaskArea": {"CGI_Result": {"y2_3": "0", "x1_0": "100", "x1_1": "100", "x1_2": "100", 
                                                 "x1_3": "0", "y2_0": "200", "y2_1": "110", "x2_1": "100", "x2_0": "200", 
                                                 "y1_3": "0", "y1_2": "0", "y1_1": "100", "y1_0": "100", "x2_3": "0", 
@@ -419,6 +438,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         x1_N:String:String :- x1_N top left X position of mask N, y1_N top left y position of mask N, x2_N bottom right x position of mask, y2_N bottom right y position of mask,  
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setOSDMaskAreaStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -434,6 +454,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"motionDetectionConfig": {"CGI_Result": {"area8": "0", "area9": "0", "area4": "0", 
                                                            "area5": "0", "area6": "0", "area7": "0", "area0": "1", 
                                                            "area1": "0", "area2": "2", "area3": "4", "isEnable": "1", 
@@ -462,6 +483,7 @@ class FoscamF19821wService(object):
         triggerNumbererval:String :- The time of which motion detect alarm can trigger again when a motion detection has happened
         schedules:String :- The motion alarm schedule of one week
         areas:String :- The area info
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setMotionDetectionStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -477,6 +499,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"snapshotConfig": {"CGI_Result": {"result": "0", "saveLocation": "2", "snapPicQuality": "0"}}}
         '''
         pass
@@ -494,6 +517,7 @@ class FoscamF19821wService(object):
         password:String :- Password of camera user
         snapPicQuality:String :- 0:Low quality 1:Normal quality 2:High quality
         saveLocation:String :- 0:Save to sd card 1:Not in use now 2:Upload to FTP
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"snapshotConfigStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -509,6 +533,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"snapPicAsMainStream": "http://192.168.0.82:88/cgi-bin/CGIProxy.fcgi?usr=admin&cmd=snapPicture&pwd=admin"}
         '''
         pass
@@ -524,6 +549,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"snapPicAsMainStream": "http://192.168.0.82:88/cgi-bin/CGIProxy.fcgi?usr=admin&cmd=snapPicture&pwd=admin"}
         '''
         pass
@@ -539,6 +565,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"recordList": {"CGI_Result": {"totalCnt": "0", "curCnt": "0", "result": "0", "record8": null, 
                                                                "record9": null, "record6": null, "record7": null, "record4": null, 
                                                                "record5": null, "record2": null, "record3": null, "record0": null, 
@@ -557,6 +584,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"alarmRecordConfig": {"CGI_Result": {"result": "0", "preRecordSecs": "5", "alarmRecordSecs": "30", "isEnablePreRecord": "1"}}}
         '''
         pass
@@ -575,6 +603,7 @@ class FoscamF19821wService(object):
         isEnablePreRecord:String :- 0:Disable 1:Enable
         preRecordSecs:String :- Pre recording seconds 
         alarmRecordSecs:String :- Alarm record seconds
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"alamRecordConfigStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -595,6 +624,7 @@ class FoscamF19821wService(object):
         snapNumbererval:String :- Numbererval to snap picture
         triggerNumbererval:String :- Numbererval to trigger alarm again
         schedules:String :- N(0-6) alarm schedule
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"alamIOConfigStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -610,6 +640,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"ioAlarmConfig": {"CGI_Result": {"schedule0": "0", "schedule1": "0", "schedule2": "0", 
                                                    "schedule3": "0", "schedule4": "0", "schedule5": "0", "linkage": "16", 
                                                    "result": "0", "schedule6": "0", "triggerNumbererval": "5", "isEnable": "1", 
@@ -628,6 +659,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"clearIoAlarmOutputStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -643,6 +675,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"multiDeviceList": {"CGI_Result": {"dev3": "+", "dev2": "+", "dev1": "Foscam 8910+192.168.0.10", 
                                                                     "dev0": "+", "dev7": "+", "dev6": "+", "dev5": "+", 
                                                                     "dev4": "+", "result": "0", "dev8": "+"}}}
@@ -661,6 +694,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         channelNo:String :- Device location 
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"multiDeviceList": {"CGI_Result": {"dev3": "+", "dev2": "testing+192.168.1.3", 
                                                                     "dev1": "Foscam 8910+192.168.0.10", "dev0": "+", 
                                                                     "dev7": "+", "dev6": "+", "dev5": "+", "dev4": "+", 
@@ -687,6 +721,7 @@ class FoscamF19821wService(object):
         userName:String :- New device username
         passWord:String :- New device password
         devName:String :- New device name
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"newMultiDeviceStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -703,6 +738,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         channelNo:String :- Channel number of device
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"deleteDeviceStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -721,6 +757,7 @@ class FoscamF19821wService(object):
         usrName:String :- New username for specific user
         usrPwd:String :- New password for specific user
         privilege:String :- 0 : Visitor, 1 : Operator, 2 : Administrator
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"addNewUserStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -737,6 +774,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         usrName:String :- Current username of existing user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"deleteUserStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -755,6 +793,7 @@ class FoscamF19821wService(object):
         usrName:String :- Current existing username
         oldPwd:String :- Current password of user
         newPwd:String :- New password for existing user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"changeUserPasswordStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -772,6 +811,7 @@ class FoscamF19821wService(object):
         password:String :- Password of camera user
         usrName:String :- Current existing username
         newUsrName:String :- New username for existing user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"changeUsernameStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -791,6 +831,7 @@ class FoscamF19821wService(object):
         ip:String :- User's ip address
         pwd:String :- User's password
         groupId:String :- ID to distinguish different user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"logInStatus": {"CGI_Result": {"privilege": "2", "result": "0", "logInResult": "0"}}}
         '''
         pass
@@ -809,6 +850,7 @@ class FoscamF19821wService(object):
         usrName:String :- Current existing username
         ip:String :- User's ip address
         groupId:String :- ID to distinguish different user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"logOutStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -824,6 +866,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"sessionList": {"CGI_Result": {"usr8": null, "usr1": null, "usrCnt": "0", "usr2": null, 
                                                                 "result": "0", "usr3": null, "usr6": null, "usr7": null, 
                                                                 "usr4": null, "usr5": null}}}
@@ -841,6 +884,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"userList": {"CGI_Result": {"usr8": null, "usr1": "admin+2", "usrCnt": "1", "usr2": null, 
                                                              "result": "0", "usr3": null, "usr6": null, "usr7": null, 
                                                              "usr4": null, "usr5": null}}}
@@ -861,6 +905,7 @@ class FoscamF19821wService(object):
         usrName:String :- Username of user whose connection is to be checked
         remoteIp:String :- IP Address of remote user
         groupId:String :- Group identification value
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"userConnectionStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -876,6 +921,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraMoveUp": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -891,6 +937,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraMoveDown": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -906,6 +953,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraMoveLeft": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -921,6 +969,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraMoveRight": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -936,6 +985,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraMoveTopLeft": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -951,6 +1001,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraMoveTopRight": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -966,6 +1017,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraMoveBottomLeft": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -981,6 +1033,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraMoveBottomRight": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -996,6 +1049,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraStop": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1011,6 +1065,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraPtzReset": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1025,6 +1080,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraPtzSpeed": {"CGI_Result": {"result": "0", "speed": "4"}}}
         '''
         pass
@@ -1041,6 +1097,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         speedValue:String :- 0 : Very Slow ....... 4 : Very Fast
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraPtzSpeedStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1056,6 +1113,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraPtzPresetPoNumber": {"CGI_Result": {"poNumber2": "LeftMost", "poNumber7": null, "result": "0", 
                                                                         "poNumber3": "RightMost", "poNumber6": null, "poNumber4": "preset1", 
                                                                         "poNumber5": "1", "poNumber14": null, "poNumber15": null, "poNumber12": null, 
@@ -1076,6 +1134,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         presetName:String :- Camera preset name
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"newCameraPtzPresetPoNumber": {"CGI_Result": {"poNumber2": "LeftMost", "poNumber7": null, "result": "0", 
                                                                             "poNumber11": null, "poNumber6": null, "addResult": "2", 
                                                                             "poNumber4": "preset1", "poNumber5": "1", "poNumber14": null, 
@@ -1098,6 +1157,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         presetName:String :- Camera preset name
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"deleteCameraPtzPresetPoNumber": {"CGI_Result": {"poNumber2": "LeftMost", "deleteResult": "3", "poNumber7": null, 
                                                                 "result": "0", "poNumber3": "RightMost", "poNumber6": null, "poNumber4": "preset1", 
                                                                 "poNumber5": "1", "poNumber14": null, "poNumber15": null, "poNumber12": null, "poNumber13": null, 
@@ -1182,6 +1242,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"stopCruise": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1198,6 +1259,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         testmode:String :- 0 : No self test, 1 : Normal self test, 2 : After normal self test, go to preset poNumber assigned
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"selfTestMode": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1213,6 +1275,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getSelfTestMode": {"CGI_Result": {"result": "0", "mode": "1"}}}
         '''
         pass
@@ -1265,6 +1328,7 @@ class FoscamF19821wService(object):
         rs485DataBit:String :- Data bit
         rs485StopBit:String :- Stop bit
         rs485Check:String :- Parity
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
 
@@ -1279,6 +1343,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"get485Information": {"CGI_Result": {"rs485DataBit": "7", "rs485Addr": "1", "rs485Baud": "1200", 
                                                                       "rs485Protocol": "0", "result": "0", "rs485Check": "0", "rs485StopBit": "1"}}}
         '''
@@ -1295,6 +1360,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getIpInformation": {"CGI_Result": {"mask": "255.255.255.0", "gate": "0.0.0.0", "ip": "192.168.0.82", 
                                                                      "dns2": "0.0.0.0", "result": "0", "isDHCP": "1", "dns1": "0.0.0.0"}}}
         '''
@@ -1317,6 +1383,7 @@ class FoscamF19821wService(object):
         subnetMask:String :- Subnet mask
         dns1:String :- First dns server address
         dns2:String :- Second dns server address
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setIpInformation": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1332,6 +1399,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"refreshWifiList": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1348,6 +1416,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         startNo:String :-Start number of wifi connection user wants to get.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getWifiList": {"CGI_Result": {"ap5": null, "ap4": null, "ap7": null, "ap6": null, "ap1": "dlink @_@#+00:01:95:6A:4E:BF+7+0+0", 
                                                                 "ap0": "WRT yes 300N+00:18:39:6A:E3:E2+7+1+2", "ap3": "WRT120N+00:25:9C:AF:F6:ED+2+1+4", 
                                                                 "ap2": "dlink651+B8:A3:86:53:97:00+2+1+3", "result": "0", "ap9": null, "ap8": null, "curCnt": "4", 
@@ -1366,6 +1435,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getWifiConfig": {"CGI_Result": {"authMode": "2", "key4Len": "64", "key1Len": "64", "key2": null, "key3Len": "64", 
                                                                   "key2Len": "64", "isEnable": "0", "isUseWifi": "0", "psk": null, "key4": null, "isConnected": "0", 
                                                                   "key1": null, "connectedAP": null, "key3": null, "defaultKey": "1", "ssid": null, "result": "0", 
@@ -1384,6 +1454,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getPortInformation": {"CGI_Result": {"mediaPort": "88", "httpsPort": "443", "result": "0", 
                                                         "webPort": "88", "onvifPort": "888"}}}
         '''
@@ -1400,6 +1471,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getUpnpInformation": {"CGI_Result": {"result": "0", "isEnable": "1"}}}
         '''
         pass
@@ -1416,6 +1488,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         isEnableUpnp:String :- Enable or disable upnp, 0:Disable | 1:Enable
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setUpnpStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1431,6 +1504,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getDdnsInformation": {"CGI_Result": {"password": null, "ddnsServer": "0", "factoryDDNS": "dh4434.myfoscam.org", 
                                                                         "hostName": null, "user": null, "result": "0", "isEnable": "0"}}}
         '''
@@ -1447,6 +1521,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getFtpInformation": {"CGI_Result": {"ftpPort": "21", "password": null, "result": "0", "userName": null, "mode": "0", "ftpAddr": null}}}
         '''
         pass
@@ -1467,6 +1542,7 @@ class FoscamF19821wService(object):
         ftpPort:String :- Ftp server port number
         ftpUserName:String :- Ftp server username
         ftpPassword:String :- Ftp server password
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
 
@@ -1481,6 +1557,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"getSmtpConfig": {"CGI_Result": {"server": null, "reciever": null, "port": "0", "password": null, 
                                                                   "user": null, "isEnable": "1", "isNeedAuth": "1", "result": "0", "sender": null, "tls": "0"}}}
         '''
@@ -1498,6 +1575,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         tls:String :- 0 : None, 1 : TLS, 2 : STARTTLS
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
 
@@ -1522,6 +1600,7 @@ class FoscamF19821wService(object):
         hour:String :- Hour eg 13 
         minute:String :- Minute eg- 30
         sec:String :- Seconds eg- 00
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"systemTimeStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1537,6 +1616,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"systemTime": {"CGI_Result": {"day": "2", "isDst": "0", "ntpServer": "time.nist.gov", "timeZone": "-28800", "year": "2014", 
                                                                "timeSource": "0", "result": "0", "sec": "36", "minute": "50", "timeFormat": "0", "dateFormat": "0", 
                                                                "mon": "6", "hour": "16", "dst": "0"}}}
@@ -1554,6 +1634,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"infraredLedConfig": {"CGI_Result": {"result": "0", "mode": "1"}}}
         '''
         pass
@@ -1570,6 +1651,7 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         infraredMode:String :- 0 : Auto, 1 : Manual
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"infraredLedStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1585,6 +1667,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"allDeviceState": {"CGI_Result": {"sdState": "0", "motionDetectAlarm": "1", "upnpState": "1", "IOAlarm": "1", 
                                                                     "ntpState": "1", "result": "0", "record": "0", "isWifiConnected": "0", "sdFreeSpace": "0k", 
                                                                     "url": "http://dh4434.myfoscam.org:88", "soundAlarm": "0", "ddnsState": "0", "wifiConnectedAP": null, 
@@ -1603,6 +1686,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"deviceName": {"CGI_Result": {"result": "0", "devName": "Foscam9821w"}}}
         '''
         pass
@@ -1618,6 +1702,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"setDeviceName": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1633,6 +1718,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"deviceInformation": {"CGI_Result": {"productName": "FI9821W V2", "day": "2", "devName": "Foscam9821wTest", "timeZone": "-28800", 
                                                                       "serialNo": null, "min": "55", "hour": "16", "result": "0", "sec": "46", "year": "2014", "mon": "6", 
                                                                       "hardwareVer": "1.4.1.8", "mac": "C4D6552FF77A", "firmwareVer": "1.11.1.18"}}}
@@ -1650,6 +1736,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"restartCamera": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1665,6 +1752,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
 
@@ -1679,6 +1767,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"exportCameraConfig": {"CGI_Result": {"fileName": "configs.bin", "result": "0"}}}
         '''
         pass
@@ -1694,6 +1783,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"firewallConfiguration": {"CGI_Result": {"ipList5": "0", "rule": "0", "ipList7": "0", "ipList6": "0", 
                                                                           "ipList1": "1660987584", "ipList0": "553691328", "ipList3": "0", 
                                                                           "ipList2": "3825248448", "isEnable": "1", "result": "0", "ipList4": "0"}}}
@@ -1714,6 +1804,7 @@ class FoscamF19821wService(object):
         isEnableFirewall:String :- Turn on or off firewall, 0:Disable  |  1:Enable
         rule:String :- 0 : IP List cannot access, 1 : Only allow the IP List to access
         ips:String :- IP Address to block or allow
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"firewallConfigurationStatus": {"CGI_Result": {"result": "0"}}}
         '''
         pass
@@ -1731,6 +1822,7 @@ class FoscamF19821wService(object):
         password:String :- Password of camera user
         offset:String :- Starting place to get camera log
         count:String :- Amount of log to take. <20
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"cameraLog": {"CGI_Result": {"log9": null, "log8": null, "log1": "1401728621+admin+4043352256+3", 
                                                               "log0": "1401728632+admin+4043352256+5", "result": "0", "log2": "1399509555+root+16777343+0", 
                                                               "log5": null, "log4": null, "log7": null, "log6": null, "curCnt": "3", "totalCnt": "3", "log3": null}}}
@@ -1748,6 +1840,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"response":{"openInfraLed": {"CGI_Result": {"result": "0", "ctrlResult": "0"}}}
         '''
         pass
@@ -1763,6 +1856,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"closeInfraLed": {"CGI_Result": {"result": "0", "ctrlResult": "0"}}}
         '''
         pass
@@ -1778,6 +1872,8 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"zoomIn":{}}
         '''
         pass
 

@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,24 +17,36 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class DimmerStepperControllerService():
 
     @staticmethod
     def get_capabilities(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        Get device capabilities.
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success":true}
+        '''
         pass
     
     @staticmethod
     def get_status(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        get device status.
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-  {"success":true}
+        '''
         pass
     
     @staticmethod
     def set_on(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Turn on dimmer.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": "true"}
         '''
         pass
@@ -43,7 +55,8 @@ class DimmerStepperControllerService():
     def set_off(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Turn off dimmer.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": "true"}
         '''
         pass
@@ -52,7 +65,8 @@ class DimmerStepperControllerService():
     def set_dim(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Turn off dimmer.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": "true"}
         '''
         pass
@@ -60,8 +74,9 @@ class DimmerStepperControllerService():
     @staticmethod
     def set_bright(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
-        Turn off dimmer.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        set dimmer brightness
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": "true"}
         '''
         pass

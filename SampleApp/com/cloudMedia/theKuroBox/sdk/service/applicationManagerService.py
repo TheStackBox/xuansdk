@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,7 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class ApplicationManagerService(object):
@@ -29,7 +28,8 @@ class ApplicationManagerService(object):
     def list_current_running_app(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get a list of running app
-        Return:Dictionary :eg-
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-
         {"apps":
             {
                 "2000300":
@@ -43,13 +43,14 @@ class ApplicationManagerService(object):
                 },
                 "2000400":
                 {
-                    "status":"initializing"
+                    "status":"initializing",
                     "statusId":0
                 },
                 "2000800":
                 {
                     "id":"2000300",
                     "name":"Automation",
+                    
                     "app_ver":"19999122",
                     "type":"|ui|daemon|",
                     "status":"restarting",
@@ -57,12 +58,6 @@ class ApplicationManagerService(object):
                 }
             }
         }
-        
-        Status and Status ID:
-        0 - initializing
-        1 - running
-        2 - crashed
-        3 - restarting
         '''
         pass
     
@@ -70,20 +65,14 @@ class ApplicationManagerService(object):
     def get_app_running_status(appId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get running status of an app
-        Return:Dictionary :eg-
+        appId:String - the application Id.
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-
         {
             "appId":"2000300",
             "status":"running",
             "statusId":1
         }
-        
-        Status and Status ID:
-        0 - initializing
-        1 - running
-        2 - crashed
-        3 - restarting
-        4 - stopped
-        5 - starting
         '''
         pass
     
@@ -91,16 +80,12 @@ class ApplicationManagerService(object):
     def get_system_running_status(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get running status of an app
-        Return:Dictionary :eg-
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-
         {
             "status":"running",
             "statusId":1
         }
-        
-        Status and Status ID:
-        0 - initializing
-        1 - running
-        5 - starting
         '''
         pass
         

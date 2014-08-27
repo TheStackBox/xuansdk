@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,18 +17,29 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class DoorLockControllerService():
 
     @staticmethod
     def get_capabilities(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        get capabilities of the door lock.
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-  {"success":true}
+        '''
         pass
     
 
     @staticmethod
     def get_status(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        get device status.
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-  {"success":true}
+        '''
         pass
     
 
@@ -36,7 +47,9 @@ class DoorLockControllerService():
     def set_lock(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Lock door.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-  {"lock":true}
         '''
         pass
     
@@ -45,7 +58,9 @@ class DoorLockControllerService():
     def set_unlock(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Unlock door.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-  {"success":true}
         '''
         pass
     
@@ -54,7 +69,9 @@ class DoorLockControllerService():
     def get_battery_level(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get battery status.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-  {"batteryLevel":50}
         '''
         pass
     
@@ -62,8 +79,10 @@ class DoorLockControllerService():
     @staticmethod
     def get_lock_status(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
-        Get battery status.
-        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        Get lock status.
+        pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg-  {"status":true}
         '''
         pass
     

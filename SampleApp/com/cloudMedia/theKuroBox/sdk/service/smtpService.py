@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -18,7 +18,6 @@
 ##############################################################################################
 
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class SMTPService():
@@ -32,6 +31,7 @@ class SMTPService():
         smtpServer:String :- the smtp server for the sender, currently support smtp.gmail.com and smtp.mail.yahoo.com
         port:Number :- the smtpServer port
         isRecipient:Boolean :- add target sender to the recipient list
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"sender": [{"smtpServerPort": "587", "smtpServerName": "smtp.gmail.com", "email": "@gmail.com"}]}
         '''
         pass
@@ -42,6 +42,7 @@ class SMTPService():
         '''
         Add a recipient for email service 
         email:String :- the sender email
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"recipient": [{"email": "@yahoo.com"}]}
         '''
         pass
@@ -51,6 +52,7 @@ class SMTPService():
     def get_smtp_recipient(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         get a list of recipient from email service 
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"recipient": [{"email": "@yahoo.com"}]}
         '''
         pass
@@ -60,6 +62,7 @@ class SMTPService():
     def get_smtp_sender(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         get the sender of the email service 
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"sender": [{"smtpServerPort": "587", "smtpServerName": "smtp.gmail.com", "email": "@gmail.com"}]}
         '''
         pass
@@ -70,6 +73,7 @@ class SMTPService():
         '''
         remove the selected sender 
         email:String :- the sender email which need to remove
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"sender": []}
         '''
         pass
@@ -81,6 +85,7 @@ class SMTPService():
         change the selected recipient
         targetEmail:String :- the recipient email which need to change
         newEmail:String :- the new recipient email for change
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"recipient": [{"email": "@yahoo.com"}, {"email": "test@yahoo.com"}]}
         '''
         pass
@@ -91,6 +96,7 @@ class SMTPService():
         '''
         remove the selected recipient 
         email:String :- the recipient email which need to remove
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"recipient": [{"email": "@yahoo.com"}]}
         '''
         pass
@@ -100,7 +106,8 @@ class SMTPService():
     def remove_all_smtp_recipient(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         remove all smtp recipient from the system.
-        return:Dictionary :eg- {"response":{"recipient": []}
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"recipient": []}
         '''
         pass
         
@@ -109,10 +116,11 @@ class SMTPService():
     def send_smtp_mail(recipient, cc, subject, text, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         send notification email to the provided recipient.
-        recipient:String :- the notification receiver. Example: johnsmith@gmail.com, abc@yahoo.com"
+        recipient:String :- the notification receiver. Example: johnsmith@gmail.com, abc@yahoo.com
         cc:String :- carbon copy to other email address
         subject:String :- the subject of the email
         text:String :- the body of the email
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
@@ -122,6 +130,7 @@ class SMTPService():
     def get_smtp_server(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         get a list of supported smtp server.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"smtpServerList": [{"smtpServerPort": 587, "label": "Gmail", "smtpServerName": "smtp.gmail.com"}, 
                                                   {"smtpServerPort": 587, "label": "Yahoo! Mail", "smtpServerName": "smtp.mail.yahoo.com"}]}
         '''
@@ -134,6 +143,7 @@ class SMTPService():
         status:Boolean :- Turn on/off the service.
         0 = On
         1 = Off
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": 1}
         '''
         pass
@@ -142,6 +152,7 @@ class SMTPService():
     def get_service_status(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         get twitter service current status
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": 1}
         '''
         pass  

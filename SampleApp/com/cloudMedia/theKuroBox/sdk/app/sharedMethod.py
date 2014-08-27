@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -21,9 +21,9 @@ from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
 class SharedMethod(object):
     
     ''' Currently callable shared method'''
-    METHOD_STATUS_ACTIVE = SharedMethodManagerService.METHOD_STATUS_ACTIVE
+    METHOD_STATUS_ACTIVE = 1
     ''' Shared method which is registered but not callable currently '''
-    METHOD_STATUS_INACTIVE = SharedMethodManagerService.METHOD_STATUS_INACTIVE
+    METHOD_STATUS_INACTIVE = 0
 
     __unset__ = []
     
@@ -151,6 +151,44 @@ class SharedMethod(object):
         pass
 
     @staticmethod
+    def list_shared_methods_by_app_id(kbxMethodAppId, kbxMethodIds=__unset__, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        List method configuration of given method unique IDs. 
+        This is a faster approach compared to "list_shared_methods" because you know the unique app IDs of the methods.
+
+        Params:
+        kbxMethodAppId:Integer - [Required] Unique app ID which registered the methods.
+        kbxMethodIds:List<Integer> - [Required] List of unique method IDs.
+        language:String - [Optional] Preferred language.
+
+        Returns:
+        A dictionary which contains of methodId-methodObject pairs.
+        eg. 
+        {57: {'kbxMethodTag': ['sample_method_tag'], 
+              'kbxMethodDesc': 'Method Description',
+              'kbxMethodStatus': 1,
+              'kbxMethodLabel': 'Method Label',
+            'kbxMethodName': 'method_identifier',
+              'kbxMethodParams': [{'kbxParamLabel': None,
+                                   'kbxParamName': 'param1',
+                                   'kbxParamDefaultValue': 'defaultValue', 
+                                   'kbxParamMaxLength': None, 
+                                   'kbxParamType': 'kbxString', 
+                                   'kbxParamDesc': None, 
+                                   'kbxParamIsRequired': True, 
+                                   'kbxParamMinLength': None, 
+                                   'kbxParamCom': 'kbxHidden'}], 
+              'kbxModuleName': 'sample_module', 
+              'kbxGroupId': None, 
+              'kbxMethodIsPrivate': False}} 
+        
+        * For ID which is not registered under that app, it returns None.
+        eg.
+        {24: None}
+        '''
+        pass
+
+    @staticmethod
     def get_shared_method_group(kbxGroupName, kbxGroupAppId, kbxGroupParentId=None, enableTagCount=False, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get shared method group. SystemException raised if no shared method group found matching the criteria.
@@ -198,6 +236,31 @@ class SharedMethod(object):
         language:String - [Optional] Preferred language.
 
         Returns:
-        A tuple constains of a list of group properties (dictionaries) and total number of records.
+        A tuple contains of a list of group properties (dictionaries) and total number of records.
+        '''
+        pass
+    
+    @staticmethod
+    def list_shared_method_groups_by_app_id(kbxGroupAppId, kbxGroupIds, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        List group configuration of given group unique IDs. 
+        This is a faster approach compared to "list_shared_methods" because you know the unique app IDs of the methods.
+
+        Params:
+        kbxGroupAppId:Integer - [Required] Unique app ID which registered the groups.
+        kbxGroupIds:List<Integer> - [Required] List of unique group IDs.
+        language:String - [Optional] Preferred language.
+
+        Returns:
+        A dictionary which contains of groupId-groupObject pairs.
+        eg. 
+        {23: {'kbxGroupDesc': 'Group ABC description', 
+              'kbxGroupName': 'group_abc', 
+              'kbxGroupParentId': 2, 
+              'kbxGroupLabel': 'Group ABC'}}
+        
+        * For ID which is not registered under that app, it returns None.
+        eg.
+        {24: None}
         '''
         pass

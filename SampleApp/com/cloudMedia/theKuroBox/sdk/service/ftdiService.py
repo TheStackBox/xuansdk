@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,7 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class FTDIService():
@@ -28,6 +27,8 @@ class FTDIService():
         Initialize ftdi command to device.
         deviceId:Number :- target device id
         cmdStr:String :- command string write to ftdi device
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"status":"success"}
         '''
         pass
     
@@ -37,6 +38,8 @@ class FTDIService():
         Write ftdi command to device.
         deviceId:Number :- target device id
         cmdStr:String :- command string write to ftdi device
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"status":"success"}
         '''
         pass
     
@@ -46,6 +49,8 @@ class FTDIService():
         Write ftdi command to device perform read.
         deviceId:Number :- target device id
         till:String :- read until
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"status":true}
         '''
         pass
     

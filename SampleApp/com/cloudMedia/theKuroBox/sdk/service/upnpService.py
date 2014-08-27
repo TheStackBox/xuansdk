@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,15 +17,13 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
-
-
 class UPNPService():
     
     @staticmethod
     def upnp_list_upnp_servers(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         List UPNP servers.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"services": [{"UDN": "uuid:f785f8e6-f19e-4b0a-b2fd-ad8ec26386ac", "friendlyName": "aa: a - 23:"}]}
 
         '''                                
@@ -35,6 +33,7 @@ class UPNPService():
     def upnp_list_upnp_renderers(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         List UPNP renderers.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"renderers": [{"UDN": "uuid:C6F2D312-E40D-4928-B1E2-C837F59B8D75", "friendlyName": "A(C6F2D312-4928-B1E2-C837F59B8D75)"}]}
         '''
         pass
@@ -44,6 +43,7 @@ class UPNPService():
         '''
         Get protocol info.
         udn:String :- UDN return from API upnp_list_upnp_renderers
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"Source": [], "Sink": []}
         '''
         pass
@@ -53,6 +53,7 @@ class UPNPService():
         '''
         Start playback.
         udn:String :- UDN return from API upnp_list_upnp_renderers
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
@@ -62,6 +63,7 @@ class UPNPService():
         '''
         Pause playback.
         udn:String :- UDN return from API upnp_list_upnp_renderers
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -70,6 +72,7 @@ class UPNPService():
         '''
         Resume playback.
         udn:String :- UDN return from API upnp_list_upnp_renderers
+        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
     
@@ -78,6 +81,7 @@ class UPNPService():
         '''
         Stop playback.
         udn:String :- UDN return from API upnp_list_upnp_renderers
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
@@ -87,6 +91,7 @@ class UPNPService():
         '''
         Get transport info.
         udn:String :- UDN return from API upnp_list_upnp_renderers
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"CurrentSpeed": 1, "CurrentTransportState": "STOPPED"}
         '''
         pass
@@ -96,6 +101,7 @@ class UPNPService():
         '''
         Get media info.
         udn:String :- UDN return from API upnp_list_upnp_renderers
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"MediaDuration": "0:02:53", "NrTracks": 1, "NextURI": "NOT_IMPLEMENTED", "CurrentURI": "http://23.23.136.93/alsghoaeiw/test.mp3"}
         '''
         pass
@@ -105,6 +111,7 @@ class UPNPService():
         '''
         Get track info.
         udn:String :- UDN return from API upnp_list_upnp_renderers
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"Track": 1, "RelTime": "0:00:41", "TrackDuration": "0:02:53", "AbsTime": "0:03:34", "TrackURI": "http://23.23.136.93/alsghoaeiw/test.mp3"}
         '''
         pass
@@ -114,6 +121,7 @@ class UPNPService():
         '''
         Get mute status.
         udn:String :- UDN return from API upnp_list_upnp_renderers
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"mute": "0"}
         '''
         pass
@@ -124,6 +132,7 @@ class UPNPService():
         Set mute status.
         udn:String :- UDN return from API upnp_list_upnp_renderers
         mute:Boolean :- True=mute, False=unmute
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"response":{"status": "success"}}
         '''
         pass

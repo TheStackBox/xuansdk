@@ -8,7 +8,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    This project is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
@@ -17,7 +17,6 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 
 class BluetoothService():
@@ -25,7 +24,10 @@ class BluetoothService():
     @staticmethod
     def bluetooth_scan(doStart):
         '''
-        
+        Start/Stop bluetooth device discovery process.
+        doStart:Boolean :- True to start and False to stop.
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success": true}
         '''
         pass
     
@@ -34,6 +36,7 @@ class BluetoothService():
     def bluetooth_scan_status(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Bluetooth scan status. 'Idle' or 'Scanning'
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "Scanning"}
         '''
         pass
@@ -43,6 +46,7 @@ class BluetoothService():
         '''
         Bluetooth pair device.
         device:String :- Bluetooth device return from API bluetooth_list_devices.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": true}
         '''
         pass
@@ -52,6 +56,7 @@ class BluetoothService():
         '''
         Bluetooth connect device.
         device:String :- Bluetooth device return from API bluetooth_list_paired_devices.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": true}
         '''
         pass
@@ -61,6 +66,7 @@ class BluetoothService():
         '''
         Bluetooth disconnect device.
         device:String :- Bluetooth device return from API bluetooth_list_paired_devices.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": true}
         '''
         pass
@@ -70,6 +76,7 @@ class BluetoothService():
         '''
         Bluetooth remove device.
         device:String :- Bluetooth device return from API bluetooth_list_paired_devices.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": true}
         '''
         pass
@@ -79,6 +86,7 @@ class BluetoothService():
         '''
         Bluetooth get device information.
         device:String :- Bluetooth device return from API bluetooth_list_paired_devices.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"Address": "00:00:00:00:00:00", "LE": "0", "Name": "Ener", "Class": "0x240404", "RSSI": "-49"}
         '''
         pass
@@ -87,7 +95,8 @@ class BluetoothService():
     def bluetooth_list_devices(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Bluetooth list devices.
-        return:Dictionary :eg- {"Name": "tiny", "Address": "D9:..:..:..:..}
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"Name": "tiny", "Address": "D9:00:00:00:00:00"}
         '''
         pass
     
@@ -95,6 +104,7 @@ class BluetoothService():
     def bluetooth_list_connected_devices(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Bluetooth list connected devices.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"devices": {"Address": "00:00:00:00:00:00", "Name": "EnerPlex"}}
         '''
         pass
@@ -103,6 +113,7 @@ class BluetoothService():
     def bluetooth_list_paired_devices(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Bluetooth list paired devices.
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"devices": [{"Address": "00:00:00:00:00:00", "Name": "EnerPlex"}]}
         '''
         pass
@@ -110,6 +121,9 @@ class BluetoothService():
     @staticmethod
     def bluetooth_low_energy_start(device, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
+        Bluetooth low energy start
+        device:String - mac address of the device. e.g. 00:00:00:00:00:00
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": true}
         '''
         pass
@@ -117,6 +131,9 @@ class BluetoothService():
     @staticmethod
     def bluetooth_low_energy_stop(device, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
+        Bluetooth low energy stop
+        device:String - mac address of the device. e.g. 00:00:00:00:00:00
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": true}
         '''
         pass
@@ -124,12 +141,28 @@ class BluetoothService():
     @staticmethod
     def bluetooth_low_energy_write(device, args, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
+        Bluetooth low energy write
+        device:String - mac address of the device. e.g. 00:00:00:00:00:00
+        args:String - GATTTOOL Commands and arguments:
+                    primary [UUID]-Primary Service Discovery
+                    included  [start hnd [end hnd]]  - Find Included Services
+                    characteristics [start hnd [end hnd [UUID]]]  - Characteristics Discovery
+                    char-desc [start hnd] [end hnd]  - Characteristics Descriptor Discovery
+                    char-read-hnd <handle>  - Characteristics Value/Descriptor Read by handle
+                    char-read-uuid <UUID> [start hnd] [end hnd] - Characteristics Value/Descriptor Read by UUID
+                    char-write-req <handle> <new value>  - Characteristic Value Write (Write Request)
+                    char-write-cmd <handle> <new value>  - Characteristic Value Write (No response)
+                    sec-level [low | medium | high]  - Set security level. Default: low
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success": true}
         '''
         pass
     
     @staticmethod
     def bluetooth_list_low_energy_connected_devices(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
+        Bluetooth list low energy connected devices
+        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"devices": []}
         '''
         pass
