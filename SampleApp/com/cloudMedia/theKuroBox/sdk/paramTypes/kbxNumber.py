@@ -21,14 +21,32 @@ import sys
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamType import KBXParamType
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamWrapper import KBXParamWrapper
 
+    
+class KBXNumber(KBXParamType, KBXParamWrapper):
 
-class KBXNumberType(KBXParamType):
-
+    
+    ''' Read-only: Name of the component. '''
     TYPE_NAME = "kbxNumber"
 
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_DECIMAL = "kbxParamDecimal"
     PROP_KBX_PARAM_MIN_VALUE = "kbxParamMinValue"
     PROP_KBX_PARAM_MAX_VALUE = "kbxParamMaxValue"
+    
+    
+    def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamDecimal=0, kbxParamMinValue=-(sys.maxsize), kbxParamMaxValue=sys.maxsize, **kbxParamProps):
+        '''
+        Parameter that accepts only number value.
+
+        Params:
+        kbxParamName:String - [Required] Name of this parameter.
+        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
+        kbxParamMinValue:Integer - [Optional] Lower boundary for the value of this parameter
+        kbxParamMaxValue:Integer - [Optional] Upper boundary for the value of this parameter.
+        kbxParamDecimal:Number - [Optional] Number of decimal points allowed. False by default.
+        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
+        '''
+        pass
 
     def set_kbx_param_decimal(self, value):
         '''
@@ -81,21 +99,5 @@ class KBXNumberType(KBXParamType):
 
         Returns:
         Value of upper boundary.
-        '''
-        pass
-    
-class KBXNumber(KBXNumberType, KBXParamWrapper):
-
-    def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamDecimal=0, kbxParamMinValue=-(sys.maxsize), kbxParamMaxValue=sys.maxsize, **kbxParamProps):
-        '''
-        Parameter that accepts only number value.
-
-        Params:
-        kbxParamName:String - [Required] Name of this parameter.
-        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
-        kbxParamMinValue:Integer - [Optional] Lower boundary for the value of this parameter
-        kbxParamMaxValue:Integer - [Optional] Upper boundary for the value of this parameter.
-        kbxParamDecimal:Number - [Optional] Number of decimal points allowed. False by default.
-        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
         '''
         pass

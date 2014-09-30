@@ -25,22 +25,6 @@ class PanasonicIPCameraService(object):
     '''
     Panasonic IP Camera Service SDK class
     '''
-    
-    @staticmethod
-    def __validate_default_params(isSecured, hostAddress, hostPort):
-        '''
-        Validate the default parameters and return in tupple
-        '''
-        pass
-    
-         
-    @staticmethod
-    def __validate_result(result):
-        '''
-        Validate the result returned
-        '''
-        pass
-    
     @staticmethod
     def get_Camera_Name(isSecured, hostAddress, hostPort, username="", password="", language=AppInfo.DEFAULT_API_LANGUAGE):
         '''

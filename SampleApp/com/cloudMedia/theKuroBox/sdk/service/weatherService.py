@@ -189,6 +189,7 @@ class WeatherService():
     def get_matching_location_name(location, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         this method will get all location matching the location parameter. 
+        location:String - the location for search.
         language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"matchingLocationName": [{"id": 7535661, "longitude": -0.33333000000000002, "name": "London Borough of Harrow", 
                                                           "latitude": 51.566668999999997, "country": "GB"}, {"id": 1264773, "longitude": 77.283332999999999, 

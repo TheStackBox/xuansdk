@@ -16,16 +16,17 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxMetric import KBXMetricType
+from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxMetric import KBXMetric
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamWrapper import KBXParamWrapper
-from com.cloudMedia.theKuroBox.sdk.util.temperatureUtils import TemperatureUtils
 
 
-class KBXTemperatureMetricType(KBXMetricType):
-    ''' Base class for KBXTemperatureMetric. '''
-    TYPE_NAME = "kbxTemperature"
+class KBXTemperatureMetric(KBXMetric, KBXParamWrapper):
     
-    ''' Temperature units '''    
+    
+    ''' Read-only: Name of the component. '''
+    TYPE_NAME = "kbxObject.kbxMetric.kbxTemperature"
+    
+    ''' Read-only: Temperature units '''    
     UNIT_ROEMER = "Ro"
     UNIT_REAUMUR = "Re"
     UNIT_RANKINE = "R"
@@ -36,8 +37,6 @@ class KBXTemperatureMetricType(KBXMetricType):
     UNIT_NEWTON = "N"
 
 
-class KBXTemperatureMetric(KBXTemperatureMetricType, KBXParamWrapper):
-
     def __init__(self, kbxParamName, kbxParamIsRequired=True, **kbxParamProps):
         '''
         Parameter that accepts only temperature value. Does not accepts value falls below absolute zero (0K)
@@ -47,3 +46,4 @@ class KBXTemperatureMetric(KBXTemperatureMetricType, KBXParamWrapper):
         kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
         **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
         '''
+        pass

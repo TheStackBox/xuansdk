@@ -24,31 +24,6 @@ class FoscamFI8910wService(object):
     '''
     Foscam FI8910W
     '''
-    
-    @staticmethod
-    def __validate_default_params(hostAddress, hostPort):
-        '''
-        Validate the default parameters and return in tupple
-        '''
-        pass
-
-
-    @staticmethod
-    def __check_is_enabled_key_valid(value):
-        '''
-        Check whether the value is 1 or 0 
-        '''
-        pass
-
- 
-    @staticmethod
-    def __validate_result(result):
-        '''
-        Validate the result returned
-        '''
-        pass
-
-
     @staticmethod
     def check_user(hostAddress, hostPort, username, password, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''

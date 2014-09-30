@@ -16,20 +16,22 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-import json
-
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParam import KBXParam
 
 
 class KBXParamComponent(KBXParam):
     '''
-    Wrapper that adds display information to KBXParams. 
-    Do not instantiate this class directly.
+    Wrapper class that adds display information to KBXParams. 
+    This class is not intended to be instantiated.
     '''
+    
+    
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_COM = "kbxParamCom"
     PROP_KBX_PARAM_LABEL = "kbxParamLabel"
     PROP_KBX_PARAM_DESC = "kbxParamDesc"
     PROP_KBX_PARAM_DEFAULT_VALUE = "kbxParamDefaultValue"
+
 
     def set_kbx_param_label(self, value):
         '''

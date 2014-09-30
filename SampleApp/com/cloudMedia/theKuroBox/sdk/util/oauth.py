@@ -16,13 +16,6 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-import time
-import random
-import hashlib
-import hmac
-import base64
-from com.cloudMedia.theKuroBox.sdk.util.httpUtil import HttpUtil
-from com.cloudMedia.theKuroBox.sdk.util.util import Util
 
 class OAuth():
     '''

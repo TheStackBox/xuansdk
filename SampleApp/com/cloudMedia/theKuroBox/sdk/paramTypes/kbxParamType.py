@@ -18,13 +18,18 @@
 ##############################################################################################
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParam import KBXParam
 
+
 class KBXParamType(KBXParam):
     '''
     Generic class for KBXParams which defines common characteristics.
+    This class is not intended to be instantiated directly.
     '''
     
+    
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_TYPE = "kbxParamType"
     PROP_KBX_PARAM_IS_REQUIRED = "kbxParamIsRequired"
+
 
     def set_kbx_param_is_required(self, value):
         '''

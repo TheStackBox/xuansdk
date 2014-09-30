@@ -20,12 +20,29 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamType import KBXParamType
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamWrapper import KBXParamWrapper
 
 
-class KBXStringType(KBXParamType):
+class KBXString(KBXParamType, KBXParamWrapper):
 
+
+    ''' Read-only: Name of the component. '''
     TYPE_NAME = "kbxString"
 
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_MIN_LENGTH = "kbxParamMinLength"
     PROP_KBX_PARAM_MAX_LENGTH = "kbxParamMaxLength"
+
+    
+    def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamMinLength=None, kbxParamMaxLength=None, **kbxParamProps):
+        '''
+        Parameter that accepts only string value.
+
+        Params:
+        kbxParamName:String - [Required] Name of this parameter.
+        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
+        kbxParamMinLength:Integer - [Optional] Minimum length of the value of this parameter is required.
+        kbxParamMaxLength:Integer - [Optional] Maximum length of the value of this parameter is allowed.
+        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
+        '''
+        pass
 
     def set_kbx_param_min_length(self, value):
         '''
@@ -60,20 +77,5 @@ class KBXStringType(KBXParamType):
 
         Returns:
         Value of the maximum allowed length.
-        '''
-        pass
-    
-class KBXString(KBXStringType, KBXParamWrapper):
-
-    def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamMinLength=None, kbxParamMaxLength=None, **kbxParamProps):
-        '''
-        Parameter that accepts only string value.
-
-        Params:
-        kbxParamName:String - [Required] Name of this parameter.
-        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
-        kbxParamMinLength:Integer - [Optional] Minimum length of the value of this parameter is required.
-        kbxParamMaxLength:Integer - [Optional] Maximum length of the value of this parameter is allowed.
-        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
         '''
         pass

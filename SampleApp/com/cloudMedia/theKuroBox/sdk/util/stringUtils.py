@@ -34,6 +34,10 @@ class StringUtils(object):
     def append_if_missing(oriString, stringToAppend):
         '''
         Append stringToAppend to the back of oriString if stringToAppend is not found at the back of oriString
+        oriString:String       - The string to check
+        stringToAppend:String  - The string to append if missing
+        
+        return:String          - The final string after append (if necessary) 
         '''
         pass
 
@@ -41,5 +45,9 @@ class StringUtils(object):
     def prepend_if_missing(oriString, stringToPrepend):
         '''
         Prepend stringToPrepend to the front of oriString if stringToPrepend is not found at the front of oriString
+        oriString:String        - The string to check
+        stringToPrepend:String  - The string to prepend if missing
+        
+        return:String           - The final string after prepend (if necessary) 
         '''
         pass

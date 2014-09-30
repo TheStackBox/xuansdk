@@ -15,7 +15,7 @@ class SampleApp(Application):
         '''
         Application implement their body when application on start
         '''
-        self.register_module(SampleAppModule("sample_app_module", None), False)
+        self.register_module(SampleAppModule("sample_app_module", None))
 
     def on_stop(self):
         '''

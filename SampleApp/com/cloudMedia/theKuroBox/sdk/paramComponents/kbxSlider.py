@@ -22,12 +22,15 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxRange import KBXRange
 
 class KBXSlider(KBXRange, KBXParamComponent):
 
+
+    ''' Read-only: Name of the component. '''
     COM_NAME = "kbxSlider"
+    
 
     def __init__(self, kbxParamName, kbxParamMinValue, kbxParamMaxValue, kbxParamIsRequired=True, kbxParamDecimal=0, kbxParamStep=1,
                  kbxParamDefaultValue=None, kbxParamLabel=None, kbxParamDesc=None, **kbxParamProps):
         '''
-        Slider component.
+        Create a slider component, users can select a value (number) with it.
 
         Params:
         kbxParamName:String - [Required] Name of this component.

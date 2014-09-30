@@ -22,23 +22,27 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxString import KBXString
 
 class KBXTextInput(KBXString, KBXParamComponent):
 
+
+    ''' Read-only: Name of the component. '''
     COM_NAME = "kbxTextInput"
 
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_PLACEHOLDER = "kbxParamPlaceholder"
     PROP_KBX_PARAM_SUGGESTIONS = "kbxParamSuggestions"
     PROP_KBX_PARAM_INPUT_TYPE = "kbxParamInputType"
 
-    ''' Options for "kbxParamInputType" '''
+    ''' Read-only: Constants of options for "kbxParamInputType" '''
     INPUT_NUMBER = "number"
     INPUT_TEXT = "text"
     INPUT_PASSWORD = "password"
     INPUT_EMAIL = "email"
+    
 
     def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamMinLength=None, kbxParamMaxLength=None,
                  kbxParamDefaultValue=None, kbxParamLabel=None, kbxParamDesc=None, kbxParamPlaceholder=None,
                  kbxParamSuggestions=None, kbxParamInputType=INPUT_TEXT, **kbxParamProps):
         '''
-        A single line of text input.
+        Create a text input component.
 
         Params:
         kbxParamName:String - [Required] Name of this parameter.

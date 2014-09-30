@@ -91,13 +91,20 @@ class X10Service():
     @staticmethod    
     def scanning(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
-        Scan for motion detection
+        Scan for X10 device
         language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"model_id": "MS10A", "event": "Scanning", "address": "01:00:00", "model_name": "P. I. R. Motion Detector", 
                                 "eventTag": "X10_SCANNING_EVENT", "parameter": {}}
         '''
         pass
     
+    @staticmethod    
+    def stopScanning(language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        Stop scan for X10 device
+        return:Dictionary :eg- {"returnMessage": "Ok", "returnValue": 100, "response": {}}
+        '''
+        pass
     
     @staticmethod    
     def set_brightness_level(address, level, language=AppInfo.DEFAULT_API_LANGUAGE):

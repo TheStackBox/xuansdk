@@ -16,7 +16,6 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-import inspect, os
 
 class Logger(object):
     '''
@@ -24,16 +23,10 @@ class Logger(object):
     '''
     
     @staticmethod
-    def __initLogger():
-        '''
-        Init the logger class
-        '''
-        pass
-    
-    @staticmethod
     def set_enable_debug(enable):
         '''
         Set whether to enable debug or not
+        enable:Boolean        - Set whether to activate logger feature
         '''
         pass
     
@@ -41,6 +34,7 @@ class Logger(object):
     def get_enable_debug():
         '''
         Get whether debug is enabled or not
+        return:Boolean       - A boolean value stating whether the logger feature is activated
         '''
         pass
     
@@ -48,7 +42,7 @@ class Logger(object):
     @staticmethod
     def add_include():
         '''
-        Add calling file into include field.
+        Add calling file into include field. If a file is included, only the debug message from the included files will be logged
         '''
         pass
     
@@ -56,7 +50,8 @@ class Logger(object):
     @staticmethod
     def add_include_file(filename):
         '''
-        Add file into include field
+        Add file into include field. If a file is included, only the debug message from the included files will be logged
+        filename:String         - The filename which to be included.
         '''
         pass
     
@@ -71,24 +66,15 @@ class Logger(object):
     def remove_include_file(filename):
         '''
         Remove file from include field
+        filename:String         - The filename to be removed.
         '''
-        if (filename in Logger.__includeFile):
-            del Logger.__includeFile[filename]
-    
-    @staticmethod
-    def __get_log_information():
-        '''
-        Get the log information such as file name, line number
-        '''
-        
-        stackItem = inspect.stack()[2]
-        return { "file":os.path.basename(stackItem[1]), "line":stackItem[2] }
-        
+        pass
     
     @staticmethod
     def log_info(*info):
         '''
         Log as info
+        info:[Multiple Object Input]       - the message to be logged
         '''
         pass
         
@@ -96,6 +82,7 @@ class Logger(object):
     def log_debug(*info):
         '''
         Log as debug
+        info:[Multiple Object Input]       - the message to be logged
         '''
         pass
     
@@ -103,6 +90,7 @@ class Logger(object):
     def log_warning(*info):
         '''
         Log as warning
+        info:[Multiple Object Input]       - the message to be logged
         '''
         pass
         
@@ -110,6 +98,7 @@ class Logger(object):
     def log_error(*info):
         '''
         Log as error
+        info:[Multiple Object Input]       - the message to be logged
         '''
         pass
         

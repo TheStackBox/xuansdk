@@ -29,12 +29,6 @@ class HornControllerService():
         language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success":true}
         '''
-        return SharedMethod.call(kbxMethodAppId=SharedMethod.get_system_id(),
-                                 kbxMethodName="get_capabilities",
-                                 kbxModuleName="device_manager.horn_controller",
-                                 pyapi=SharedMethod.get_pyapi(),
-                                 pairedDeviceId=pairedDeviceId,
-                                 **{AppInfo.REQUEST_KEY_LANGUAGE:language})
 
     @staticmethod
     def get_status(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
@@ -44,12 +38,6 @@ class HornControllerService():
         language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success":true}
         '''
-        return SharedMethod.call(kbxMethodAppId=SharedMethod.get_system_id(),
-                                 kbxMethodName="get_status",
-                                 kbxModuleName="device_manager.horn_controller",
-                                 pyapi=SharedMethod.get_pyapi(),
-                                 pairedDeviceId=pairedDeviceId,
-                                 **{AppInfo.REQUEST_KEY_LANGUAGE:language})
 
     @staticmethod
     def set_on(pairedDeviceId, timeout, language=AppInfo.DEFAULT_API_LANGUAGE):
@@ -60,13 +48,6 @@ class HornControllerService():
         language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success":true}
         '''
-        return SharedMethod.call(kbxMethodAppId=SharedMethod.get_system_id(),
-                                 kbxMethodName="set_on",
-                                 kbxModuleName="device_manager.horn_controller",
-                                 pyapi=SharedMethod.get_pyapi(),
-                                 pairedDeviceId=pairedDeviceId,
-                                 timeout=timeout,
-                                 **{AppInfo.REQUEST_KEY_LANGUAGE:language})
 
     @staticmethod
     def set_off(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
@@ -76,9 +57,3 @@ class HornControllerService():
         language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success":true}
         '''
-        return SharedMethod.call(kbxMethodAppId=SharedMethod.get_system_id(),
-                                 kbxMethodName="set_off",
-                                 kbxModuleName="device_manager.horn_controller",
-                                 pyapi=SharedMethod.get_pyapi(),
-                                 pairedDeviceId=pairedDeviceId,
-                                 **{AppInfo.REQUEST_KEY_LANGUAGE:language})

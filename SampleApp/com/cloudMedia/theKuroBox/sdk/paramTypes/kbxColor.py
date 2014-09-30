@@ -16,18 +16,34 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxObject import KBXObjectType
+from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxObject import KBXObject
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamType import KBXParamType
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamWrapper import KBXParamWrapper
 
 
-class KBXColorType(KBXObjectType):
+class KBXColor(KBXObject, KBXParamWrapper):
 
-    TYPE_NAME = "kbxColor"
+    
+    ''' Read-only: Name of the component. '''
+    TYPE_NAME = "kbxObject.kbxColor"
 
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_OBJ_KEY_RED = "r"
     PROP_KBX_PARAM_OBJ_KEY_GREEN = "g"
     PROP_KBX_PARAM_OBJ_KEY_BLUE = "b"
+    
+    
+    def __init__(self, kbxParamName, kbxParamIsRequired=True, **kbxParamProps):
+        '''
+        This type of parameter receives color object.
+        
+        Params:
+        kbxParamName:String - [Required] Name of this parameter.
+        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
+        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
+        '''
+        pass
+    
 
     class DTO(dict):
 
@@ -99,16 +115,3 @@ class KBXColorType(KBXObjectType):
             An integer.
             '''
             pass
-
-class KBXColor(KBXColorType, KBXParamWrapper):
-
-    def __init__(self, kbxParamName, kbxParamIsRequired=True, **kbxParamProps):
-        '''
-        This type of parameter receives color object.
-        
-        Params:
-        kbxParamName:String - [Required] Name of this parameter.
-        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
-        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
-        '''
-        pass

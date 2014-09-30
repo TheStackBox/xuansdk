@@ -62,7 +62,7 @@ class SpeakerControllerService():
         pass
     
     @staticmethod
-    def set_start(pairedDeviceId, url, name, album, artist, albumArt, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def set_start(pairedDeviceId, url, name, album, artist, albumArt, urlDetails, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Start playback.
         pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
@@ -71,6 +71,7 @@ class SpeakerControllerService():
         album:String - Album Name
         artist:String - Artist Name
         albumArt:String - Album Art
+        urlDetails:String :- Media URL details return from File Browser
         language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success": "true"}
         '''

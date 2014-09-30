@@ -20,12 +20,31 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamType import KBXParamType
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamWrapper import KBXParamWrapper
 
 
-class KBXBooleanType(KBXParamType):
+class KBXBoolean(KBXParamType, KBXParamWrapper):
 
+    
+    ''' Read-only: Name of the component. '''
     TYPE_NAME = "kbxBoolean"
 
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_TRUE_VALUE = "kbxParamTrueValue"
     PROP_KBX_PARAM_FALSE_VALUE = "kbxParamFalseValue"
+    
+    
+    def __init__(self, kbxParamName, kbxParamIsRequired=True,
+             kbxParamTrueValue=True, kbxParamFalseValue=False, **kbxParamProps):
+        '''
+        Parameter that accepts only Boolean value.
+
+        Params:
+        kbxParamName:String - [Required] Name of this parameter.
+        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
+        kbxParamTrueValue - [Optional] Value to be used as True. True by default.
+        kbxParamFalseValue - [Optional] Value to be used as False. False by default.
+        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
+        '''
+        pass
+    
 
     def set_kbx_param_true_value(self, value):
         '''
@@ -60,21 +79,5 @@ class KBXBooleanType(KBXParamType):
 
         Returns:
         Value for False.
-        '''
-        pass
-
-class KBXBoolean(KBXBooleanType, KBXParamWrapper):
-
-    def __init__(self, kbxParamName, kbxParamIsRequired=True,
-             kbxParamTrueValue=True, kbxParamFalseValue=False, **kbxParamProps):
-        '''
-        Parameter that accepts only Boolean value.
-
-        Params:
-        kbxParamName:String - [Required] Name of this parameter.
-        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
-        kbxParamTrueValue - [Optional] Value to be used as True. True by default.
-        kbxParamFalseValue - [Optional] Value to be used as False. False by default.
-        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
         '''
         pass

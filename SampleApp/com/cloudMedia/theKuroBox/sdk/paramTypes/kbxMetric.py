@@ -16,29 +16,44 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxObject import KBXObjectType
+from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxObject import KBXObject
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamType import KBXParamType
 
 
-class KBXMetricType(KBXObjectType):
+class KBXMetric(KBXObject, KBXParamWrapper):
     '''
     Base class for all quantitative KBXParams with units.
-    Do not instantiate this class directly.
+    This class is not intended to be instantiated directly.
     '''
 
-    TYPE_NAME = "kbxMetric"
 
+    ''' Read-only: Name of the component. '''
+    TYPE_NAME = "kbxObject.kbxMetric"
+
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_UNITS = "kbxParamUnits"
-
     PROP_KBX_PARAM_OBJ_KEY_VALUE = "value"
     PROP_KBX_PARAM_OBJ_KEY_UNIT = "unit"
+    
+    
+    def __init__(self, kbxParamName, kbxParamUnits, kbxParamIsRequired=True, **kbxParamProps):
+        '''
+        Refers to other KBXParam types such as "KBXTemperatureMetric".
+
+        Params:
+        kbxParamName:String - [Required] Name of this parameter.
+        kbxParamUnits:List<String> - [Required] List of supported units.
+        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
+        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
+        '''
+        pass
 
     def set_kbx_param_units(self, value):
         '''
         Set list of units allowed for this metric type.
         
         Params:
-        value:List - [Required] List of string (duplicate is not allowed) indicates unit symbol allowed for received value.
+        value:List<String> - [Required] List of string (duplicate is not allowed) indicates unit symbol allowed for received value.
         '''
         pass
 

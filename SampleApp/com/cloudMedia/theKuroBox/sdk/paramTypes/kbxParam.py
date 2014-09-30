@@ -18,10 +18,12 @@
 ##############################################################################################
 class KBXParam(object):
     '''
-    Base class for all KBXParams, do not instantiate it directly.
+    Base class for all KBXParams
+    This class is not intended to be instantiated directly.
     '''
     
-    ''' Error code used by KBXParams '''
+    
+    ''' Read-only: Error code used by KBXParams '''
     ERR_INVALID_DATA_TYPE = 1501
     ERR_INVALID_TIMESTAMP = 1502
     ERR_INVALID_VALUE = 1503
@@ -34,6 +36,7 @@ class KBXParam(object):
     ERR_INDEX_DUPLICATED = 1510
     ERR_FIELD_REQUIRED = 1511
     ERR_OPERATION_FAILED = 1512
+
 
     def set_property(self, prop, value):
         '''

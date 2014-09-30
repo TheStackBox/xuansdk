@@ -21,11 +21,19 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxList import KBXList
 
 
 class KBXOption(KBXList, KBXParamComponent):
+    
+    
+    ''' Read-only: Name of the component. '''
+    COM_NAME = "kbxOption"
+    
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
+    PROP_KBX_PARAM_ITEMS = "kbxParamItems"
+
 
     def __init__(self, kbxParamName, kbxParamItems=None, kbxParamIsRequired=True, kbxParamMinSize=None, kbxParamMaxSize=None,
                  kbxParamDefaultValue=None, kbxParamLabel=None, kbxParamDesc=None, **kbxParamProps):
         '''
-        Let user choose from list of items. (Multiple)
+        Create an option list components and users will select item(s) from the list.
 
         Params:
         kbxParamName:String - [Required] Name of this component.

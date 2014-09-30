@@ -22,12 +22,15 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxDateTime import KBXDateTime
 
 class KBXTime(KBXDateTime, KBXParamComponent):
 
+    
+    ''' Read-only: Name of the component. '''
     COM_NAME = "kbxTime"
+
 
     def __init__(self, kbxParamName, kbxParamIsRequired=True,
                  kbxParamDefaultValue=None, kbxParamLabel=None, kbxParamDesc=None, **kbxParamProps):
         '''
-        A true/false toggling component.
+        Select time-only component.
 
         Params:
         kbxParamName:String - [Required] Name of this component.

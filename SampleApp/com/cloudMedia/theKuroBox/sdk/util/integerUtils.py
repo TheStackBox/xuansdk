@@ -25,5 +25,5 @@ class IntegerUtils(object):
     
     @staticmethod
     def is_num(obj):
-        """Cast to String"""
+        """Return Boolean checking is number"""
         pass

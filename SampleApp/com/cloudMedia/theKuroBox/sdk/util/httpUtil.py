@@ -16,9 +16,6 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-import urllib.request
-import http.server
-from urllib.error import URLError, HTTPError
 
 class HttpUtil(object):
     

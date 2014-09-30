@@ -42,12 +42,13 @@ class IPCameraControllerService(object):
         pass
     
     @staticmethod
-    def get_camera_stream_configuration(pairedDeviceId, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def get_camera_stream_configuration(pairedDeviceId, isRemoteAccess=False, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get Camera Stream Configuration
         pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
+        isRemoteAccess - Enable remote access.
         language:String - [Optional] Preferred language. Default is en.
-        return:Dictionary :eg- {"streamConfiguration":}
+        return:Dictionary :eg- {"streamConfiguration":null}
         '''
         pass
     
@@ -58,7 +59,7 @@ class IPCameraControllerService(object):
         Set Snapshot
         pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
         language:String - [Optional] Preferred language. Default is en.
-        return:Dictionary :eg- {"snapshot":}
+        return:Dictionary :eg- {"snapshot":null}
         '''
         pass
     
@@ -69,7 +70,7 @@ class IPCameraControllerService(object):
         Get Snapshot List
         pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
         language:String - [Optional] Preferred language. Default is en.
-        return:Dictionary :eg- {"snapshotList":}
+        return:Dictionary :eg- {"snapshotList":[]}
         '''
         pass
     
@@ -80,7 +81,7 @@ class IPCameraControllerService(object):
         Get preset angle list
         pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
         language:String - [Optional] Preferred language. Default is en.
-        return:Dictionary :eg- {"presetList":}
+        return:Dictionary :eg- {"presetList":[]}
         '''
         pass
     
@@ -137,6 +138,19 @@ class IPCameraControllerService(object):
         Set camera move
         pairedDeviceId:Number - Paired Device ID return from DeviceManagerService.get_paired_device_list
         moveTo:String - move to 
+        language:String - [Optional] Preferred language. Default is en.
+        return:Dictionary :eg- {"success":true}
+        '''
+        pass
+    
+    
+    @staticmethod
+    def set_update_login(pairedDeviceId, username, password, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        Set update login
+        pairedDeviceId:Number :- Paired Device ID return from DeviceManagerService.get_paired_device_list
+        username:String :- new username
+        password:String :- new password 
         language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"success":true}
         '''

@@ -16,8 +16,7 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-from threading import Thread
-import sys
+
 
 '''
 Timeout an call
@@ -26,12 +25,8 @@ timeout:Number    - Timeout in seconds
 '''
 
 def timelimit(timeout):
-    def internal(function):
-        def internal2(*args, **kw):
-            class Calculator(Thread):
-                def __init__(self):
-                    pass
-                
-                def run(self):
-                    pass
+    '''
+    Wrap a function call with timeout control. Can be used as annotation as well.
+    '''
+    pass
             

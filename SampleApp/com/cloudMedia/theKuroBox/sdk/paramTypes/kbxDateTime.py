@@ -16,13 +16,29 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxNumber import KBXNumberType
+from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxNumber import KBXNumber
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamWrapper import KBXParamWrapper
 
 
-class KBXDateTimeType(KBXNumberType):
+class KBXDateTime(KBXNumber, KBXParamWrapper):
 
-    TYPE_NAME = "kbxDateTime"
+    
+    ''' Read-only: Name of the component. '''
+    TYPE_NAME = "kbxNumber.kbxDateTime"
+    
+    
+    def __init__(self, kbxParamName, kbxParamIsRequired=True, **kbxParamProps):
+        '''
+        Receive timestamp as parameter.
+        You will get KBXDateTimeType.DTO instance which you can get standard datetime object by calling "get_date_time_obj".
+        
+        Params:
+        kbxParamName:String - [Required] Name of this parameter.
+        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
+        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
+        '''
+        pass
+    
 
     class DTO(int):
 
@@ -44,17 +60,3 @@ class KBXDateTimeType(KBXNumberType):
             Python built-in  datetime object.
             '''
             pass
-
-class KBXDateTime(KBXDateTimeType, KBXParamWrapper):
-
-    def __init__(self, kbxParamName, kbxParamIsRequired=True, **kbxParamProps):
-        '''
-        Receive timestamp as parameter.
-        You will get KBXDateTimeType.DTO instance which you can get standard datetime object by calling "get_date_time_obj".
-        
-        Params:
-        kbxParamName:String - [Required] Name of this parameter.
-        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
-        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
-        '''
-        pass

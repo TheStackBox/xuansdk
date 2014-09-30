@@ -21,9 +21,11 @@ from com.cloudMedia.theKuroBox.sdk.paramComponents.kbxOption import KBXOption
 
 class KBXDayOfWeek(KBXOption):
 
+
+    ''' Read-only: Name of the component. '''
     COM_NAME = "kbxDayOfWeek"
 
-    ''' Constants for the days of the week in integers. '''
+    ''' Read-only: Constants for the days of the week. '''
     SUNDAY = 0
     MONDAY = 1
     TUESDAY = 2
@@ -35,7 +37,7 @@ class KBXDayOfWeek(KBXOption):
     def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamMinSize=None, kbxParamMaxSize=None,
                  kbxParamDefaultValue=None, kbxParamLabel=None, kbxParamDesc=None, **kbxParamProps):
         '''
-        Parameter for that accepts days of week values.
+        Create a list of days in week for users to select.
 
         Params:
         kbxParamName:String - [Required] Name of this component.

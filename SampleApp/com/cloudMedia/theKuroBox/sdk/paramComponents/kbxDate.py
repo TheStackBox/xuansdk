@@ -22,12 +22,13 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxDateTime import KBXDateTime
 
 class KBXDate(KBXDateTime, KBXParamComponent):
 
+    ''' Read-only: Name of the component. '''
     COM_NAME = "kbxDate"
 
     def __init__(self, kbxParamName, kbxParamIsRequired=True,
                  kbxParamDefaultValue=None, kbxParamLabel=None, kbxParamDesc=None, **kbxParamProps):
         '''
-        User will see a date picker.
+        Create a date (only) picker component, users can pick a date easily.
 
         Params:
         kbxParamName:String - [Required] Name of this component.

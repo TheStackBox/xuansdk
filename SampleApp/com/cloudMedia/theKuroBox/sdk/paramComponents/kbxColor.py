@@ -22,12 +22,15 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxColor import KBXColor as KBXCol
 
 class KBXColor(KBXColorSDK, KBXParamComponent):
 
+
+    ''' Read-only: Name of the component. '''
     COM_NAME = "kbxColor"
+
 
     def __init__(self, kbxParamName, kbxParamIsRequired=True,
                  kbxParamDefaultValue=None, kbxParamLabel=None, kbxParamDesc=None, **kbxParamProps):
         '''
-        Display a color pickers.
+        Create a color picker component, users can pick a color visually.
         
         Params:
         kbxParamName:String - [Required] Name of this component.

@@ -16,25 +16,12 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-import json
-import os, signal
 
-from com.cloudMedia.theKuroBox.core.sharedMethodRepo import SharedMethodRepo
-from com.cloudMedia.theKuroBox.core.spine import Spine
-from com.cloudMedia.theKuroBox.core.webServer import WebServer
-from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-from com.cloudMedia.theKuroBox.sdk.app.event import Event
-from com.cloudMedia.theKuroBox.sdk.app.ipcClient import IPCClient
-from com.cloudMedia.theKuroBox.sdk.app.module import Module
-from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
-from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
 
 class Application(object):
     '''
     Base class of an Application. All application MUST extends this class
     '''
-    
-    __unset__ = []
     
     def get_app_runnig_status(self):
         '''
@@ -105,8 +92,8 @@ class Application(object):
         pass
 
 
-    def update_method(self, kbxMethodName, kbxMethodFunc=__unset__, kbxMethodIsPrivate=__unset__,
-                        kbxMethodLabel=__unset__, kbxMethodDesc=__unset__, kbxMethodParams=__unset__,
+    def update_method(self, kbxMethodName, kbxMethodFunc={}, kbxMethodIsPrivate={},
+                        kbxMethodLabel={}, kbxMethodDesc={}, kbxMethodParams={},
                         **kbxMethodProps):
         '''
         Update an exposed method to web server as a service.
@@ -176,9 +163,9 @@ class Application(object):
         '''
         pass
 
-    def update_shared_method(self, kbxMethodName, kbxGroupId=None, kbxMethodFunc=__unset__, kbxMethodIsPrivate=__unset__,
-                             kbxMethodLabel=__unset__, kbxMethodDesc=__unset__,
-                             kbxMethodTag=__unset__, kbxMethodParams=__unset__, **kbxMethodProps):
+    def update_shared_method(self, kbxMethodName, kbxGroupId=None, kbxMethodFunc={}, kbxMethodIsPrivate={},
+                             kbxMethodLabel={}, kbxMethodDesc={},
+                             kbxMethodTag={}, kbxMethodParams={}, **kbxMethodProps):
         '''
         Update an exposed method to external application as a service.
 
@@ -242,7 +229,7 @@ class Application(object):
         pass
 
     def update_shared_method_group(self, kbxGroupName, kbxGroupParentId=None,
-                                   kbxGroupLabel=__unset__, kbxGroupDesc=__unset__, **kbxGroupProps):
+                                   kbxGroupLabel={}, kbxGroupDesc={}, **kbxGroupProps):
         '''
         Update registered shared method group by group properties.
 

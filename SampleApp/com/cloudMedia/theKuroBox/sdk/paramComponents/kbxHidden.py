@@ -22,12 +22,16 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxString import KBXString
 
 class KBXHidden(KBXString, KBXParamComponent):
 
+
+    ''' Read-only: Name of the component. '''
     COM_NAME = "kbxHidden"
+
 
     def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamMinLength=None, kbxParamMaxLength=None,
                  kbxParamDefaultValue=None, kbxParamLabel=None, kbxParamDesc=None, **kbxParamProps):
         '''
-        Invisible text component. End user will not see this component.
+        Create an invisible/hidden text component. 
+        Users will not see this component, its used to pass values in background usually.
 
         Params:
         kbxParamName:String - [Required] Name of this parameter.
@@ -41,7 +45,6 @@ class KBXHidden(KBXString, KBXParamComponent):
         '''
         pass
     
-
     def set_kbx_default_value(self, value):
         '''
         Set default value of this component.

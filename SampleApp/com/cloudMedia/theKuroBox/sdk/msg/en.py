@@ -16,6 +16,7 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
+
 class EN:
     '''
 
@@ -43,29 +44,34 @@ class EN:
            "102":"Busy",
            "103":"Timeout",
            "104":"Error",
-           "105":"Max applications reached",
-           "106":"Application is already running",
-           "107":"Application is not started",
+           "105":"Maximum applications reached",
+           "106":"Application already running",
+           "107":"Application not started",
            "108":"Application not installed",
            "109":"Invalid parameter",
            "110":"Invalid password",
            "111":"Invalid username",
            "112":"Database error",
-           "113":"",
-           "114":"",
+           "114":"Sandbox error",
 
            "401":"Session expired",
            "402":"Invalid argument",
            "403":"Invalid login",
-           "404":"Maximum login reached",
+           "404":"Maximum users reached",
            "405":"Invalid cookie",
-           "406":"Maximum failed login reached\\nPlease wait for 30 minutes before retrying",
+           "406":"Maximum failed login reached\nPlease wait for 30 minutes before retrying",
 
            "450":"Playback not started",
-
+           
+           "501":"Horn is running",
+           "502":"Horn not yet run",
+           "503":"Dim or Bright are running",
+           "504":"X10 security address not yet reset",
+           
            "0":"Success",
-           "1001":"Unexpected Error Occur",
+           "1001":"Unexpected Error Occurred",
            "1002":"Invalid Parameter",
+           "1003":"Network Error",
            
            "1010":"Module not found",
            "1011":"Method not found",
@@ -79,7 +85,7 @@ class EN:
            "1036":"Event does not belong to provided application id",
            "1037":"Keep-alive connection found for provided application id",
            "1038":"Unknown source application id",
-           "1039":"Response data must be a stringifiable dictionary",
+           "1039":"Response data must be a stringified dictionary",
            "1040":"Event listener registered previously",
            "1041":"Event listener not found",
 
@@ -93,7 +99,7 @@ class EN:
            "1406":"Invalid Parameter",
            "1407":"No Sender Found",
            "1408":"Only one instance is allowed to run at the same time",
-           "1409":"Parameter values must be stringifiable",
+           "1409":"Parameter values must be stringified",
            "1410":"Target Recipient Not Found.",
 
            "1411":"Location Not Found",
@@ -102,7 +108,7 @@ class EN:
            "1414":"Invalid Temperature Unit",
            "1415":"No Matched Location Found",
            "1416":"Not a Supported Unit.",
-           "1417":"Coordinate must be in earth-like bounds of long. Longitude:-180 to 180, Latitude=-90 to 90",
+           "1417":"Coordinate must be in earth-like bounds of: Longitude:-180 to 180, Latitude=-90 to 90",
            "1418":"Invalid Location",
            "1419":"Failed To Get Weather",
 
@@ -111,7 +117,7 @@ class EN:
            "1422":"Failed To Send Twitter Notification",
            "1423":"Invalid callback URL.",
 
-           "1431":"Service is not available or turn off.",
+           "1431":"Service is not available or may be turned off by another user.",
            "1432":"Service Request Timeout",
            "1433":"Target Invalid Response",
 
@@ -171,6 +177,8 @@ class EN:
 
            "1901":"Invalid path",
            "1902":"Invalid storage type",
-           "1903":"Unable to process file"
+           "1903":"Unable to process file",
+           "1904":"Unable to retrieve directory content",
+           "1905":"Unable to retrieve file info"
 
            }

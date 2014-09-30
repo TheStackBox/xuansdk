@@ -20,8 +20,8 @@ class Module(object):
     '''
     Module Base Class
     '''
-    __unset__ = []
-
+    
+    
     def __init__(self, kbxModuleName, parentModulePath):
         '''
         Constructor
@@ -56,8 +56,8 @@ class Module(object):
         '''
         pass
 
-    def update_method(self, kbxMethodName, kbxMethodFunc=__unset__, kbxMethodIsPrivate=__unset__,
-                        kbxMethodLabel=__unset__, kbxMethodDesc=__unset__, kbxMethodParams=__unset__,
+    def update_method(self, kbxMethodName, kbxMethodFunc={}, kbxMethodIsPrivate={},
+                        kbxMethodLabel={}, kbxMethodDesc={}, kbxMethodParams={},
                         **kbxMethodProps):
         '''
         Update an exposed method to web server as a service.
@@ -128,9 +128,9 @@ class Module(object):
         '''
         pass
 
-    def update_shared_method(self, kbxMethodName, kbxGroupId=None, kbxMethodFunc=__unset__, kbxMethodIsPrivate=__unset__,
-                             kbxMethodLabel=__unset__, kbxMethodDesc=__unset__,
-                             kbxMethodTag=__unset__, kbxMethodParams=__unset__, **kbxMethodProps):
+    def update_shared_method(self, kbxMethodName, kbxGroupId=None, kbxMethodFunc={}, kbxMethodIsPrivate={},
+                             kbxMethodLabel={}, kbxMethodDesc={},
+                             kbxMethodTag={}, kbxMethodParams={}, **kbxMethodProps):
         '''
         Update registered shared method by method properties.
 
@@ -193,7 +193,7 @@ class Module(object):
         pass
 
     def update_shared_method_group(self, kbxGroupName, kbxGroupParentId=None,
-                                   kbxGroupLabel=__unset__, kbxGroupDesc=__unset__, **kbxGroupProps):
+                                   kbxGroupLabel={}, kbxGroupDesc={}, **kbxGroupProps):
         '''
         Update registered shared method group by group properties.
 

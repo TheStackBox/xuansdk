@@ -22,12 +22,30 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamType import KBXParamType
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamWrapper import KBXParamWrapper
 
 
-class KBXObjectType(KBXParamType):
+class KBXObject(KBXParamType, KBXParamWrapper):
 
+    
+    ''' Read-only: Name of the component. '''
     TYPE_NAME = "kbxObject"
 
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_OBJ_PROPS = "kbxParamObjProps"
     PROP_KBX_PARAM_STRICT = "kbxParamStrict"
+    
+    
+    def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamObjProps=None, kbxParamStrict=False, **kbxParamProps):
+        '''
+        Parameter that accepts dictionary/object value.
+
+        Params:
+        kbxParamName:String - [Required] Name of this parameter.
+        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
+        kbxParamObjProps:Dictionary - [Optional] Define keys and validation that this parameter accepts. Pass in as {[propName]:[propType]} format.
+        kbxParamStrict:Boolean - [Optional] True if you want received value to contain keys that you defined only.
+        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
+        '''
+        pass
+    
 
     def set_kbx_param_obj_prop(self, propName, propType=None):
         '''
@@ -111,6 +129,7 @@ class KBXObjectType(KBXParamType):
 
     class DTO(dict):
 
+
         @staticmethod
         def build(**kwargs):
             '''
@@ -123,18 +142,3 @@ class KBXObjectType(KBXParamType):
             Dictionary value built from **kwargs.
             '''
             pass
-
-class KBXObject(KBXObjectType, KBXParamWrapper):
-
-    def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamObjProps=None, kbxParamStrict=False, **kbxParamProps):
-        '''
-        Parameter that accepts dictionary/object value.
-
-        Params:
-        kbxParamName:String - [Required] Name of this parameter.
-        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
-        kbxParamObjProps:Dictionary - [Optional] Define keys and validation that this parameter accepts. Pass in as {[propName]:[propType]} format.
-        kbxParamStrict:Boolean - [Optional] True if you want received value to contain keys that you defined only.
-        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
-        '''
-        pass

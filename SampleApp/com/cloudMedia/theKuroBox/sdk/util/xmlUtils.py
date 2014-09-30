@@ -16,10 +16,7 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-from collections import defaultdict
 
-import xml.etree.ElementTree as ET
-import json
 class XMLUtils(object):
     '''
     Utilities methods for XML

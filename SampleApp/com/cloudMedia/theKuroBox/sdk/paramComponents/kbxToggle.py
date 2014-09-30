@@ -22,8 +22,11 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxBoolean import KBXBoolean
 
 class KBXToggle(KBXBoolean, KBXParamComponent):
 
+
+    ''' Read-only: Name of the component. '''
     COM_NAME = "kbxToggle"
 
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_TRUE_LABEL = "kbxParamTrueLabel"
     PROP_KBX_PARAM_FALSE_LABEL = "kbxParamFalseLabel"
 
@@ -31,7 +34,7 @@ class KBXToggle(KBXBoolean, KBXParamComponent):
     def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamTrueValue=True, kbxParamFalseValue=False,
                  kbxParamDefaultValue=None, kbxParamLabel=None, kbxParamDesc=None, kbxParamTrueLabel="True", kbxParamFalseLabel="False", **kbxParamProps):
         '''
-        A true/false toggling component.
+        An on-off-like toggle component.
 
         Params:
         kbxParamName:String - [Required] Name of this parameter.

@@ -25,7 +25,6 @@ class SharedMethod(object):
     ''' Shared method which is registered but not callable currently '''
     METHOD_STATUS_INACTIVE = 0
 
-    __unset__ = []
     
     @staticmethod
     def get_system_id():
@@ -106,8 +105,8 @@ class SharedMethod(object):
         pass
 
     @staticmethod
-    def list_shared_methods(kbxMethodId=__unset__, kbxMethodAppId=__unset__, kbxModuleName=__unset__, kbxMethodName=__unset__,
-                            kbxGroupId=__unset__, kbxMethodTag=__unset__, kbxMethodStatus=METHOD_STATUS_ACTIVE, limit=50, offset=0,
+    def list_shared_methods(kbxMethodId={}, kbxMethodAppId={}, kbxModuleName={}, kbxMethodName={},
+                            kbxGroupId={}, kbxMethodTag={}, kbxMethodStatus=METHOD_STATUS_ACTIVE, limit=50, offset=0,
                             language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Retrieve list of registered shared methods based on given criteria.
@@ -130,8 +129,8 @@ class SharedMethod(object):
         pass
 
     @staticmethod
-    def get_shared_methods_count(kbxMethodId=__unset__, kbxMethodAppId=__unset__, kbxModuleName=__unset__, kbxMethodName=__unset__,
-                            kbxGroupId=__unset__, kbxMethodTag=__unset__, kbxMethodStatus=METHOD_STATUS_ACTIVE, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def get_shared_methods_count(kbxMethodId={}, kbxMethodAppId={}, kbxModuleName={}, kbxMethodName={},
+                            kbxGroupId={}, kbxMethodTag={}, kbxMethodStatus=METHOD_STATUS_ACTIVE, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get total count of registered shared methods which matched given criteria.
 
@@ -151,7 +150,7 @@ class SharedMethod(object):
         pass
 
     @staticmethod
-    def list_shared_methods_by_app_id(kbxMethodAppId, kbxMethodIds=__unset__, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def list_shared_methods_by_app_id(kbxMethodAppId, kbxMethodIds={}, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         List method configuration of given method unique IDs. 
         This is a faster approach compared to "list_shared_methods" because you know the unique app IDs of the methods.
@@ -221,8 +220,8 @@ class SharedMethod(object):
         pass
 
     @staticmethod
-    def list_shared_method_groups(kbxGroupId=__unset__, kbxGroupAppId=__unset__, kbxGroupName=__unset__,
-                                  kbxGroupParentId=__unset__, kbxMethodTag=__unset__, enableTagCount=False, limit=50, offset=0, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def list_shared_method_groups(kbxGroupId={}, kbxGroupAppId={}, kbxGroupName={},
+                                  kbxGroupParentId={}, kbxMethodTag={}, enableTagCount=False, limit=50, offset=0, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Retrieve list of registered shared methods based on given criteria.
 

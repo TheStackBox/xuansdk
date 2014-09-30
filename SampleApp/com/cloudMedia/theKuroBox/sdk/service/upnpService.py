@@ -49,11 +49,13 @@ class UPNPService():
         pass
     
     @staticmethod
-    def upnp_play(udn, url, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def upnp_play(rendererUDN, url, serverUDN, objectId, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Start playback.
-        udn:String :- UDN return from API upnp_list_upnp_renderers
-        language:String - [Optional] Preferred language. Default is en.
+        rendererUDN:String :- UDN return from API upnp_list_upnp_renderers
+        url:String :- Media URL
+        serverUDN:String :- UDN use in API upnp_browse_upnp_dir if media URL is get from it.
+        objectId:String :- Object ID use in API upnp_browse_upnp_dir if media URL is get from it.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
@@ -95,6 +97,14 @@ class UPNPService():
         return:Dictionary :eg- {"CurrentSpeed": 1, "CurrentTransportState": "STOPPED"}
         '''
         pass
+    
+    @staticmethod
+    def upnp_get_status(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        Get status.
+        udn:String :- UDN return from API upnp_list_upnp_renderers
+        return:Dictionary :eg- {"NrTracks":1,"MediaDuration":"","CurrentURI":"","NextURI":"","title":"","artist":"","album":"","albumArtURI":"","Track":1,"TrackDuration":"0:03:11","TrackURI":"","RelTime":"0:00:00","AbsTime":"","CurrentMute":"0","CurrentVolume":"0"}
+        '''
     
     @staticmethod
     def upnp_get_media_info(udn, language=AppInfo.DEFAULT_API_LANGUAGE):

@@ -20,13 +20,17 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParam import KBXParam
 
 
 class KBXParamWrapper(KBXParam):
-    
     '''
     Wrapper class for KBXParams.
     It wraps KBXParamTypes with identifiable name.
-    '''
     
+    This class is not intended to be instantiated directly.
+    '''
+
+
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''    
     PROP_KBX_PARAM_NAME = "kbxParamName"
+
 
     def set_kbx_param_name(self, value):
         '''

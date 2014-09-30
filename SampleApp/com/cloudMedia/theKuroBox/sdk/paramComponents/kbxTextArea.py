@@ -22,14 +22,18 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxString import KBXString
 
 class KBXTextArea(KBXString, KBXParamComponent):
 
+
+    ''' Read-only: Name of the component. '''
     COM_NAME = "kbxTextArea"
 
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_PLACEHOLDER = "kbxParamPlaceholder"
+
 
     def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamMinLength=None, kbxParamMaxLength=None,
                  kbxParamDefaultValue=None, kbxParamLabel=None, kbxParamDesc=None, kbxParamPlaceholder=None, **kbxParamProps):
         '''
-        Multiline text input.
+        Create a text area component.
 
         Params:
         kbxParamName:String - [Required] Name of this parameter.

@@ -21,13 +21,27 @@ class AppInfo(object):
     Store any app related information
     '''
 
-    ''' Set this value to another subclass of KBXJsonEncoder to add functions to JSON decoder ''' 
+    ''' 
+    Set this value to another subclass of KBXJsonEncoder to add functions to JSON decoder 
+    It is referred to KBXJsonEncoder by default.
+    ''' 
     JSON_ENCODER_CLS = None
 
+    '''
+    Check against "requestMethod" in module's request to determine the source type.
+    e.g: request.requestMethod == AppInfo.REQUEST_TYPE_IPC   means the request is initiated by another application.
+    '''
     REQUEST_TYPE_IPC = "ipc"
     REQUEST_TYPE_WEB = "web"
 
-    REQUEST_KEY_LANGUAGE = "language"
+    '''
+    Key constant for language preference.
+    '''
+    REQUEST_KEY_LANGUAGE = "language" 
+    
+    '''
+    Default language used.
+    '''
     DEFAULT_API_LANGUAGE = "en"
 
     @staticmethod

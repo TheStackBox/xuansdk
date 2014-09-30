@@ -17,14 +17,19 @@
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 
-import threading
-
 class ThreadUtil(object):
 
     @staticmethod
     def set_interval(func, sec):
+        '''
+        Function: execute the specific function repeatedly after the given seconds is elapsed.
+        Returns: the thread to execute the function
+        '''
         pass
     
     @staticmethod
     def stop_interval(t):
+        '''
+        Function: stop the particular interval.
+        '''
         pass

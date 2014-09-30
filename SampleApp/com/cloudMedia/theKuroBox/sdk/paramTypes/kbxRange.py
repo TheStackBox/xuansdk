@@ -16,20 +16,35 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-from com.cloudMedia.theKuroBox.sdk.ex.systemException import SystemException
-from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxNumber import KBXNumberType
-from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamType import KBXParamType
+from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxNumber import KBXNumber
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamWrapper import KBXParamWrapper
-from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
-from com.cloudMedia.theKuroBox.sdk.util.util import Util
-from com.cloudMedia.theKuroBox.sdk.util.validator.numberValidator import NumberValidator
 
 
-class KBXRangeType(KBXNumberType):
+class KBXRange(KBXNumber, KBXParamWrapper):
 
-    TYPE_NAME = "kbxRange"
 
+    ''' Read-only: Name of the component. '''
+    TYPE_NAME = "kbxNumber.kbxRange"
+
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_STEP = "kbxParamStep"
+    
+    
+    def __init__(self, kbxParamName, kbxParamMinValue, kbxParamMaxValue, kbxParamIsRequired=True,
+                 kbxParamDecimal=0, kbxParamStep=1, **kbxParamProps):
+        '''
+        Parameter that accepts only number value.
+
+        Params:
+        kbxParamName:String - [Required] Name of this parameter.
+        kbxParamMinValue:Integer - [Required] Lower boundary for the value of this parameter
+        kbxParamMaxValue:Integer - [Required] Upper boundary for the value of this parameter.
+        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
+        kbxParamDecimal:Boolean - [Optional] True if decimal point is allowed and vice versa. False by default.
+        kbxParamStep:Integer - [Optional] A value to indicates the step of the movement of the value.
+        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
+        '''
+        pass
 
     def set_kbx_param_step(self, value):
         '''
@@ -49,20 +64,3 @@ class KBXRangeType(KBXNumberType):
         '''
         pass
 
-class KBXRange(KBXRangeType, KBXParamWrapper):
-
-    def __init__(self, kbxParamName, kbxParamMinValue, kbxParamMaxValue, kbxParamIsRequired=True,
-                 kbxParamDecimal=0, kbxParamStep=1, **kbxParamProps):
-        '''
-        Parameter that accepts only number value.
-
-        Params:
-        kbxParamName:String - [Required] Name of this parameter.
-        kbxParamMinValue:Integer - [Required] Lower boundary for the value of this parameter
-        kbxParamMaxValue:Integer - [Required] Upper boundary for the value of this parameter.
-        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
-        kbxParamDecimal:Boolean - [Optional] True if decimal point is allowed and vice versa. False by default.
-        kbxParamStep:Integer - [Optional] A value to indicates the step of the movement of the value.
-        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
-        '''
-        pass

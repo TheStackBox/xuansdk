@@ -159,16 +159,5 @@ class TwitterService():
         '''
         pass
     
-  
-    @staticmethod    
-    def on_twitter_message_received(language=AppInfo.DEFAULT_API_LANGUAGE):
-        '''
-        get twitter notification when twitter account received new tweet
-        language:String - [Optional] Preferred language. Default is en.
-        return:Dictionary :eg- {"response":{"value":true}}
-        '''
-        pass
-  
-        
         
     

@@ -23,45 +23,6 @@ class FoscamF19821wService(object):
     '''
     SDK Service for Foscam HD API
     '''
-    @staticmethod
-    def __validate_default_params(isSecured, host, port):
-        '''
-        Validate the default parameters and return in tupple
-        '''
-        pass
-    
-         
-    @staticmethod
-    def __validate_result(result):
-        '''
-        Validate the result returned
-        '''
-        pass
-    
-    
-    @staticmethod
-    def __check_is_enabled_key_valid(value):
-        '''
-        Check whether the value is 1 or 0 
-        '''
-        pass
-    
-    
-    @staticmethod
-    def __check_range(rangeValue, minValue, maxValue):
-        '''
-        Return the value if its in range, else raise exception
-        '''
-        pass
-    
-    
-    @staticmethod
-    def __check_is_in_options(optionValue, *options):
-        '''
-        Check whether option value in options
-        '''
-        pass
-    
     
     @staticmethod
     def get_image_setting(isSecured, host, port, username, password, language=AppInfo.DEFAULT_API_LANGUAGE):
@@ -1104,30 +1065,30 @@ class FoscamF19821wService(object):
 
 
     @staticmethod
-    def get_camera_ptz_preset_poNumber_list(isSecured, host, port, username, password, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def get_camera_ptz_preset_point_list(isSecured, host, port, username, password, language=AppInfo.DEFAULT_API_LANGUAGE):
 
         '''
-        Get a list of camera preset position poNumber
+        Get a list of camera preset position point
         isSecured:Boolean :- Decide whether to use HTTPS or not. Default is False
         host:String :- IP Address or host name of the camera
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
         language:String - [Optional] Preferred language. Default is en.
-        return:Dictionary :eg- {"cameraPtzPresetPoNumber": {"CGI_Result": {"poNumber2": "LeftMost", "poNumber7": null, "result": "0", 
-                                                                        "poNumber3": "RightMost", "poNumber6": null, "poNumber4": "preset1", 
-                                                                        "poNumber5": "1", "poNumber14": null, "poNumber15": null, "poNumber12": null, 
-                                                                        "poNumber13": null, "poNumber10": null, "poNumber11": null, "poNumber0": "TopMost", 
-                                                                        "poNumber8": null, "poNumber9": null, "cnt": "6", "poNumber1": "BottomMost"}}}
+        return:Dictionary :eg- {"cameraPtzPresetpoint": {"CGI_Result": {"point2": "LeftMost", "point7": null, "result": "0", 
+                                                                        "point3": "RightMost", "point6": null, "point4": "preset1", 
+                                                                        "point5": "1", "point14": null, "point15": null, "point12": null, 
+                                                                        "point13": null, "point10": null, "point11": null, "point0": "TopMost", 
+                                                                        "point8": null, "point9": null, "cnt": "6", "point1": "BottomMost"}}}
         '''
         pass
 
 
     @staticmethod
-    def add_camera_ptz_preset_poNumber(isSecured, host, port, username, password, presetName, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def add_camera_ptz_preset_point(isSecured, host, port, username, password, presetName, language=AppInfo.DEFAULT_API_LANGUAGE):
 
         '''
-        Add current position as a preset poNumber
+        Add current position as a preset point
         isSecured:Boolean :- Decide whether to use HTTPS or not. Default is False
         host:String :- IP Address or host name of the camera
         port:Number :- Port number of the camera HTTP server from 0 - 65535
@@ -1135,22 +1096,22 @@ class FoscamF19821wService(object):
         password:String :- Password of camera user
         presetName:String :- Camera preset name
         language:String - [Optional] Preferred language. Default is en.
-        return:Dictionary :eg- {"newCameraPtzPresetPoNumber": {"CGI_Result": {"poNumber2": "LeftMost", "poNumber7": null, "result": "0", 
-                                                                            "poNumber11": null, "poNumber6": null, "addResult": "2", 
-                                                                            "poNumber4": "preset1", "poNumber5": "1", "poNumber14": null, 
-                                                                            "poNumber15": null, "poNumber12": null, "poNumber13": null, 
-                                                                            "poNumber10": null, "poNumber3": "RightMost", "poNumber0": 
-                                                                            "TopMost", "poNumber8": null, "poNumber9": null, "cnt": "6", 
-                                                                            "poNumber1": "BottomMost"}}}
+        return:Dictionary :eg- {"newCameraPtzPresetpoint": {"CGI_Result": {"point2": "LeftMost", "point7": null, "result": "0", 
+                                                                            "point11": null, "point6": null, "addResult": "2", 
+                                                                            "point4": "preset1", "point5": "1", "point14": null, 
+                                                                            "point15": null, "point12": null, "point13": null, 
+                                                                            "point10": null, "point3": "RightMost", "point0": 
+                                                                            "TopMost", "point8": null, "point9": null, "cnt": "6", 
+                                                                            "point1": "BottomMost"}}}
         '''
         pass
 
 
     @staticmethod
-    def delete_camera_ptz_preset_poNumber(isSecured, host, port, username, password, presetName, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def delete_camera_ptz_preset_point(isSecured, host, port, username, password, presetName, language=AppInfo.DEFAULT_API_LANGUAGE):
 
         '''
-        Remove a preset poNumber
+        Remove a preset point
         isSecured:Boolean :- Decide whether to use HTTPS or not. Default is False
         host:String :- IP Address or host name of the camera
         port:Number :- Port number of the camera HTTP server from 0 - 65535
@@ -1158,27 +1119,27 @@ class FoscamF19821wService(object):
         password:String :- Password of camera user
         presetName:String :- Camera preset name
         language:String - [Optional] Preferred language. Default is en.
-        return:Dictionary :eg- {"deleteCameraPtzPresetPoNumber": {"CGI_Result": {"poNumber2": "LeftMost", "deleteResult": "3", "poNumber7": null, 
-                                                                "result": "0", "poNumber3": "RightMost", "poNumber6": null, "poNumber4": "preset1", 
-                                                                "poNumber5": "1", "poNumber14": null, "poNumber15": null, "poNumber12": null, "poNumber13": null, 
-                                                                "poNumber10": null, "poNumber11": null, "poNumber0": "TopMost", "poNumber8": null, "poNumber9": null, 
-                                                                "cnt": "6", "poNumber1": "BottomMost"}}}
+        return:Dictionary :eg- {"deleteCameraPtzPresetpoint": {"CGI_Result": {"point2": "LeftMost", "deleteResult": "3", "point7": null, 
+                                                                "result": "0", "point3": "RightMost", "point6": null, "point4": "preset1", 
+                                                                "point5": "1", "point14": null, "point15": null, "point12": null, "point13": null, 
+                                                                "point10": null, "point11": null, "point0": "TopMost", "point8": null, "point9": null, 
+                                                                "cnt": "6", "point1": "BottomMost"}}}
         '''
         pass
 
 
     @staticmethod
-    def go_to_camera_ptz_preset_poNumber(isSecured, host, port, username, password, presetName, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def go_to_camera_ptz_preset_point(isSecured, host, port, username, password, presetName, language=AppInfo.DEFAULT_API_LANGUAGE):
 
         '''
-        Move the camera to the preset poNumber
+        Move the camera to the preset point
         isSecured:Boolean :- Decide whether to use HTTPS or not. Default is False
         host:String :- IP Address or host name of the camera
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
         presetName:String :- Camera preset name
-        return:Dictionary :eg- {"goToCameraPtzPresetPoNumber": {"CGI_Result": {"result": "0"}}}
+        return:Dictionary :eg- {"goToCameraPtzPresetpoint": {"CGI_Result": {"result": "0"}}}
         '''
         pass
 
@@ -1210,8 +1171,8 @@ class FoscamF19821wService(object):
         username:String :- Username of camera user
         password:String :- Password of camera user
         cruiseName:String :- Camera cruise name
-        return:Dictionary :eg- {"cameraPtzCruiseDetail": {"CGI_Result": {"poNumber4": null, "poNumber5": null, "poNumber6": null, "poNumber7": null, "poNumber0": "TopMost", 
-                                                                          "poNumber1": "BottomMost", "poNumber2": null, "poNumber3": null, "result": "0", "getResult": "0"}}}
+        return:Dictionary :eg- {"cameraPtzCruiseDetail": {"CGI_Result": {"point4": null, "point5": null, "point6": null, "point7": null, "point0": "TopMost", 
+                                                                          "point1": "BottomMost", "point2": null, "point3": null, "result": "0", "getResult": "0"}}}
         '''
         pass
 
@@ -1258,7 +1219,7 @@ class FoscamF19821wService(object):
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
-        testmode:String :- 0 : No self test, 1 : Normal self test, 2 : After normal self test, go to preset poNumber assigned
+        testmode:String :- 0 : No self test, 1 : Normal self test, 2 : After normal self test, go to preset point assigned
         language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"selfTestMode": {"CGI_Result": {"result": "0"}}}
         '''
@@ -1282,32 +1243,32 @@ class FoscamF19821wService(object):
 
 
     @staticmethod
-    def set_ptz_prepoNumber_for_self_test(isSecured, host, port, username, password, prepoNumberName, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def set_ptz_prepoint_for_self_test(isSecured, host, port, username, password, prepointName, language=AppInfo.DEFAULT_API_LANGUAGE):
 
         '''
-        Set the preset poNumber for self test
+        Set the preset point for self test
         isSecured:Boolean :- Decide whether to use HTTPS or not. Default is False
         host:String :- IP Address or host name of the camera
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
-        prepoNumberName:String :- Name of the pre poNumber
+        prepointName:String :- Name of the pre point
         return:Dictionary :eg- {"ptzSelfTestMode": {"CGI_Result": {"result": "0"}}}
         '''
         pass
 
 
     @staticmethod
-    def get_ptz_prepoNumber_for_self_test(isSecured, host, port, username, password, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def get_ptz_prepoint_for_self_test(isSecured, host, port, username, password, language=AppInfo.DEFAULT_API_LANGUAGE):
 
         '''
-        Get the preset poNumber for self test
+        Get the preset point for self test
         isSecured:Boolean :- Decide whether to use HTTPS or not. Default is False
         host:String :- IP Address or host name of the camera
         port:Number :- Port number of the camera HTTP server from 0 - 65535
         username:String :- Username of camera user
         password:String :- Password of camera user
-        return:Dictionary :eg- {"getPtzPrepoNumberSelfTest": {"CGI_Result": {"result": "0", "name": "TopMost"}}}
+        return:Dictionary :eg- {"getPtzPrepointSelfTest": {"CGI_Result": {"result": "0", "name": "TopMost"}}}
         '''
         pass
 
@@ -1409,7 +1370,7 @@ class FoscamF19821wService(object):
     def get_wifi_list(isSecured, host, port, username, password, startNo, language=AppInfo.DEFAULT_API_LANGUAGE):
 
         '''
-        Get a list of WiFi access poNumber
+        Get a list of WiFi access point
         isSecured:Boolean :- Decide whether to use HTTPS or not. Default is False
         host:String :- IP Address or host name of the camera
         port:Number :- Port number of the camera HTTP server from 0 - 65535

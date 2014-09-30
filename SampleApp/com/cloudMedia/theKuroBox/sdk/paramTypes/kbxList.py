@@ -22,14 +22,34 @@ from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamType import KBXParamType
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamWrapper import KBXParamWrapper
 
 
-class KBXListType(KBXParamType):
+class KBXList(KBXParamType, KBXParamWrapper):
 
+
+    ''' Read-only: Name of the component. '''
     TYPE_NAME = "kbxList"
 
+    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_TYPE_INFERENCE = "kbxParamTypeInference"
     PROP_KBX_PARAM_MAX_SIZE = "kbxParamMaxSize"
     PROP_KBX_PARAM_MIN_SIZE = "kbxParamMinSize"
     PROP_KBX_PARAM_DUPLICATE = "kbxParamDuplicate"
+    
+    
+    def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamTypeInference=None, 
+                 kbxParamMaxSize=None, kbxParamMinSize=None, kbxParamDuplicate=True, **kbxParamProps):
+        '''
+        Parameter that accepts list as value.
+
+        Params:
+        kbxParamName:String - [Required] Name of this parameter.
+        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
+        kbxParamTypeInference - [Optional] Any instance from KBXList.KBXNumber, KBXList.KBXString, and KBXList.KBXBoolean; or None if you don't want to validate the received values.
+        kbxParamMaxSize:Number - [Optional] Maximum amount of items in received list allowed. None by default.
+        kbxParamMinSize:Number - [Optional] Minimum amount of items in received list required. None by default.
+        kbxParamDuplicate:Boolean - [Optional] False if duplication is allowed in received list. True by default.
+        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
+        '''
+        pass
 
     def set_kbx_param_type_inference(self, value):
         '''
@@ -124,21 +144,3 @@ class KBXListType(KBXParamType):
         '''
         def __init__(self, kbxParamIsRequired=True):
             pass
-
-class KBXList(KBXListType, KBXParamWrapper):
-
-    def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamTypeInference=None, 
-                 kbxParamMaxSize=None, kbxParamMinSize=None, kbxParamDuplicate=True, **kbxParamProps):
-        '''
-        Parameter that accepts list as value.
-
-        Params:
-        kbxParamName:String - [Required] Name of this parameter.
-        kbxParamIsRequired:Boolean - [Optional] True if a value for this parameter is required. True by default.
-        kbxParamTypeInference - [Optional] Any instance from KBXList.KBXNumber, KBXList.KBXString, and KBXList.KBXBoolean; or None if you don't want to validate the received values.
-        kbxParamMaxSize:Number - [Optional] Maximum amount of items in received list allowed. None by default.
-        kbxParamMinSize:Number - [Optional] Minimum amount of items in received list required. None by default.
-        kbxParamDuplicate:Boolean - [Optional] False if duplication is allowed in received list. True by default.
-        **kbxParamProps - Additional properties. Must be able to be converted into json string altogether.
-        '''
-        pass

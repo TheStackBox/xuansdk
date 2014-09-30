@@ -84,15 +84,6 @@ class DustService():
         pass
     
     @staticmethod
-    def get_network_config(language=AppInfo.DEFAULT_API_LANGUAGE): 
-        '''
-        Retrieve network configuration parameters.
-        language:String - [Optional] Preferred language. Default is en.
-        return:Dictionary :eg- {"cmdId": 63}
-        '''
-        pass
-    
-    @staticmethod
     def get_ip_config(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Return manager's IP configuration parameters
