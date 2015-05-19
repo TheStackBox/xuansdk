@@ -1,9 +1,0 @@
-<div class="container" id="main-container">
-	<div id="content">
-	</div>
-	<div class="dark-layer-90" id="shell-dark" style="display:none;"></div>
-	<div id="shell-dark-content" style="display:none;"></div>
-	<div id="shell-pop-content" class="confirm-box" style="display:none;"></div>
-	<div id="loadingIndicator" style="z-index:901"></div>
-</div>
-
