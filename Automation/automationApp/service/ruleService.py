@@ -1,37 +1,42 @@
 ##############################################################################################
-# Copyright 2014 Cloud Media Sdn. Bhd.
+# Copyright 2014-2015 Cloud Media Sdn. Bhd.
 #
 # This file is part of Xuan Automation Application.
 #
-#    Xuan Automation Application is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+# Xuan Automation Application is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#    This project is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
+# Xuan Automation Application is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-import bisect
+
+from collections import deque
+from concurrent.futures.thread import ThreadPoolExecutor
 import copy
 import json
+import threading
 import time
 
 from automationApp.appConstants import AppConstants
 from automationApp.automationException import AutomationException
-from automationApp.core.eventTracker import EventTracker
-from automationApp.core.methodTracker import MethodTracker
-from automationApp.core.storage import Storage
-from automationApp.core.triggerTracker import TriggerTracker
-from automationApp.dto.groupDTO import GroupDTO
-from automationApp.dto.methodDTO import MethodDTO
-from automationApp.dto.ruleDTO import RuleDTO
+from automationApp.core.eventController import EventController
+from automationApp.core.groupController import GroupController
+from automationApp.core.methodController import MethodController
+from automationApp.core.ruleController import RuleController
+from automationApp.core.triggerController import TriggerController
 from automationApp.module.timerModule import TimerModule
+from automationApp.utils.automationJSONEncoder import AutomationJSONEncoder
+from automationApp.utils.methodCallGroup import MethodCallGroup
+from automationApp.utils.sharedMethodWrapper import SharedMethodWrapper
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
+from com.cloudMedia.theKuroBox.sdk.app.application import Application
 from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
 from com.cloudMedia.theKuroBox.sdk.util.util import Util
@@ -39,676 +44,572 @@ from com.cloudMedia.theKuroBox.sdk.util.validator.numberValidator import NumberV
 from com.cloudMedia.theKuroBox.sdk.util.validator.stringValidator import StringValidator
 
 
-class RuleContainer(object):
+class RuleExecResult(threading.Event):
+    '''
+    Rule methods execution result tracker.
+    '''
 
-    def __init__(self):
-        self.__rules = {}
-        self.__ruleSequence = []
 
-    def rule_count(self):
-        return len(self.__ruleSequence)
+    def __init__(self, totalResultRequested):
+        super().__init__()
+        self.__result = None
+        self.__totalResultRequested = totalResultRequested
+        self.__totalResultResponsed = 0
+        self.__lock = threading.Lock()
+    
+    def set_result(self, result):
+        with self.__lock:
+            if self.__result is None:
+                self.__result = not isinstance(result, Exception)
+            else:
+                self.__result = self.__result and not isinstance(result, Exception)
+                
+            self.__totalResultResponsed += 1
+            if self.__totalResultResponsed == self.__totalResultRequested:
+                self.set()
+    
+    def get_result(self):
+        return self.__result is True
 
-    def set(self, ruleId, ruleDTO):
-        self.__rules[ruleId] = ruleDTO
-        if ruleId not in self.__ruleSequence:
-            bisect.insort(self.__ruleSequence, ruleId)
 
-    def unset(self, ruleId):
-        try:
-            del(self.__rules[ruleId])
-        except:
-            pass
-
-        try:
-            self.__ruleSequence.remove(ruleId)
-        except:
-            pass
-
-    def has_id(self, ruleId):
-        return ruleId in self.__rules
-
-    def get_by_id(self, ruleId):
-        return self.__rules[ruleId]
-
-    def list(self, offset, limit):
-        return self.__ruleSequence[offset:limit]
+class RuleExecInfo:
+    '''
+    Keep tracks the total count of a rule being requested to trigger.
+    '''
 
     
-class RuleTriggerController(object):
-    
     def __init__(self):
-        self.triggerTime = 0 # Keep track of last timestamp when rule triggered.
-        self.triggerReset = False # Only set to True when rule is disabled or just set.
+        self.__lock = threading.Lock()
+        self.__triggerCount = 0
+                
+    def get_rlock(self):
+        return self.__lock
+    
+    def get_trigger_count(self):
+        return self.__triggerCount
+    
+    def increase_trigger_count(self):
+        self.__triggerCount = (self.__triggerCount + 1) % 100000
 
 
-class RuleService(object):
+class RuleService:
 
-    def __init__(self, fireEventFunc=None):
-        self.__fireEventFunc = fireEventFunc
 
-        self.__ruleContainer = RuleContainer()
+    def __init__(self):
+        # Rule processors.
+        self.__ruleController = RuleController()
+        self.__methodController = MethodController()
+        self.__triggerController = TriggerController.instance()
+        
+        self.__ruleUpdateThreadPool = ThreadPoolExecutor(max_workers=1)
+        self.__ruleExecThreadPool = ThreadPoolExecutor(max_workers=AppConstants.MAX_RULE_EXEC_THREAD_SIZE)
+        
+        # Rule run workers.
+        self.__ruleExecInfos = {}
+        self.__condCallGroup = MethodCallGroup()
+        self.__execCallGroup = MethodCallGroup()
+        
+        # Listeners.
+        self.__ruleController.listen_to_rule_status_change(self.__on_rule_status_changed)
+        GroupController.instance().listen_to_group_icon_change(self.__on_group_icon_changed)
+        self.__methodController.listen_to_method_status_change(self.__on_method_status_changed)
+        EventController.instance().listen_to_event_callback(self.__on_method_event_callback)
+        self.__triggerController.listen_to_trigger_callback(self.__on_trigger_callback)
+        
+    def __on_rule_status_changed(self, ruleId, oldEnabled, newEnabled, oldStatusProcessed, newStatusProcessed):
+        '''
+        Trigger Source: RuleController --> This
+        Callback when a rule is re-enabled OR statusProcessed changed to "updated".
+        '''
+        if newEnabled == True and newStatusProcessed == AppConstants.RULE_STATUS_UPDATED:
+            if oldEnabled != newEnabled or oldStatusProcessed != newStatusProcessed:
+                self.__ruleExecThreadPool.submit(self.__trigger_rule_implementation, ruleId=ruleId, checkCondition=True)
+        
+    def __on_group_icon_changed(self, kbxGroupId):
+        '''
+        Trigger Source: GroupController --> This
+        Callback when kbxGroupIcon changed.
+        '''
+        ruleIdsFromCond = self.__ruleController.list_rule_ids_which_has_kbx_group_id_as_condition(kbxGroupId)
+        ruleIdsFromExec = self.__ruleController.list_rule_ids_which_has_kbx_group_id_as_execution(kbxGroupId)
+            
+        # Broadcast rules updated messages.
+        for ruleId in set(ruleIdsFromCond + ruleIdsFromExec):
+            self.__broadcast_message__rule_updated(ruleId)
 
-        self.__methodTracker = MethodTracker(self.__method_tracker_update_notify)
-        self.__eventTracker = EventTracker(self.__event_tracker_event_callback)
-        self.__triggerTracker = TriggerTracker()
-
-        self.__ruleTriggerController = {} # Control rule do not let it execute too many times in a short period of time.
-
-        #=======================================================================
-        # Load rules from database
-        #=======================================================================
-        rules = Storage.list_all_rules()
-        for rule in rules:
-            AppConstants.get_thread_pool_executor().submit(self.set_rule, **rule)
-
-    def set_rule(self, trigger, condition, execution, ruleId=None, ruleName=None, enabled=True):
-
-        def __validate_max_rule_size():
-            if self.__ruleContainer.rule_count() >= AppConstants.MAX_RULE_SIZE:
-                raise AutomationException(1708, "Rule size cannot be more than " + str(AppConstants.MAX_RULE_SIZE))
-
-        #=======================================================================
-        # Get RuleDTO object, create new id if necessary
-        #=======================================================================
-        if Util.is_empty(ruleId):
-            __validate_max_rule_size()
-            while True:
-                ruleId = str(time.time())
-                if not self.__ruleContainer.has_id(ruleId): # prevent uuid collision
-                    ruleDTO = RuleDTO(**{RuleDTO.PROP_RULE_ID:ruleId})
-                    break
-        elif self.__ruleContainer.has_id(ruleId):
-            ruleDTO = self.__ruleContainer.get_by_id(ruleId)
-
-            if ruleDTO.get_status_processed() != RuleDTO.RULE_STATUS_PROCESSED_UPDATED:
-                raise AutomationException(1704, "Rule is under processing")
-
-            self.__enable_rule(ruleId, False)
-        else:
-            __validate_max_rule_size()
-            ruleDTO = RuleDTO(**{RuleDTO.PROP_RULE_ID:ruleId})
-
-        #=======================================================================
-        # Validates all inputs, make sure inputs are in correct format
-        #=======================================================================
-        if isinstance(trigger, str):
-            try:
-                trigger = json.loads(trigger)
-            except Exception:
-                raise AutomationException(1701, "invalid json string in param: trigger")
-
-        triggerDTO = self.__triggerTracker.parse_to_trigger_dto(trigger)
-
-        def __validate_method_object(methodList):
+    def __on_method_status_changed(self, kbxMethodId, oldKBXMethodStatus, newKBXMethodStatus):
+        '''
+        Trigger Source: MethodController --> This
+        Callback when kbxMethodStatus changed.
+        '''
+        if oldKBXMethodStatus != newKBXMethodStatus:
+            ruleIdsFromCond = self.__ruleController.list_rule_ids_which_has_kbx_method_id_as_condition(kbxMethodId)
+            ruleIdsFromExec = self.__ruleController.list_rule_ids_which_has_kbx_method_id_as_execution(kbxMethodId)
+                
+            # Executes rules with conditions affected.
+            if newKBXMethodStatus == SharedMethod.METHOD_STATUS_ACTIVE:
+                for ruleId in ruleIdsFromCond:
+                    self.__ruleExecThreadPool.submit(self.__trigger_rule_implementation, ruleId=ruleId, checkCondition=True)
+            
+            # Broadcast rules updated messages.
+            for ruleId in set(ruleIdsFromCond + ruleIdsFromExec):
+                self.__broadcast_message__rule_updated(ruleId)
+                
+    def __on_method_event_callback(self, kbxMethodId, eventTag, eventData):
+        '''
+        Trigger Source: EventController --> MethodController --> This
+        Callback when a method with event broadcasted event.
+        '''
+        ruleIds = self.__ruleController.list_rule_ids_which_has_kbx_method_id_as_condition(kbxMethodId)
+        for ruleId in ruleIds:
+            self.__ruleExecThreadPool.submit(self.__trigger_rule_implementation, ruleId=ruleId, 
+                                             checkCondition=True, eventTag=eventTag, 
+                                             eventData=eventData, eventMethodId=kbxMethodId)
+        
+    def __on_trigger_callback(self, ruleId):
+        '''
+        Trigger Source: TriggerController --> This
+        Callback when a rule is triggered.
+        '''
+        self.__ruleExecThreadPool.submit(self.__trigger_rule_implementation, ruleId=ruleId, checkCondition=True)
+        
+    def set_rule(self, trigger, condition, execution, ruleId=None, ruleName=None, ruleProtected=False, enabled=True):
+        '''
+        Create/Edit(with ruleId provided) an existing rule.
+        
+        trigger:Dictionary
+        condition:List
+        execution:List
+        ruleId:Integer <Optional>
+        ruleName:String <Optional>
+        ruleProtected:Boolean <Optional>
+        enabled:Boolean
+        
+        Returns "ruleId"
+        '''
+        def process_method_list(methodList):
+            #===================================================================
+            # Basic type validation
+            #===================================================================
             if not isinstance(methodList, list):
-                raise AutomationException(1097, "List is required for both 'condition' and 'execution'")
+                Logger.log_error("RuleService.set_rule: 'condition' and 'execution' must be type of list.")
+                Logger.log_debug("type:", type(methodList), "value:", methodList)
+                raise AutomationException(11704, "List is required for both 'condition' and 'execution'")
 
             #===================================================================
             # Check allowed size, raise error if exceeded.
             #===================================================================
-            if len(methodList) > AppConstants.MAX_METHOD_SIZE:
-                raise AutomationException(1706, "Only " + str(AppConstants.MAX_METHOD_SIZE) + " is allowed for each 'condition' and 'execution'")
+            methodListLen = len(methodList)
+            if methodListLen > AppConstants.MAX_METHOD_SIZE:
+                Logger.log_error("RuleService.set_rule: 'condition' and 'execution' cannot have more than", AppConstants.MAX_METHOD_SIZE, "items respectively.")
+                raise AutomationException(11705, "Only a maximum of " + \
+                                          str(AppConstants.MAX_METHOD_SIZE) + \
+                                          " items is allowed for each 'condition' and 'execution' - given size " + \
+                                          str(methodListLen),
+                                          lambda text: str(AppConstants.MAX_METHOD_SIZE).join(text.split(":max_item_size:")))
 
             #===================================================================
             # Check if all kbxMethodIds are valid and all kbxMethodParams are list
             #===================================================================
-            idValidator = NumberValidator(isRequired=True, minVal=1, decimalPoint=0)
-            if not all([idValidator.is_valid(eachMethod[MethodDTO.PROP_METHOD_ID])
-                        and isinstance(eachMethod[MethodDTO.PROP_METHOD_ARGS], list)
+            idValidator = NumberValidator(isRequired=True, decimalPoint=False)
+            if not all([idValidator.is_valid(eachMethod["kbxMethodId"])
+                        and isinstance(eachMethod["kbxMethodParams"], list)
                         for eachMethod in methodList]):
-                raise AutomationException(1097, "'condition' and 'execution' have invalid data structure")
+                raise AutomationException(11704, "'condition' and 'execution' have incorrect data structure.")
 
             #===================================================================
             # Check if all kbxParamName and kbxParamCurrentValue exists
             #===================================================================
             paramNameValidator = StringValidator(isRequired=True)
             for eachMethod in methodList:
-                methodArgs = eachMethod[MethodDTO.PROP_METHOD_ARGS]
+                methodArgs = eachMethod["kbxMethodParams"]
                 for methodArg in methodArgs:
                     if not paramNameValidator.is_valid(methodArg[AppConstants.ARG_NAME]):
-                        raise AutomationException(1097, "'condition' and 'execution' have invalid params structure")
+                        raise AutomationException(11704, "'condition' and 'execution' have invalid params structure")
 
                     if not AppConstants.ARG_CURRENT_VALUE in methodArg:
-                        raise AutomationException(1097, "'condition' and 'execution' current value is missing")
+                        methodArg[AppConstants.ARG_CURRENT_VALUE] = None
+            
+            return methodList
 
-        if isinstance(condition, str):
-            try:
-                condition = json.loads(condition)
-            except Exception:
-                raise AutomationException(1701, "invalid json string in param: condition")
+        #=======================================================================
+        # Data structure validations
+        #=======================================================================
+        ruleId = NumberValidator(isRequired=False, decimalPoint=False).get_value(ruleId)
+        triggerDTO = self.__triggerController.parse_to_trigger_dto(trigger)
+        condition = process_method_list(condition)
+        execution = process_method_list(execution)
+        
+        #=======================================================================
+        # Add to database
+        #=======================================================================
+        if Util.is_empty(ruleId):
+            # Validate_max_rule_size
+            if self.__ruleController.count() >= AppConstants.MAX_RULE_SIZE:
+                raise AutomationException(11706, 
+                                          "Total amount of rules cannot be more than " + str(AppConstants.MAX_RULE_SIZE),
+                                          lambda text: str(AppConstants.MAX_RULE_SIZE).join(text.split(":max_rule_size:")))
+            ruleId = self.__ruleController.generate_id(ruleName)
+            rule = {}
+        elif self.__ruleController.has(ruleId):
+            ruleFromDB = self.__ruleController.get(ruleId)
+            rule = dict(ruleFromDB)
+            self.__check_rule_process_status(ruleId)
+            self.__ruleController.change_to_updating(ruleId, ruleName)
+        else:
+            raise AutomationException(11704, "Rule ID provided not found - " + str(ruleId))
 
-        __validate_method_object(condition)
-
-        if isinstance(execution, str):
-            try:
-                execution = json.loads(execution)
-            except Exception:
-                raise AutomationException(1701, "invalid json string in param: execution")
-
-        __validate_method_object(execution)
+        #=======================================================================
+        # Broadcast message: starts to update rule.
+        #=======================================================================
+        self.__broadcast_message__rule_update_started(ruleId, ruleName)
 
         #=======================================================================
         # Set basic information of the rule
         #=======================================================================
-        ruleDTO.set_rule_id(ruleId)
-        ruleDTO.set_rule_name(ruleName)
-        ruleDTO.set_enabled(enabled)
-
-        ruleDTO.set_trigger(triggerDTO)
-        ruleDTO.set_status_processed(RuleDTO.RULE_STATUS_PROCESSED_UPDATING)
-
-
-        #=======================================================================
-        # Append if its new rule
-        #=======================================================================
-        if not self.__ruleContainer.has_id(ruleId):
-            self.__ruleContainer.set(ruleId, ruleDTO)
-
-        ruleTriggerController = RuleTriggerController()
-        ruleTriggerController.triggerReset = True
-        self.__ruleTriggerController[ruleId] = ruleTriggerController
+        rule["ruleId"] = ruleId
+        rule["ruleName"] = ruleName
+        rule["ruleProtected"] = ruleProtected
+        rule["trigger"] = triggerDTO
+        rule["enabled"] = enabled
+        
+        rule["condition"] = condition
+        rule["execution"] = execution
 
         #=======================================================================
-        # Fire rule update start event
+        # Update rule
         #=======================================================================
-        self.__fire_rule_update_started_event(ruleId)
+        def __update_rule(rule):
+            try:
+                # Fire rule update start event
+                ruleId = rule["ruleId"]
+                
+                # Add methods to subscribe list
+                methodIds = [kbxMethod["kbxMethodId"] for kbxMethod in rule["condition"] + rule["execution"]]
+                self.__methodController.add(methodIds)
+                
+                # Update "rule" base table
+                self.__ruleController.update(rule)
+                self.__ruleController.commit()
+            
+            except Exception as e:
+                self.__ruleController.rollback()
+                self.__broadcast_message__rule_update_failed(ruleId, ruleName)
+                Logger.log_error("RuleService __update_rule failed:", e, "-- rolledback")
+            else:
+                # Process for Timer Module
+                TimerModule.delete_scheduler(ruleId)
+                
+                timerModuleHandlers = {TimerModule.METHOD_ID_DATE_TIME_RANGE:TimerModule.handle_date_time_range,
+                                       TimerModule.METHOD_ID_DAY_OF_WEEK:TimerModule.handle_dow,
+                                       TimerModule.METHOD_ID_TIME_RANGE:TimerModule.handle_time_range}
+                
+                for kbxMethod in rule["condition"]:
+                    kbxMethodId = kbxMethod["kbxMethodId"]
+                    timerModuleHandler = timerModuleHandlers.get(kbxMethodId, None)
+                    if timerModuleHandler is not None:
+                        timerModuleHandler(ruleId, kbxMethod["kbxMethodParams"])
+                    
+                # Broadcast message: completed updating a rule
+                self.__broadcast_message__rule_updated(ruleId)
 
         #=======================================================================
         # Submit to a thread to process other info, and return... performance...
         #=======================================================================
-        AppConstants.get_thread_pool_executor().submit(self.__create_rule, ruleDTO, condition, execution)
+        self.__ruleUpdateThreadPool.submit(__update_rule, rule)
 
     def delete_rule(self, ruleId):
         self.__check_rule_process_status(ruleId)
-
-        #=======================================================================
-        # Remove trigger and event listener
-        #=======================================================================
         try:
-            self.__enable_rule(ruleId, False)
+            self.__ruleController.delete(ruleId)
+            self.__ruleController.commit()
         except Exception as e:
-            Logger.log_debug("Unable to disable rule upon delete:", e)
+            self.__ruleController.rollback()
+            Logger.log_error("RuleService delete_rule ex:", e, "-- rolled back")
+        else:
+            self.__broadcast_message__rule_deleted(ruleId)
+            self.__triggerController.unregister_listener(ruleId)
+            TimerModule.delete_scheduler(ruleId)
 
-        #=======================================================================
-        # Remove entries in method trackers
-        #=======================================================================
+    def trigger_rule(self, ruleId, checkCondition=False):
+        '''
+        self.__check_rule_process_status(ruleId) <-- Check again in self.__trigger_rule_implementation.
+        '''
+        self.__trigger_rule_implementation(ruleId=ruleId, checkCondition=checkCondition)
+    
+    def enable_rule(self, ruleId, enabled):
+        self.__check_rule_process_status(ruleId)
         try:
-            self.__methodTracker.update_method(ruleId)
+            self.__ruleController.enable(ruleId, enabled)
+            self.__ruleController.commit()
         except Exception as e:
-            Logger.log_debug("Unable to update method tracker:", e)
-
-        #=======================================================================
-        # Remove entries in ruleService
-        #=======================================================================
-        try:
-            self.__ruleContainer.unset(ruleId)
-            del(self.__ruleTriggerController[ruleId])
-        except Exception as e:
-            Logger.log_debug("Unable to remove rule from rule container:", e)
-
-        #=======================================================================
-        # Remove from app storage
-        #=======================================================================
-        try:
-            Storage.delete_rule(ruleId)
-            Logger.log_debug(ruleId, "removed from storage.")
-        except Exception as e:
-            Logger.log_debug("Unable to remove rule from storage:", e)
+            self.__ruleController.rollback()
+            Logger.log_error("RuleService enable_rule ex:", e, "-- rolled back")
+        else:
+            self.__broadcast_message__rule_updated(ruleId)
 
     def get_rule(self, ruleId, language=AppInfo.DEFAULT_API_LANGUAGE):
         try:
-            ruleDTO = self.__ruleContainer.get_by_id(ruleId)
-            ruleDTO = copy.deepcopy(ruleDTO)
+            rule = self.__ruleController.get_detail(ruleId)
         except:
-            raise AutomationException(1707, "Rule Id not found")
-
-        condDTOs = ruleDTO.get_conditions()
-        execDTOs = ruleDTO.get_executions()
-
-        methodDTOs = condDTOs + execDTOs
-        methodIds = [methodDTO.get_method_id() for methodDTO in methodDTOs]
-
-        self.__methodTracker.update_language(language, methodIds)
-
-        statusCodeOfRemoved = (AppConstants.METHOD_ERROR_METHOD_REMOVED[0], AppConstants.METHOD_ERROR_GROUP_REMOVED[0])
+            raise AutomationException(11702, "Rule ID provided not found - " + str(ruleId))
         
-        for condDTO in condDTOs:
-            try:
-                #===============================================================
-                # Update method
-                #===============================================================
-                args = condDTO.get_method_args()
-                mapArgs = {arg[AppConstants.ARG_NAME]:arg[AppConstants.ARG_CURRENT_VALUE] for arg in args}
-
-                #===============================================================
-                # Update arguments
-                #===============================================================
-                condDTO.update(self.__methodTracker.get_method(condDTO.get_method_id()))
-                if condDTO.get_status_code() in statusCodeOfRemoved:
-                    condDTO.set_method_args(None)
+        kbxMethods = list(rule["condition"]) + list(rule["execution"])
+        
+        # -------------- Compile lists of kbxMethod and group IDs contains in this rule.
+        kbxMethodIdsToList = {}
+        kbxGroupIdsToList = set([])
+        
+        for kbxMethod in kbxMethods:
+            # Variables
+            kbxMethodId = kbxMethod["kbxMethodId"]
+            kbxMethodAppId = kbxMethod["kbxMethodAppId"]
+            kbxMethodStatus = kbxMethod["kbxMethodStatus"]
+            kbxGroupId = kbxMethod["kbxGroupId"]
+            kbxGroupStatus = kbxMethod["kbxGroupStatus"]
+            
+            if kbxMethodStatus is not -1 and kbxMethodAppId is not None:
+                kbxMethodIdsToList.setdefault(kbxMethodAppId, set([]))
+                kbxMethodIdsToList[kbxMethodAppId].add(kbxMethodId)
+            if kbxGroupId is not None and kbxGroupStatus is not -1:
+                kbxGroupIdsToList.add(kbxGroupId)
+                
+        # -------------- Get methods and groups based on requested language.
+        kbxMethodIdsListed = {}
+        kbxGroupIdsListed = {}
+                
+        for kbxMethodAppId, kbxMethodIds in kbxMethodIdsToList.items():
+            kbxMethodIdsListed[kbxMethodAppId] = SharedMethodWrapper.list_shared_methods_by_app_id(kbxMethodAppId, 
+                                                                                                   list(kbxMethodIds), 
+                                                                                                   language=language)
+            
+        groupList = SharedMethodWrapper.list_shared_method_groups(kbxGroupId=kbxGroupIdsToList, language=language)
+        for row in groupList:
+            kbxGroupIdsListed[row["kbxGroupId"]] = row
+        
+        # -------------- Set method and group data into rule.
+        for kbxMethod in kbxMethods:
+            # Variables
+            kbxMethodId = kbxMethod["kbxMethodId"]
+            kbxMethodAppId = kbxMethod["kbxMethodAppId"]
+            kbxMethodStatus = kbxMethod["kbxMethodStatus"]
+            kbxGroupId = kbxMethod["kbxGroupId"]
+            kbxGroupStatus = kbxMethod["kbxGroupStatus"]
+            
+            if kbxMethodStatus is not -1 and kbxMethodAppId is not None:
+                kbxMethodParamsWithCurrentValue = {kbxMethodParam["kbxParamName"]:kbxMethodParam["kbxParamCurrentValue"] \
+                                                   for kbxMethodParam in kbxMethod["kbxMethodParams"]}
+                kbxMethodWithDetails = kbxMethodIdsListed[kbxMethodAppId][kbxMethodId]
+                if kbxMethodWithDetails is not None:
+                    kbxMethodParamsWithDetails = kbxMethodWithDetails["kbxMethodParams"]
+                    kbxMethodParamsWithDetails = copy.deepcopy(kbxMethodParamsWithDetails)
+                    
+                    for kbxMethodParam in kbxMethodParamsWithDetails:
+                        kbxMethodParam["kbxParamCurrentValue"] = kbxMethodParamsWithCurrentValue.get(kbxMethodParam["kbxParamName"], None)
+                    
+                    kbxMethod["kbxMethodParams"] = kbxMethodParamsWithDetails
+                    kbxMethod["kbxMethodHasEvent"] = not Util.is_empty(kbxMethodWithDetails.get("kbxMethodEvent", None)) \
+                                                        and not Util.is_empty(kbxMethodWithDetails.get("kbxMethodIdentifier", None))
+                    kbxMethod["kbxMethodLabel"] = kbxMethodWithDetails.get("kbxMethodLabel")
+                    kbxMethod["kbxMethodDesc"] = kbxMethodWithDetails.get("kbxMethodDesc")
+                
                 else:
-                    processedArgs = condDTO.get_method_args()
-                    for processedArg in processedArgs:
-                        processedArg[AppConstants.ARG_CURRENT_VALUE] = mapArgs.get(processedArg[AppConstants.ARG_NAME])
-            except:
-                continue
+                    kbxMethod["atDebugMethod"] = "Unable to get shared method, caused by a method which never register itself on this bootup."
+                    
+            else:
+                kbxMethod["kbxMethodHasEvent"] = False
+                
+            if kbxGroupId is not None and kbxGroupStatus is not -1:
+                try:
+                    kbxMethod["kbxGroupLabel"] = kbxGroupIdsListed[kbxGroupId]["kbxGroupLabel"]
+                    kbxMethod["kbxGroupDesc"] = kbxGroupIdsListed[kbxGroupId]["kbxGroupDesc"]
+                except:
+                    kbxMethod["atDebugGroup"] = "Unable to get shared method group, caused by a group which never register itself on this bootup."
+                    
+        return rule
 
-        for execDTO in execDTOs:
-            try:
-                args = execDTO.get_method_args()
-                mapArgs = {arg[AppConstants.ARG_NAME]:arg[AppConstants.ARG_CURRENT_VALUE] for arg in args}
-
-                execDTO.update(self.__methodTracker.get_method(execDTO.get_method_id()))
-                if execDTO.get_status_code() in statusCodeOfRemoved:
-                    execDTO.set_method_args(None)
-                else:
-                    processedArgs = execDTO.get_method_args()
-                    for processedArg in processedArgs:
-                        processedArg[AppConstants.ARG_CURRENT_VALUE] = mapArgs.get(processedArg[AppConstants.ARG_NAME])
-            except:
-                continue
-
-        return ruleDTO
-
-    def list_rules(self, offset=0, limit=200):
-        rules = []
-        for ruleId in (ruleId for ruleId in self.__ruleContainer.list(offset, limit)):
-            try:
-                ruleDTO = self.__get_rule_summary(ruleId)
-                rules.append(self.__filter_rule_summary(ruleDTO))
-            except Exception as e:
-                ruleDTO = self.__ruleContainer.get_by_id(ruleId)
-                rules.append(self.__filter_rule_summary(ruleDTO))
-                Logger.log_debug(e)
-        
-        return rules, self.__ruleContainer.rule_count()
-
-    def trigger_rule(self, ruleId, checkCondition=False, eventTag=None, eventData=None):
-        self.__check_rule_process_status(ruleId)
-
-        AppConstants.get_thread_pool_executor().submit(self.__trigger_rule, ruleId, checkCondition, eventTag, eventData)
-
-    def enable_rule(self, ruleId, enabled):
-        self.__check_rule_process_status(ruleId)
-
-        if not isinstance(enabled, bool):
-            raise AutomationException(1097, "Invalid parameter 'enabled'")
-        
-        if enabled is False:
-            self.__ruleTriggerController[ruleId].triggerReset = True
-
-        AppConstants.get_thread_pool_executor().submit(self.__enable_rule, ruleId, enabled)
-
+    def list_rules(self, offset=0, limit=20):
+        return self.__ruleController.list(offset, limit), \
+                self.__ruleController.count()
+                
+    def run_all_enabled_rules(self):
+        ruleIds = self.__ruleController.list_rule_ids_which_are_enabled()
+        for ruleId in ruleIds:
+            self.__ruleExecThreadPool.submit(self.__trigger_rule_implementation, ruleId=ruleId, checkCondition=True)
+                
     def __check_rule_process_status(self, ruleId):
         try:
-            ruleDTO = self.__ruleContainer.get_by_id(ruleId)
+            statusProcessed = self.__ruleController.get_status_processed(ruleId)
+            if statusProcessed != AppConstants.RULE_STATUS_UPDATED:
+                raise AutomationException(11703, "edit/delete/execute is not allowed on rule update in progress")
         except:
-            raise AutomationException(1707, "Rule Id not found")
-
-        if ruleDTO.get_status_processed() != RuleDTO.RULE_STATUS_PROCESSED_UPDATED:
-            raise AutomationException(1704, "Rule is under processing")
+            raise AutomationException(11702, "Rule ID provided not found - " + str(ruleId))
         
-    def __filter_rule_summary(self, ruleDTO):
-        return {RuleDTO.PROP_RULE_ID:ruleDTO.get_rule_id(),
-                RuleDTO.PROP_RULE_NAME:ruleDTO.get_rule_name(),
-                RuleDTO.PROP_RULE_TYPE:ruleDTO.get_rule_type(),
-                RuleDTO.PROP_ENABLED:ruleDTO.get_enabled(),
-                RuleDTO.PROP_STATUS_CODE:ruleDTO.get_status_code(),
-                RuleDTO.PROP_STATUS_MESSAGE:ruleDTO.get_status_message(),
-                RuleDTO.PROP_STATUS_PROCESSED:ruleDTO.get_status_processed(),
-                RuleDTO.PROP_CONDITION:[{GroupDTO.PROP_GROUP_ICON:methodDTO.get(GroupDTO.PROP_GROUP_ICON),
-                                         MethodDTO.PROP_GROUP_ID:methodDTO.get_group_id(),
-                                         MethodDTO.PROP_STATUS_CODE:methodDTO.get_status_code(),
-                                         MethodDTO.PROP_STATUS_MESSAGE:methodDTO.get_status_message()} for methodDTO in ruleDTO.get_conditions()],
-                RuleDTO.PROP_EXECUTION:[{GroupDTO.PROP_GROUP_ICON:methodDTO.get(GroupDTO.PROP_GROUP_ICON),
-                                         MethodDTO.PROP_GROUP_ID:methodDTO.get_group_id(),
-                                         MethodDTO.PROP_STATUS_CODE:methodDTO.get_status_code(),
-                                         MethodDTO.PROP_STATUS_MESSAGE:methodDTO.get_status_message()} for methodDTO in ruleDTO.get_executions()]}
-
-    def __get_rule_summary(self, ruleId):
-        try:
-            ruleDTO = self.__ruleContainer.get_by_id(ruleId)
-        except:
-            raise AutomationException(1707, "Rule Id not found")
+    def __broadcast_message__rule_update_started(self, ruleId, ruleName=None):
+        eventTag = AppConstants.EVENT_RULE_UPDATE_STARTED
+        eventData = {"ruleId":ruleId, "newRuleName":ruleName}
         
-        if ruleDTO.get_status_processed() != RuleDTO.RULE_STATUS_PROCESSED_UPDATED:
-            raise AutomationException(1704, "Rule is updating")
-        
-        ruleDTO = copy.deepcopy(ruleDTO)
+        self.__broadcast_message(eventTag, eventData)
+        Logger.log_info("Rule Start Update:", ruleName)
 
-        for condDTO in ruleDTO.get_conditions():
-            try:
-                condDTO.update(self.__methodTracker.get_method(condDTO.get_method_id()))
-
-                #===============================================================
-                # Aggregate group icon
-                #===============================================================
-                groupDTO = self.__methodTracker.get_group(condDTO.get_group_id())
-                condDTO[GroupDTO.PROP_GROUP_ICON] = groupDTO.get_group_icon()
-            except:
-                continue
-
-        for execDTO in ruleDTO.get_executions():
-            try:
-                execDTO.update(self.__methodTracker.get_method(execDTO.get_method_id()))
-
-                groupDTO = self.__methodTracker.get_group(execDTO.get_group_id())
-                execDTO[GroupDTO.PROP_GROUP_ICON] = groupDTO.get_group_icon()
-            except:
-                continue
-
-        return ruleDTO
-
-    def __enable_rule(self, ruleId, enabled):
+    def __broadcast_message__rule_updated(self, ruleId):
         try:
-            ruleDTO = self.__ruleContainer.get_by_id(ruleId)
-        except:
-            return
-
-        if ruleDTO.get_status_processed() != RuleDTO.RULE_STATUS_PROCESSED_UPDATED:
-            return
-
-        if not isinstance(enabled, bool):
-            return
-
-        ruleDTO.set_enabled(enabled)
-
-        if enabled is True:
-            condDTOs = ruleDTO.get_conditions()
-
-            methodIds = []
-            for condDTO in condDTOs:
-                methodId = condDTO.get_method_id()
-                methodIds.append(methodId)
-                #===============================================================
-                # Whole Chunks of code here just to integrate with Timer Module!!
-                #===============================================================
-                if methodId == TimerModule.METHOD_ID_DAILY_TASK:
-                    methodParams = condDTO.get_method_args()
-                    timeValue = None
-                    for methodParam in methodParams:
-                        if methodParam.get(AppConstants.ARG_NAME) == "time":
-                            timeValue = methodParam.get(AppConstants.ARG_CURRENT_VALUE)
-                            break
-
-                    AppConstants.get_thread_pool_executor().submit(TimerModule.add_daily_task_scheduler, ruleId, timeValue)
-
-            tags = self.__methodTracker.get_tags_by_id(methodIds)
-            if len(tags) > 0:
-                self.__eventTracker.update_listener(ruleId, *tags)
-
-            self.__triggerTracker.register_listener(ruleId, ruleDTO.get_trigger())
-
-            #===================================================================
-            # Execute once if its not a scene and no timer callback
-            #===================================================================
-            if self.__ruleTriggerController[ruleId].triggerReset is True:
-                self.__ruleTriggerController[ruleId].triggerReset = False
-                if ruleDTO.get_trigger().is_no_callback() and len(tags) > 0:
-                    AppConstants.get_thread_pool_executor().submit(self.trigger_rule, ruleId=ruleId, checkCondition=True)
-                    
-
-        else:
-            #===============================================================
-            # Whole Chunks of code here just to integrate with Timer Module!!
-            #===============================================================
-            condDTOs = ruleDTO.get_conditions()
-            for condDTO in condDTOs:
-                methodId = condDTO.get_method_id()
-                if methodId == TimerModule.METHOD_ID_DAILY_TASK:
-                    methodParams = condDTO.get_method_args()
-                    timeValue = None
-                    for methodParam in methodParams:
-                        if methodParam.get(AppConstants.ARG_NAME) == "time":
-                            timeValue = methodParam.get(AppConstants.ARG_CURRENT_VALUE)
-                            break
-
-                    AppConstants.get_thread_pool_executor().submit(TimerModule.delete_daily_task_scheduler, ruleId, timeValue)
-            #===================================================================
-            # Timer Module integration ends!!!
-            #===================================================================
-
-            self.__eventTracker.update_listener(ruleId)
-            self.__triggerTracker.unregister_listener(ruleId)
-
-        #=======================================================================
-        # Update app storage..
-        # Looks like all changes will execute this function at the end
-        #=======================================================================
-        Storage.store_rule(ruleDTO)
-
-    def __create_rule(self, ruleDTO, condition, execution):
-        ruleId = ruleDTO.get_rule_id()
-
-        try:
-            #=======================================================================
-            # Add methods to subscribe list
-            #=======================================================================
-            condDTOs = [MethodDTO(**eachCond) for eachCond in condition]
-            execDTOs = [MethodDTO(**eachExec) for eachExec in execution]
-
-            methodIds = [methodDTO.get_method_id() for methodDTO in condDTOs + execDTOs]
-            self.__methodTracker.update_method(ruleId, *methodIds)
-
-            #=======================================================================
-            # Set Conditions, Executions, and Rule Type
-            #=======================================================================
-            ruleDTO.set_conditions(condDTOs)
-            ruleDTO.set_executions(execDTOs)
-
-            if len(condDTOs) == 0 and ruleDTO.get_trigger().is_no_callback():
-                ruleDTO.set_rule_type(RuleDTO.RULE_TYPE_SCENE)
-            else:
-                ruleDTO.set_rule_type(RuleDTO.RULE_TYPE_RULE)
-
-            #=======================================================================
-            # Update rule status code
-            #=======================================================================
-            self.__update_rule_status(ruleId)
-
+            rule = self.__ruleController.get_summary(ruleId)
         except Exception as e:
-            Logger.log_debug(e)
-
-    def __trigger_rule(self, ruleId, checkCondition=False, eventTag=None, eventData=None):
-        try:
-            ruleDTO = self.__ruleContainer.get_by_id(ruleId)
-        except:
+            Logger.log_error("RuleService.__broadcast_message__rule_updated get_summary ex:", e)
             return
 
-        currentTime = time.time()
-
-        #=======================================================================
-        # Block if last execution is less than 500 ms
-        #=======================================================================
+        eventTag = AppConstants.EVENT_RULE_UPDATED
+        eventData = rule
+        
+        self.__broadcast_message(eventTag, eventData)
+        Logger.log_info("Rule Updated:", rule["ruleName"])
+        
+    def __broadcast_message__rule_update_failed(self, ruleId, ruleName=None):
+        '''
+        ruleName - For debugging purpose.
+        '''
         try:
-            lastTriggerTime = self.__ruleTriggerController[ruleId].triggerTime
-            triggerInterval = currentTime - lastTriggerTime
-            if triggerInterval < AppConstants.MIN_TRIGGER_INTERVAL:
-                Logger.log_debug("Rule Execution Blocked --- Triggered again in ", triggerInterval, " sec")
-                return
-            else:
-                self.__ruleTriggerController[ruleId].triggerTime = currentTime
-        except Exception as e:
-            Logger.log_debug("Spamming Protection Error: ", e)
-            self.__ruleTriggerController[ruleId].triggerTime = currentTime
+            rule = self.__ruleController.get_summary(ruleId)
+        except Exception:
+            rule = None
+        
+        eventTag = AppConstants.EVENT_RULE_UPDATE_FAILED
+        eventData = {"ruleId": ruleId, "oldRuleSummary":rule}
 
-        try:
+        self.__broadcast_message(eventTag, eventData)
+        Logger.log_info("Rule Update Failed:", ruleName)
+        
+    def __broadcast_message__rule_deleted(self, ruleId):
+        eventTag = AppConstants.EVENT_RULE_DELETED
+        eventData = {"ruleId": ruleId}
+
+        self.__broadcast_message(eventTag, eventData)
+        Logger.log_info("Rule Deleted: Id -", ruleId)
+            
+    def __broadcast_message(self, eventTag, eventData):
+        eventData = json.dumps(eventData, cls=AutomationJSONEncoder)
+        Application.send_web_server_event(eventTag, eventData)
+        
+    def __trigger_rule_implementation(self, ruleId, checkCondition=False, eventTag=None, eventData=None, eventMethodId=None):
+        '''
+        Triggers a rule by given ruleId.
+        '''
+        # Check if rule is "updated" AND enabled.
+        statusProcessed, enabled = self.__ruleController.get_status_processed_and_enabled(ruleId)
+        if statusProcessed != AppConstants.RULE_STATUS_UPDATED or enabled != True:
+            return
+        
+        self.__ruleExecInfos.setdefault(ruleId, RuleExecInfo())
+        
+        ruleExecInfo = self.__ruleExecInfos.get(ruleId)
+        ruleExecInfo.increase_trigger_count()
+        triggerCountInThisSession = ruleExecInfo.get_trigger_count()
+        
+        with ruleExecInfo.get_rlock():
             #=======================================================================
-            # Execute conditions
+            # Check conditions
             #=======================================================================
             if checkCondition is True:
-                condDTOs = ruleDTO.get_conditions()
-                for condDTO in condDTOs:
-                    methodId = condDTO.get_method_id()
-    
-                    methodDTOWithInfo = self.__methodTracker.get_method(methodId)
-                    methodName = methodDTOWithInfo.get_method_name()
-                    methodStatusCode = methodDTOWithInfo.get_status_code()
-                    if methodStatusCode != AppConstants.METHOD_ERROR_OK[0]:
-                        Logger.log_debug("Rule Exec --- Cond Checking (%s) --- %s --- STOP EXECUTION" % (str(methodName), str(methodDTOWithInfo.get_status_message())))
+                # Check if we should proceed (stop if there is another pending request on the same ruleId).
+                if triggerCountInThisSession != ruleExecInfo.get_trigger_count():
+                    return
+                
+                methodListToCheck = deque()
+                result = self.__ruleController.list_conditions(ruleId)
+                methodCheckingTime = int(time.time())
+                for row in result:
+                    if row["kbxMethodStatus"] not in (SharedMethod.METHOD_STATUS_ACTIVE, SharedMethod.METHOD_STATUS_INACTIVE):
                         return
                     else:
-                        methodArgs = condDTO.get_method_args()
+                        methodArgs = row["kbxMethodParams"]
     
                         kwargs = {methodArg[AppConstants.ARG_NAME]:methodArg[AppConstants.ARG_CURRENT_VALUE] for methodArg in methodArgs}
-                        kwargs["kbxMethodId"] = methodId
-    
-                        if eventTag is not None:
+                        
+                        if eventTag is not None and eventMethodId == row["kbxMethodId"]:
                             kwargs[AppConstants.KEY_CONDITION_EVENT_TAG] = eventTag
                             kwargs[AppConstants.KEY_CONDITION_EVENT_DATA] = eventData
-    
+                            
                         if AppInfo.REQUEST_KEY_LANGUAGE not in kwargs:
                             kwargs[AppInfo.REQUEST_KEY_LANGUAGE] = AppInfo.DEFAULT_API_LANGUAGE
-    
-                        kwargs[AppConstants.KEY_CONDITION_TIMESTAMP] = currentTime
-    
-                        result = SharedMethod.call_by_method_id(**kwargs)
-    
-                        if result[AppConstants.KEY_CONDITION_RESPONSE] is not True:
-                            Logger.log_debug("Rule Exec --- Cond Checking (%s) --- Result (%s) --- STOP EXECUTION" % (str(methodName), str(result)))
-                            return # Condition checking failed
-                        else:
-                            Logger.log_debug("Rule Exec --- Cond Checking (%s) --- Result (%s) --- CONTINUE EXECUTION" % (str(methodName), str(result)))
-    
-            #=======================================================================
-            # Execute actions
-            #=======================================================================
-            execDTOs = ruleDTO.get_executions()
-            for execDTO in execDTOs:
-                methodId = execDTO.get_method_id()
-    
-                methodDTOWithInfo = self.__methodTracker.get_method(methodId)
-                methodName = methodDTOWithInfo.get_method_name()
-                methodStatusCode = methodDTOWithInfo.get_status_code()
-    
-                if methodStatusCode != AppConstants.METHOD_ERROR_OK[0]:
-                    Logger.log_debug("Rule Exec --- Run Action (%s) --- %s --- SKIP ACTION" % (str(methodName), str(methodDTOWithInfo.get_status_message())))
-                    continue
-                else:
-                    methodArgs = execDTO.get_method_args()
-    
-                    kwargs = {methodArg[AppConstants.ARG_NAME]:methodArg[AppConstants.ARG_CURRENT_VALUE] for methodArg in methodArgs}
-                    kwargs["kbxMethodId"] = methodId
-    
-                    kwargs[AppConstants.KEY_ACTION_TIMESTAMP] = currentTime
+                            
+                        kwargs["kbxMethodName"] = row["kbxMethodName"]
+                        kwargs["kbxModuleName"] = row["kbxModuleName"]
+                        kwargs["kbxGroupId"] = row["kbxGroupId"]
+                        kwargs["kbxMethodAppId"] = row["kbxMethodAppId"]
+                        callId = hash(str(kwargs)) # Generate condition checking ID
+                        kwargs[AppConstants.KEY_CONDITION_TIMESTAMP] = methodCheckingTime # So that timestamp will not caused the generated id to be different
+                        methodListToCheck.append({"callId":callId,
+                                                  "callFn":SharedMethod.call,
+                                                  "callKwargs":kwargs})
                     
-                    Logger.log_debug("Rule Exec --- Run Action (Id:%s, Name:%s)" % (str(methodId), str(methodName)))
-    
-                    if AppInfo.REQUEST_KEY_LANGUAGE not in kwargs:
-                        kwargs[AppInfo.REQUEST_KEY_LANGUAGE] = AppInfo.DEFAULT_API_LANGUAGE
-    
-                    AppConstants.get_thread_pool_executor().submit(self.__call_method_by_id, **kwargs)
-        except Exception as e:
-            Logger.log_debug("Rule Execution Ex:", e)
-
-    def __update_rule_status(self, ruleId):
-        try:
-            ruleDTO = self.__ruleContainer.get_by_id(ruleId)
-        except:
-            return
-
-        try:
-            methodDTOs = ruleDTO.get_conditions() + ruleDTO.get_executions()
-            isRequireFireEvent = False
-
-            #=======================================================================
-            # Only update if all methods are processed successfully
-            #=======================================================================
-            processedStatus = ruleDTO.get_status_processed()
-            if processedStatus != RuleDTO.RULE_STATUS_PROCESSED_UPDATED:
-                methodIds = [methodDTO.get_method_id() for methodDTO in methodDTOs]
-                if self.__methodTracker.check_is_updated(methodIds):
-                    ruleDTO.set_status_processed(RuleDTO.RULE_STATUS_PROCESSED_UPDATED)
-                    isRequireFireEvent = True
-                else:
+                #===============================================================
+                # Submit all conditions for checking
+                #===============================================================
+                methodListToCheckLen = len(methodListToCheck)
+                if methodListToCheckLen > 0:
+                    ruleExecResult = RuleExecResult(methodListToCheckLen)
+                    
+                    for methodItem in methodListToCheck:
+                        self.__condCallGroup.submit(callbackFn=self.__on_method_call_complete, ruleExecResult=ruleExecResult, **methodItem)
+                    
+                    result = ruleExecResult.wait(40.0)
+                    
+                    if result is False or ruleExecResult.get_result() is False:
+                        return # Failed at condition checking.
+            
+                # Clear cache
+                del(methodListToCheck)
+                del(methodCheckingTime)
+                del(methodListToCheckLen)
+                
+                # Check if we should proceed (stop if there is another pending request on the same ruleId).
+                if triggerCountInThisSession != ruleExecInfo.get_trigger_count():
                     return
 
             #=======================================================================
-            # Update rule status code
+            # Execute executions
             #=======================================================================
-            ruleStatusCode = AppConstants.METHOD_ERROR_OK[0]
-            for methodDTO in methodDTOs:
-                try:
-                    methodId = methodDTO.get_method_id()
-                    realMethodDTO = self.__methodTracker.get_method(methodId)
-                    ruleStatusCode = ruleStatusCode | realMethodDTO.get_status_code()
-                except:
+            methodListToExec = deque()
+            result = self.__ruleController.list_executions(ruleId)
+            methodExecTime = int(time.time())
+            for row in result:
+                if row["kbxMethodStatus"] not in (SharedMethod.METHOD_STATUS_ACTIVE, SharedMethod.METHOD_STATUS_INACTIVE):
                     continue
+                else:
+                    methodArgs = row["kbxMethodParams"]
+                    kwargs = {methodArg[AppConstants.ARG_NAME]:methodArg[AppConstants.ARG_CURRENT_VALUE] for methodArg in methodArgs}
+                    if AppInfo.REQUEST_KEY_LANGUAGE not in kwargs:
+                        kwargs[AppInfo.REQUEST_KEY_LANGUAGE] = AppInfo.DEFAULT_API_LANGUAGE
+                    
+                    kwargs["kbxMethodName"] = row["kbxMethodName"]
+                    kwargs["kbxModuleName"] = row["kbxModuleName"]
+                    kwargs["kbxGroupId"] = row["kbxGroupId"]
+                    kwargs["kbxMethodAppId"] = row["kbxMethodAppId"]
+                    
+                    callId = hash(str(kwargs)) # Generate execution id
+                    kwargs[AppConstants.KEY_ACTION_TIMESTAMP] = methodExecTime
+                    methodListToExec.append({"callId":callId,
+                                             "callFn":SharedMethod.call,
+                                             "callKwargs":kwargs})
 
-            ruleDTO.set_status_code(ruleStatusCode)
-            ruleDTO.set_status_message(AppConstants.RULE_CODE[ruleStatusCode])
+            #===============================================================
+            # Submit all methods for executions
+            #===============================================================
+            methodListToExecLen = len(methodListToExec)
+            if methodListToExecLen > 0:
+                ruleExecResult = RuleExecResult(methodListToExecLen)
+                
+                for methodItem in methodListToExec:
+                    self.__execCallGroup.submit(callbackFn=self.__on_method_call_complete, ruleExecResult=ruleExecResult, **methodItem)
+                
+                result = ruleExecResult.wait(30.0)
+                
+                return
+            
+    def __on_method_call_complete(self, checkingId, result, ruleExecResult):
+        '''
+        When rule/execution checking is completed.
+        '''
+        ruleExecResult.set_result(result)
 
-            if isRequireFireEvent is True:
-                self.__fire_rule_updated_event(ruleId)
-                self.__enable_rule(ruleId, ruleDTO.get_enabled())
-
-        except Exception as e:
-            Logger.log_debug(e)
-
-    def __fire_rule_updated_event(self, ruleId):
-        if self.__fireEventFunc is not None:
-            ruleDTO = self.__get_rule_summary(ruleId)
-            summaryDict = self.__filter_rule_summary(ruleDTO)
-
-            #===================================================================
-            # Fire the event back to server
-            #===================================================================
-            eventTag = AppConstants.EVENT_RULE_UPDATED
-            eventData = json.dumps(summaryDict)
-
-            self.__fireEventFunc(eventTag, eventData)
-            Logger.log_debug("Rule Updated Event:", eventTag, "---", eventData)
-
-    def __fire_rule_update_started_event(self, ruleId):
-        if self.__fireEventFunc is not None:
-            eventTag = AppConstants.EVENT_RULE_UPDATE_STARTED
-            eventData = json.dumps({RuleDTO.PROP_RULE_ID:ruleId})
-
-            self.__fireEventFunc(eventTag, eventData)
-            Logger.log_debug("Rule Start Update:", eventTag, "---", eventData)
-
-    def __call_method_by_id(self, **kwargs):
-        methodId = kwargs["kbxMethodId"]
-        try:
-            result = SharedMethod.call_by_method_id(**kwargs)
-            Logger.log_debug("Rule Exec --- Action Run Completed (Id:%s) --- Results (%s)" % (str(methodId), str(result)))
-        except Exception as e:
-            Logger.log_debug("Rule Exec --- Action Run Error (Id:%s) --- Error (%s)" % (str(methodId), str(e)))
-
-    #===========================================================================
-    # Callbacks
-    #===========================================================================
-    def timer_callback(self, ruleId=None, **kwargs):
-        del(kwargs)
-        if self.__ruleContainer.has_id(ruleId):
-            self.trigger_rule(ruleId, True)
-
-    def __method_tracker_update_notify(self, methodId, *ruleIds):
-        #=======================================================================
-        # Update event listener because a method is updated
-        #=======================================================================
-        for ruleId in ruleIds:
-            try:
-                ruleDTO = self.__ruleContainer.get_by_id(ruleId)
-            except:
-                continue
-
-            self.__update_rule_status(ruleId)
-
-            #=======================================================================
-            # Enable rule if necessary
-            #=======================================================================
-            condDTOs = ruleDTO.get_conditions()
-            methodIds = [condDTO.get_method_id() for condDTO in condDTOs]
-
-            if ruleDTO.get_enabled() is True:
-                if methodId in methodIds:
-                    try:
-                        self.__enable_rule(ruleId, True)
-                    except Exception as e:
-                        Logger.log_debug("Unable to re-enable rule on method changed:", e)
-
-
-    def __event_tracker_event_callback(self, ruleId, eventTag, eventData):
-        if self.__ruleContainer.has_id(ruleId):
-            self.trigger_rule(ruleId, True, eventTag, eventData)

@@ -1,21 +1,22 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global define*/
 
 define([
     'jquery',
@@ -36,8 +37,11 @@ define([
     var SAVE_RULE = 'nav-circle-done nav-icon-done';
     var BACK = 'nav-icon-back';*/
 
+    var RULE_LIMIT = 50;
+
     var DeviceView = Backbone.View.extend({
-        template: JST['app/scripts/templates/device.ejs'],
+        template: JST['app/scripts/templates/rule.ejs'],
+        prompt_pop_dialog_msg: JST['app/scripts/common/templates/prompt.pop.ejs'],
         events: {
             // modal click event
             'click #confirm-dark': 'on_everything_cancel',
@@ -53,8 +57,14 @@ define([
 
         destroy: function() {
             if (this.content_module !== undefined) {
+                this.content_module.destroy_sockets();
                 this.content_module.destroy();
                 this.content_module = undefined;
+            }
+
+            if (this.rule_creator !== undefined) {
+                this.rule_creator.destroy();
+                this.rule_creator = undefined;
             }
         },
  
@@ -66,11 +76,11 @@ define([
             // show navigation first
             this.options.nav.show();
 
-            if (_.isEmpty(this.content_module)) {
+            if (this.content_module === undefined) {
                 this.content_module = new RuleListModule();
                 this.content_module.render();
                 this.content_module.on('list_retrieved', function() {
-                    this.trigger('idle');
+                    // update add button
                 }, this);
                 this.content_module.on('execute', function(rule_config) {
                     
@@ -80,13 +90,40 @@ define([
                     window.location = '#/rule/edit/'+rule_config.get('id');
                 })
                 $('.page-content').append(this.content_module.el);
+
+                $('body').scrollTop(0);
             }
             
             switch (action) {
                 case 'add':
                 case 'edit':
+                    if (action === 'add' && this.content_module.dataLength >= RULE_LIMIT) {
+                        // note: doesn't work on computer
+                        // prompt message
+                        var return_func = function() {
+                            Shell.hide_pop_message();
+                            window.location = '#/rule';
+                        }
+
+                        var $pEl = Shell.show_pop_message(this.prompt_pop_dialog_msg({
+                                title: 'error_rule_limit_title',
+                                message: lang.translate('error_rule_limit').replace('%LIMIT%', RULE_LIMIT),
+                                ok_btn_label: 'btn_ok'
+                            }), {
+                                'click #modal-ok-btn': return_func,
+                            },
+                            return_func
+                        );
+
+                        $pEl.find('#modal-cancel-btn').hide();
+
+                        return;
+                    }
                     // hide navigation
                     this.options.nav.hide();
+
+                    // hide more options
+                    this.content_module.hide_options();
 
                     this.content_module.hide();
                     
@@ -127,6 +164,8 @@ define([
                                 }.bind(this),
                                 error: function() {
                                     console.error('Unable to get detailed rule', uid);
+                                    // return back to rule list
+                                    window.location = '#/rule';
                                 }
                             })
                         } else {
@@ -135,6 +174,10 @@ define([
                     } else {
                         this.rule_creator.navigate(uid, query)
                     }
+
+                    // fix white space
+                    this._grab_scroll_pos();
+                    $('body').scrollTop(0);
                 break;
                 case 'options':
                     // show content list
@@ -236,6 +279,8 @@ define([
 
                     if (this.content_module.is_empty()) {
                         this.content_module.retrieve_rule();
+                    } else {
+                        this._restore_scroll_pos();
                     }
                     this.content_module.show();
 
@@ -263,7 +308,9 @@ define([
                 break;
                 case 'nav-circle-add nav-icon-add':
                     // go to add rule
-                    window.location = '#/rule/add';
+                    if (this.content_module != undefined && this.content_module.dataLength != undefined) {
+                        window.location = '#/rule/add';
+                    }
                 break;
             }
         },
@@ -278,38 +325,62 @@ define([
         prompt_message: function() {
             var action = 'show';
             var conf = {
-                confirm_label: 'Ok',
-                cancel_label: 'Cancel',
-                confirm_callback: undefined,
-                cancel_callback: undefined
+                message: 'msg_are_u_sure',
+                confirm_label: 'btn_ok',
+                cancel_label: 'btn_cancel',
+                confirm_callback: function() {
+                    Shell.hide_pop_message();
+                },
+                cancel_callback: function() {
+                    Shell.hide_pop_message();
+                }
             };
 
             if (typeof arguments[0] === 'string') {
                 action = arguments[0];
             } else {
-                _.extend(conf, arguments[0]);
+                if (arguments[0].confirm_callback) {
+                    // add hide pop message
+                    // in case dev didnt close
+                    var p_confirm = arguments[0].confirm_callback;
+                    arguments[0].confirm_callback = function() {
+                        Shell.hide_pop_message(p_confirm);
+                    }.bind(this)
+                }
 
-                // fill in the blank
-                $('#myModalLabel').text(conf.title || '');
-                $('#modal-body').text(conf.message || 'Are you sure?');
-                $('#modal-cancel-btn').text(conf.cancel_label);
-                $('#modal-ok-btn').text(conf.confirm_label);
+                if (arguments[0].cancel_callback) {
+                    // add hide pop message
+                    // in case dev didnt close
+                    var p_cancel = arguments[0].cancel_callback;
+                    arguments[0].cancel_callback = function() {
+                        Shell.hide_pop_message(p_cancel);
+                    }
+                }
+
+                if (arguments[0].action !== undefined) {
+                    action = arguments[0].action;
+                }
+                _.extend(conf, arguments[0]);
             }
 
-            // execute action
-            $('#prompt-modal').data('confirm_cb', conf.confirm_callback);
-            $('#prompt-modal').data('cancel_cb', conf.cancel_callback);
-            // $('#prompt-modal').modal(action);
-
+            console.log('action prompt = '+  action)
             if (action === 'show') {
-                console.log('show confirm dark!!!!!!!!!!!!!');
-                $('#confirm-dark').show();
-                $('#prompt-modal').show();
+                Shell.show_pop_message(this.prompt_pop_dialog_msg({
+                        title: conf.title,
+                        message: conf.message,
+                        ok_btn_label: conf.confirm_label
+                    }), {
+                        'click #modal-ok-btn': conf.confirm_callback,
+                        'click #modal-cancel-btn': conf.cancel_callback
+                    }, conf.cancel_callback
+                );
             } else {
-                $('#confirm-dark').hide();
-                $('#prompt-modal').hide();
-
-            }            
+                if (conf !== undefined) {
+                    Shell.hide_pop_message(conf.close_complete);
+                } else {
+                    Shell.hide_pop_message();
+                }
+            }         
         },
 
         on_prompt_confirm:function () {
@@ -361,6 +432,17 @@ define([
             var nav = {};
             nav.right = ['ADD_RULE'];
             this.options.nav.update_buttons(nav.left, nav.right, nav.callback);
+        },
+        _grab_scroll_pos: function() {
+            this._list_pos = $('body').scrollTop();
+            console.log('--- scroll pos '+this._list_pos);
+        },
+
+        _restore_scroll_pos: function() {
+            if (this._list_pos !== undefined) {
+                console.log('---- restore scroll pos')
+                $('body').scrollTop(this._list_pos)
+            }
         }
 
     });

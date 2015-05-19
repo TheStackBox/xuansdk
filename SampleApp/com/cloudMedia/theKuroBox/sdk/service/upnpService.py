@@ -1,55 +1,72 @@
 ##############################################################################################
-# Copyright 2014 Cloud Media Sdn. Bhd.
+# Copyright 2014-2015 Cloud Media Sdn. Bhd.
 #
 # This file is part of Xuan Application Development SDK.
 #
-#    Xuan Application Development SDK is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+# Xuan Application Development SDK is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#    This project is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
+# Xuan Application Development SDK is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
+
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
+from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
+
 class UPNPService():
     
     @staticmethod
     def upnp_list_upnp_servers(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         List UPNP servers.
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"services": [{"UDN": "uuid:f785f8e6-f19e-4b0a-b2fd-ad8ec26386ac", "friendlyName": "aa: a - 23:"}]}
 
-        '''                                
+        '''
         pass
-    
+
+    @staticmethod
+    def upnp_list_upnp_basic(language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        List upnp basic.
+        return:Dictionary :eg- {"basic":[]}
+        '''
+        pass
+
     @staticmethod
     def upnp_list_upnp_renderers(language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         List UPNP renderers.
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"renderers": [{"UDN": "uuid:C6F2D312-E40D-4928-B1E2-C837F59B8D75", "friendlyName": "A(C6F2D312-4928-B1E2-C837F59B8D75)"}]}
         '''
         pass
-    
+
+    @staticmethod
+    def check_device_exist(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
+        '''
+        Check whether the UPNP device is available
+        udn:String :- UDN return from API upnp_list_upnp_renderers
+        return:Dictionary :eg- {"Source": [], "Sink": []}
+        '''
+        pass
+
     @staticmethod
     def upnp_get_protocol_info(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get protocol info.
         udn:String :- UDN return from API upnp_list_upnp_renderers
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"Source": [], "Sink": []}
         '''
         pass
-    
+
     @staticmethod
-    def upnp_play(rendererUDN, url, serverUDN, objectId, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def upnp_play(rendererUDN, url, serverUDN, objectId, urlFormat="", language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Start playback.
         rendererUDN:String :- UDN return from API upnp_list_upnp_renderers
@@ -59,45 +76,41 @@ class UPNPService():
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
-    
+
     @staticmethod
     def upnp_pause(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Pause playback.
         udn:String :- UDN return from API upnp_list_upnp_renderers
-        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
-    
+
     @staticmethod
     def upnp_resume(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Resume playback.
         udn:String :- UDN return from API upnp_list_upnp_renderers
-        language:String - [Optional] Preferred language. Default is en.
         '''
         pass
-    
+
     @staticmethod
     def upnp_stop(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Stop playback.
         udn:String :- UDN return from API upnp_list_upnp_renderers
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
-    
+
     @staticmethod
     def upnp_get_transport_info(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get transport info.
         udn:String :- UDN return from API upnp_list_upnp_renderers
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"CurrentSpeed": 1, "CurrentTransportState": "STOPPED"}
         '''
         pass
-    
+
     @staticmethod
     def upnp_get_status(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
@@ -105,48 +118,45 @@ class UPNPService():
         udn:String :- UDN return from API upnp_list_upnp_renderers
         return:Dictionary :eg- {"NrTracks":1,"MediaDuration":"","CurrentURI":"","NextURI":"","title":"","artist":"","album":"","albumArtURI":"","Track":1,"TrackDuration":"0:03:11","TrackURI":"","RelTime":"0:00:00","AbsTime":"","CurrentMute":"0","CurrentVolume":"0"}
         '''
-    
+        pass
+
     @staticmethod
     def upnp_get_media_info(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get media info.
         udn:String :- UDN return from API upnp_list_upnp_renderers
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"MediaDuration": "0:02:53", "NrTracks": 1, "NextURI": "NOT_IMPLEMENTED", "CurrentURI": "http://23.23.136.93/alsghoaeiw/test.mp3"}
         '''
         pass
-    
+
     @staticmethod
     def upnp_get_track_info(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get track info.
         udn:String :- UDN return from API upnp_list_upnp_renderers
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"Track": 1, "RelTime": "0:00:41", "TrackDuration": "0:02:53", "AbsTime": "0:03:34", "TrackURI": "http://23.23.136.93/alsghoaeiw/test.mp3"}
         '''
         pass
-    
+
     @staticmethod
     def upnp_get_mute(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get mute status.
         udn:String :- UDN return from API upnp_list_upnp_renderers
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"mute": "0"}
         '''
         pass
-    
+
     @staticmethod
     def upnp_set_mute(udn, mute, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Set mute status.
         udn:String :- UDN return from API upnp_list_upnp_renderers
         mute:Boolean :- True=mute, False=unmute
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"response":{"status": "success"}}
         '''
         pass
-    
+
     @staticmethod
     def upnp_get_volume(udn, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
@@ -155,7 +165,7 @@ class UPNPService():
         return:Dictionary :eg- {"volume": "33"}
         '''
         pass
-    
+
     @staticmethod
     def upnp_set_volume(udn, volume, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
@@ -165,7 +175,7 @@ class UPNPService():
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
-    
+
     @staticmethod
     def upnp_browse_upnp_dir(udn, objectId, startIndex, reqCount, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
@@ -179,3 +189,4 @@ class UPNPService():
                                           {"objectId": "12", "parent_id": "0", "title": "Playlists"}]}}
         '''
         pass
+

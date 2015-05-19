@@ -1,32 +1,38 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 define([
     'Kurobox',
 	'underscore'
 ], function (Kurobox, _) {
-	var clazz = function() {
-		this.initialize.apply(this, arguments)
-	}
-
+    var _xhr_store = {};
+    var gen_id = function() {
+        return new Date().getTime();
+    }
+    var clazz = function() {
+        this.initialize.apply(this, arguments)
+    }
 	_.extend(clazz.prototype, {
 		dev_opt: null,
+        get_xhr: function(id) {
+            return _xhr_store[id];
+        },
+
         fetch: function(options) {
             // inject parsing script
             options = options || {};
@@ -43,11 +49,7 @@ define([
                 if (successCb) successCb(model, kurobox, options);
             }.bind(this);
 
-            // set custom param by developer
-            var param = this._handleParam(this.dev_opt);
-
-             // call the server
-            this._triggerKuroboxApi(this, this.url, param, options, this.dev_opt);
+            this._callApi(options);
         },
 
         save: function (key, val, options) {
@@ -80,9 +82,12 @@ define([
                 }
             }
 
-            // customize param
-            api_param = this._handleParam(this.dev_opt);
+            this._callApi(options);
+        },
 
+        _callApi: function(options) {
+             // customize param
+            var api_param = this._handleParam(this.dev_opt);
             this._triggerKuroboxApi(this, this.url, api_param, options, this.dev_opt);
         },
 
@@ -124,7 +129,7 @@ define([
             if (options) {
                 skipGlobalError = options.skipGlobalError || false;
             } else if (dev_opt) {
-                skipGlobalError = dev_opt || false;
+                skipGlobalError = dev_opt.skipGlobalError || false;
             }
             
             var api_opt = {
@@ -133,6 +138,7 @@ define([
                 app_id: dev_opt.app_id || undefined,
                 redirectLogin: dev_opt.redirectLogin,
                 skipGlobalError: skipGlobalError,
+                query_param: dev_opt.query_param,
                 success: function(resp) {
                     if (!_.isEmpty(options) && _.isFunction(options.success)){
                         options.success(model, resp, options);
@@ -146,11 +152,18 @@ define([
                         }
                 },
             }
-            this.xhr = Kurobox.api(method, param, api_opt);
+
+            var id = gen_id();
+            _xhr_store[id] = Kurobox.api(method, param, api_opt).complete(function() {
+                delete _xhr_store[id];
+            });
+            return id;
         },
 
         destroy: function() {
-            if (typeof this.xhr !== 'undefined') this.xhr.abort();
+            _.each(_xhr_store, function(xhr) {
+                xhr.abort();
+            })
         }
 	}) 
 

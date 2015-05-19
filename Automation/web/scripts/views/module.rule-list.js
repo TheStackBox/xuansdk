@@ -1,21 +1,22 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global define*/
 
 define([
     'jquery',
@@ -29,7 +30,7 @@ define([
     'use strict';
     var hashTag = '#/rule';
     var itemSize = 20;
-    var listSpacer = '<div id="list-spacer" class="clear" style="height:50px;"></div>';
+    var listSpacer = '<div id="list-spacer" class="clear tab-spacer"></div>';
     var ModuleRuleListView = Backbone.View.extend({
         template: JST['app/scripts/templates/module.rule-list.ejs'],
         item_template: JST['app/scripts/templates/module.rule-list.tmpl.ejs'],
@@ -37,7 +38,7 @@ define([
         list_error_msg: JST['app/scripts/templates/module.rule-list.error.ejs'],
         events: {
             'click .device-empty button': 'on_device_start',
-            'click #device-list-error #retry-btn': 'retrieve_rule',
+            'click #device-list-error #retry-btn': 'on_user_error_retry',
         	'click .device-option': 'on_device_option',
             'click #option-button': 'on_device_action',
             'click #option-dark': 'on_option_closed',
@@ -47,6 +48,11 @@ define([
 
         initialize: function() {
             this.firstBatchData = true;
+
+            Kurobox.socket.verbose = true;
+            Kurobox.socket.on('socket:AUTOMATION_RULE_UPDATE_STARTED', this._on_rule_item_updating, this);
+            Kurobox.socket.on('socket:AUTOMATION_RULE_UPDATED', this._on_rule_item_updated, this);
+            Kurobox.socket.start();
         },
 
         start: function() {
@@ -54,35 +60,28 @@ define([
         },
 
         destroy: function() {
+            // clear collection
+            delete this.collection;
             $('.device-list').infinitescroll('destroy');
             this.$el.find('.device-list').empty()
         },
 
-        show: function() {
-            if (this.$el.is(':hidden')) {
-                // listen to updating rule item
-                console.log('--- connect socket');
-                Kurobox.socket.on('socket:AUTOMATION_RULE_UPDATE_STARTED', this._on_rule_item_updating, this);
-                Kurobox.socket.on('socket:AUTOMATION_RULE_UPDATED', this._on_rule_item_updated, this);
-                Kurobox.socket.start();
-            }
-            console.log('--- show', this.$el.is(':hidden'))
-            $(this.el).show();
+        destroy_sockets: function() {
+            // clear socket
+            Kurobox.socket.off('socket:AUTOMATION_RULE_UPDATE_STARTED', this._on_rule_item_updating, this);
+            Kurobox.socket.off('socket:AUTOMATION_RULE_UPDATED', this._on_rule_item_updated, this);
+        },
 
+        show: function() {
+            $(this.el).show();
         },
 
         hide: function() {
-            if (!this.$el.is(':hidden')) {
-                // remove listener
-                console.log('--- close socket');
-                Kurobox.socket.stop();
-            }
-
             $(this.el).hide();
         },
 
         is_empty: function() {
-            return this.$el.find('.device-list').html() === '';
+            return this.$el.find('.device-list').text() === '';
         },
 
         is_list_empty: function() {
@@ -93,8 +92,8 @@ define([
         },
 
         is_item_disabled: function(id) {
-            var $e = this.$('.rule-itm[data-id="id"]');
-            return $e.hasClass('disable');
+            var $e = this.$('.rule-itm[data-id="'+id+'"]');
+            return $e.hasClass('disabled');
         },
 
         render: function() {
@@ -105,9 +104,14 @@ define([
         	return this;
         },
 
+        on_user_error_retry: function() {
+            this.$('.device-list').text('');
+            this.retrieve_rule();
+        },
+
         retrieve_rule: function(startIdx, total) {
             console.log('retrieve_rule');
-            if (this.is_list_empty()) {
+            if (this.is_empty()) {
                 this.$('#device-list').infinitescroll('destroy');
                 this.$('#device-list').data('infinitescroll', null);
                 this.$('#device-list').empty();
@@ -139,7 +143,7 @@ define([
         },
 
         on_device_option:function(evt) {
-            var did = $(evt.currentTarget).parent().data('id');
+            var did = $(evt.currentTarget).parent().parent().data('id');
             window.location = hashTag+'/options/'+did;
         },
 
@@ -210,19 +214,20 @@ define([
         },
 
         change_rule_status: function(status, uid) {
-            console.log('change_rule_status');
+            console.log('change_rule_status', status, uid);
             
             var model = this.collection.get(uid);
 
             // change status of item 
-            var itemEl =  $('.rule-itm[data-id="' + uid + '"]');
+            var itemEl =  this.$('.rule-itm[data-id="' + uid + '"]');
 
             model.set_enable(status === 'enable')
             
+            console.log('----<>', itemEl)
             if(status === 'disable'){
-                itemEl.addClass('disable');
+                itemEl.addClass('disabled');
             } else {
-                itemEl.removeClass('disable');
+                itemEl.removeClass('disabled');
             }
         },
 
@@ -258,7 +263,7 @@ define([
                 nextSelector    : 'a#next:last',
                 itemSelector    : '#device-list',
                 debug           : false,
-                maxPage         : 2,
+                maxPage         : undefined,
                 dataType        : 'json',
                 appendCallback  : false,
                 state           : {currPage:-1, isDestroyed: false, isDone:false},
@@ -269,8 +274,21 @@ define([
                 },
                 errorCallback   : function () {
                    this.collection = new Device.collection();
+
+                   console.log('-- error callback!!!!', this.arguments)
                    
                    this.terminate_scroller();
+
+                   // global error
+                   Shell.handle_global_error({
+                        error: {
+                            code: -1
+                        },
+                        ajax: {
+                            textStatus: '',
+                            jqXHR: {responseText: ''}
+                        }
+                   })
 
                    this.show_list_error();
 
@@ -310,14 +328,22 @@ define([
 
                     if (outputCollection.length <= 0) {
                         this.terminate_scroller();
-                        this.show_empty_template();
+
+                        this.dataLength = 0;
+
+                        if (this.collection.length <= 0) {
+                            this.show_empty_template();
+                        }
                     } else {
                         this.collection.add(outputCollection.models);
 
-                        this.collection.each(function(model){
+                        outputCollection.each(function(model){
                             this._create_new_item(model);
                         }.bind(this))
 
+                        this.dataLength = response.theKuroBox.response.totalCount;
+                        
+                        console.log('-- test length', this.collection.length, response.theKuroBox.response.totalCount)
                         if (this.collection.length >= response.theKuroBox.response.totalCount) {
                             this.terminate_scroller();
                         } else {
@@ -332,6 +358,28 @@ define([
                     $('#device-list').append(listSpacer);
                 } else {
                     this.$('#device-list').infinitescroll('pause');
+
+                    // global error
+                    Shell.handle_global_error({
+                        error: {
+                            code: response.theKuroBox.returnValue,
+                            message: response.theKuroBox.returnMessage
+                        },
+                        ajax: {
+                            textStatus: '',
+                        }
+                    }, function() {
+                        switch (response.theKuroBox.returnValue) {
+                            case 401:
+                            case 403:
+                            case 405:
+                                // login expired; redirect to login
+                                window.location = '/system/?callback='+encodeURIComponent('/system/myapp');
+                                break;
+                        }
+                    })
+
+                    console.log('--- api error')
 
                     // show error
                     this.show_list_error(response.theKuroBox.returnMessage+' ['+response.theKuroBox.returnValue+']');
@@ -356,12 +404,13 @@ define([
         _create_new_item: function(model) {
             var attr_obj = {
                 'data-id': model.id,
-                'class': 'rule-itm'
+                'class': 'rule-itm',
+                'touch':'true'
             }
 
             if (!model.get('enabled')) {
                 // assume it's not enabled
-                attr_obj.class += ' disable';
+                attr_obj.class += ' disabled';
             }
 
             $('.device-list').append($('<div>', attr_obj).html(
@@ -381,7 +430,7 @@ define([
         user_execute_rule: function(e) {
             var $e = $(e.currentTarget);
             var $parent = $e.parent();
-            if (!$parent.hasClass('disable')) {
+            if (!$parent.hasClass('disabled')) {
                 this.trigger('execute', this.collection.get($parent.data('id')))
             }
         },
@@ -402,7 +451,7 @@ define([
                 try {
                     var $itm_el = this.$('.rule-itm[data-id="'+data.ruleId+'"]');
                     $itm_el.find('.rule-row').unbind('click');
-                    $itm_el.addClass('disable update');
+                    $itm_el.addClass('disabled update');
                 } catch (e) {
                     // assume it's creating a new one
                     // console.error('updating error', e)
@@ -419,17 +468,22 @@ define([
                 }
                 var m = new Device.model({response:data}, {parse:true});
                 if (this.collection.get(data.ruleId) === undefined) {
-                    // new rule
-                    this.collection.add(m);
+                    if (this.$('#device-list').data('infinitescroll').options.state.isPaused) {
+                        console.log('-- added new rule')
+                        // assume the scroller has being killed
 
-                    // remove previous spacer
-                    this.$('#device-list > #list-spacer').remove();
+                        // new rule
+                        this.collection.add(m);
 
-                    // add to ui
-                    this._create_new_item(this.collection.get(data.ruleId));
+                        // remove previous spacer
+                        this.$('#device-list > #list-spacer').remove();
 
-                    // add back spacer
-                    this.$('#device-list').append(listSpacer);
+                        // add to ui
+                        this._create_new_item(this.collection.get(data.ruleId));
+
+                        // add back spacer
+                        this.$('#device-list').append(listSpacer);
+                    }
 
                 } else {
                     // update rule
@@ -438,12 +492,12 @@ define([
                     var $itm_el = this.$('.rule-itm[data-id="'+data.ruleId+'"]');
 
                     // remove update class
-                    $itm_el.removeClass('disable update');
+                    $itm_el.removeClass('disabled update');
 
                     // add back status
                     if (!m.get('enabled')) {
                         // assume its not active
-                        $itm_el.addClass('disable');
+                        $itm_el.addClass('disabled');
                     }
 
                     // update ui

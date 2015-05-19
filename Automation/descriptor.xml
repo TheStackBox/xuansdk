@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<theKuroBox>
+<theDavidBox>
   <application>
     <appId>2000300</appId>
     <appVerId>2000300</appVerId>
-    <name>Automation App</name>
-    <cateCodes>2</cateCodes>
-    <cate></cate>
-    <version>1.0</version>
-    <priority></priority>
+    <publishTime>0</publishTime>
+    <name>Automation</name>
+    <cateCodes>|app|</cateCodes>
+    <cate>|App|</cate>
+    <typeCodes>|ui|daemon|</typeCodes>
+    <version>2.0.6</version>
     <description>Python app for automation</description>
-    <thumbnailExt>.png</thumbnailExt>
+    <author>CloudMedia</author>
     <entryPoint>automationApp.automationApp.AutomationApp</entryPoint>
-    <webEntryPoint>web.index</webEntryPoint>
+    <thumbnailExt>.png</thumbnailExt>
+    <priority>0</priority>
+    <startSeq>1</startSeq>
+    <autoStart>true</autoStart>
   </application>
-</theKuroBox>
+</theDavidBox>

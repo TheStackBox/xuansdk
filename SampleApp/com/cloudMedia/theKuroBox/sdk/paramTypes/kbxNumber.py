@@ -1,40 +1,40 @@
 ##############################################################################################
-# Copyright 2014 Cloud Media Sdn. Bhd.
+# Copyright 2014-2015 Cloud Media Sdn. Bhd.
 #
 # This file is part of Xuan Application Development SDK.
 #
-#    Xuan Application Development SDK is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+# Xuan Application Development SDK is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#    This project is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
+# Xuan Application Development SDK is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
+
 import sys
 
+from com.cloudMedia.theKuroBox.sdk.ex.systemException import SystemException
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamType import KBXParamType
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamWrapper import KBXParamWrapper
+from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
+from com.cloudMedia.theKuroBox.sdk.util.util import Util
+from com.cloudMedia.theKuroBox.sdk.util.validator.numberValidator import NumberValidator
 
-    
-class KBXNumber(KBXParamType, KBXParamWrapper):
+class KBXNumberType(KBXParamType):
 
-    
-    ''' Read-only: Name of the component. '''
     TYPE_NAME = "kbxNumber"
 
-    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_DECIMAL = "kbxParamDecimal"
     PROP_KBX_PARAM_MIN_VALUE = "kbxParamMinValue"
     PROP_KBX_PARAM_MAX_VALUE = "kbxParamMaxValue"
-    
-    
-    def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamDecimal=0, kbxParamMinValue=-(sys.maxsize), kbxParamMaxValue=sys.maxsize, **kbxParamProps):
+
+    def __init__(self, kbxParamIsRequired=True, kbxParamDecimal=0, kbxParamMinValue=-(sys.maxsize), kbxParamMaxValue=sys.maxsize):
         '''
         Parameter that accepts only number value.
 
@@ -56,7 +56,7 @@ class KBXNumber(KBXParamType, KBXParamWrapper):
         value:Boolean - [Required] True if decimal point is allowed and vice versa.
         '''
         pass
-    
+
     def set_kbx_param_min_value(self, value):
         '''
         Set the lower boundary for the value of this parameter.
@@ -101,3 +101,21 @@ class KBXNumber(KBXParamType, KBXParamWrapper):
         Value of upper boundary.
         '''
         pass
+
+    def cast(self, value):
+        '''
+        Cast given input against the properties of this parameter.
+
+        Params:
+        value - [Required] Any value.
+
+        Returns:
+        A float value if decimal point is allowed, else an integer.
+        '''
+        pass
+
+class KBXNumber(KBXNumberType, KBXParamWrapper):
+
+    def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamDecimal=0, kbxParamMinValue=-(sys.maxsize), kbxParamMaxValue=sys.maxsize, **kbxParamProps):
+        pass
+

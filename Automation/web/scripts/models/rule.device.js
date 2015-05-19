@@ -1,36 +1,35 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global define*/
 
 define([
     'underscore',
-    'models/device',
     'libs/backbone/models/kurobox-model',
     'libs/backbone/models/kurobox-collection',
-    'models/rule.device.method',
+    'common/rule/models/rule.device.method',
     'models/rule.device-type'
-], function (_, Device, KuroboxModel, KuroboxCollection, DeviceMethod, RuleDeviceType) {
+], function (_, KuroboxModel, KuroboxCollection, DeviceMethod, RuleDeviceType) {
     'use strict';
 
     var COMPONENT_DEMO = false;
 
     var RuleDevice = {};
-    var spr = Device.prototype;
    	RuleDevice.model = KuroboxModel.extend({
         defaults: {
             'section': 'if',
@@ -39,7 +38,9 @@ define([
             'name': 'Unknown device',
             'status': 0,
             'icon': '&#xe617',
-            'methods': new DeviceMethod.collection() // DeviceMethod.collection
+            'is_deleted': false,
+            'methods': new DeviceMethod.collection(), // DeviceMethod.collection
+            'has_child': false,
         },
         initialize: function(data, options) {
             if (data !== undefined) {
@@ -63,17 +64,17 @@ define([
             if (typeof PRODUCTION === 'undefined') {
                 if (COMPONENT_DEMO) this.dev_opt.url = 'json/sample.components.json';
             }
-            this.parse = this._parseListMethods;
             KuroboxModel.prototype.fetch.call(this, options);
         },
         
-        _parseListMethods: function(data) {
+        parse: function(data) {
             console.log('device data', data.response.data)
             var o = {
-                name: data.response.group.kbxGroupLabel,
+                id: data.response.group.kbxGroupId,
+                name: data.response.group.kbxGroupLabel || data.response.group.kbxGroupName,
                 icon: data.response.group.kbxGroupIcon,
                 description: data.response.group.kbxGroupDesc,
-                methods: new DeviceMethod.collection(data.response.data, {parse:true})
+                methods: new DeviceMethod.collection(data.response.data, {parse:true}),
             }
             console.log('test methods', o.methods);
             console.log('methods length vs data length', o.methods.length, data.response.data.length)
@@ -90,13 +91,15 @@ define([
                 icon: this.get('icon'),
             })
 
-            o.set('methods', this.get('methods').clone())
+            if (this.get('methods') != undefined) {
+                o.set('methods', this.get('methods').clone())
+            }
 
             return o;
         }
     });
 
-    RuleDevice.collection = Device.collection.extend({
+    RuleDevice.collection = KuroboxCollection.extend({
     	model: RuleDevice.model,
     	fetch: function(section, group, options) {
             this.section = (section === 'if') ? 'condition' : 'execution';
@@ -126,23 +129,27 @@ define([
                 delete extraInfo.kbxGroupLabel;
                 delete extraInfo.kbxGroupName;
                 delete extraInfo.kbxGroupParentId;
+                delete extraInfo.kbxGroupHasChild;
 
                 o.push({
                     id: deviceData.kbxGroupId,
-                    label: deviceData.kbxGroupLabel || deviceData.kbxGroupName || '',
+                    name: deviceData.kbxGroupLabel || deviceData.kbxGroupName || '',
                     icon: deviceData.kbxGroupIcon || undefined,
                     extra_info: extraInfo,
-                    description: deviceData.kbxGroupDesc
+                    description: deviceData.kbxGroupDesc,
+                    has_child: deviceData.kbxGroupHasChild || false,
                 })
             }.bind(this))
 
             // register group info
-            this.group = new RuleDeviceType.model({
-                id: data.response.parentGroup.kbxGroupId,
-                label: data.response.parentGroup.kbxGroupLabel || undefined,
-                icon: data.response.parentGroup.kbxGroupIcon || undefined,
-                description: data.response.parentGroup.kbxGroupDesc || '',
-            })
+            if (data.response.parentGroup != undefined) {
+                this.group = new RuleDeviceType.model({
+                    id: data.response.parentGroup.kbxGroupId,
+                    label: data.response.parentGroup.kbxGroupLabel || undefined,
+                    icon: data.response.parentGroup.kbxGroupIcon || undefined,
+                    description: data.response.parentGroup.kbxGroupDesc || '',
+                })
+            }
             return o;
         },
 

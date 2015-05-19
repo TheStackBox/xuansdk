@@ -1,21 +1,22 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global define*/
 
 define([
     'underscore',
@@ -179,6 +180,8 @@ define([
             this._triggerKuroboxApi(this, this.url, this._handleParam(this.dev_opt), options, this.dev_opt);
         },
         set_enable: function(enable, options) {
+            this.set('enabled', enable);
+            
             this.url = 'enable_rule';
             this.dev_opt = {
                 method: 'GET',
@@ -194,7 +197,7 @@ define([
             var o = {};
             o.id = res.ruleId;
             o.name = res.ruleName;
-            o.status = res.statusMessage;
+            o.status = res.statusCode;
             o.enabled = res.enabled;
             o.trigger = res.trigger;
 

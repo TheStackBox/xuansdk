@@ -1,27 +1,35 @@
 ##############################################################################################
-# Copyright 2014 Cloud Media Sdn. Bhd.
+# Copyright 2014-2015 Cloud Media Sdn. Bhd.
 #
 # This file is part of Xuan Application Development SDK.
 #
-#    Xuan Application Development SDK is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+# Xuan Application Development SDK is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#    This project is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
+# Xuan Application Development SDK is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
+
+import json
+
+from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
+from com.cloudMedia.theKuroBox.sdk.ex.systemException import SystemException
+from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
+
 class KBXParam(object):
     '''
-    Base class for all KBXParams, do not instantiate it directly.
+    Base class that serve as an interface and should not be instantiated directly.
     '''
-    
-    ''' Error code used by KBXParams '''
+    #===========================================================================
+    # Error code used by KBXParamType
+    #===========================================================================
     ERR_INVALID_DATA_TYPE = 1501
     ERR_INVALID_TIMESTAMP = 1502
     ERR_INVALID_VALUE = 1503
@@ -31,9 +39,12 @@ class KBXParam(object):
     ERR_INVALID_STRING_FORMAT = 1507
     ERR_INVALID_STRING_CHARACTER = 1508
     ERR_INDEX_OUT_OF_BOUND = 1509
-    ERR_INDEX_DUPLICATED = 1510
+    ERR_VALUE_DUPLICATED = 1510
     ERR_FIELD_REQUIRED = 1511
     ERR_OPERATION_FAILED = 1512
+
+    def __init__(self, reservedProps=[]):
+        pass
 
     def set_property(self, prop, value):
         '''
@@ -77,3 +88,4 @@ class KBXParam(object):
         True if exists and vice versa.
         '''
         pass
+

@@ -1,21 +1,22 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global define*/ 
 
 define([
     'jquery',
@@ -75,6 +76,16 @@ define([
             var $content = this.$el.find('#shell-dark-content');
             this._show_dark_message($content, msg_html, events, on_dark_clicked);
             $content.show();
+
+            // overcome hiding dark
+             var $pop_content = this.$('#shell-pop-content');
+            if ($pop_content.is(':animated')) {
+                // complete slide toggle
+                $pop_content.finish();
+                // force show shell dark
+                this.$('#shell-dark').show();
+            }
+
             return $content;
         },
 
@@ -93,21 +104,31 @@ define([
             return $content;
         },
 
-        hide_pop_message: function() {
+        hide_pop_message: function(complete_callback) {
+            console.error('--- hide pop message')
             var $content = this.$('#shell-pop-content');
+
             var completeFunc = function() {
                 this._hide_dark_message($content);
+                if (complete_callback) complete_callback(this);
             }.bind(this);
 
-            if ($content.is(':visible')) {
-                $content.slideToggle({
-                    duration:'fast',
-                    complete: completeFunc
-                });
+            if (!$content.is(':animated') && !$content.is(':empty')) {
+                if ($content.is(':visible')) {
+                    $content.slideToggle({
+                        duration:'fast',
+                        complete: completeFunc
+                    });
+                } else {
+                    completeFunc();
+                }
             } else {
-                completeFunc();
+                if ($content.is(':animated')) {
+                    console.warn('hide_pop_message: content animation is running');
+                } else {
+                    completeFunc();
+                }
             }
-            
         },
 
         on_user_clicked_dark: function(e) {
@@ -148,6 +169,7 @@ define([
         _hide_dark_message: function($content) {
             $content.off('.darkEvents' + this.cid);
             $content.empty();
+            $content.hide();
 
             this._on_dark_clicked = undefined;
 

@@ -1,21 +1,22 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global define*/
 
 define([
     'jquery',
@@ -28,6 +29,9 @@ define([
     'views/module.rule-creator.summary'
 ], function ($, _, Backbone, JST, RuleDeviceExplorer, RuleDeviceSetting, RuleConfig, RuleSettingSummary) {
     'use strict';
+
+    var RULE_CONDITION_LIMIT = 10;
+    var RULE_EXECUTION_LIMIT = 10;
 
     var OptionModel = Backbone.Model.extend({
         defaults:{
@@ -73,8 +77,8 @@ define([
         rule_item_tmpl: JST['app/scripts/templates/module.rule.device-rule-item.ejs'],
         option_tmpl: JST['app/scripts/templates/module.rule.options.ejs'],
         header_content: JST['app/scripts/templates/module.rule-creator.header.ejs'],
-        header_template: JST['app/scripts/templates/module.rule.grey-header.ejs'],
-        prompt_pop_dialog_msg: JST['app/scripts/templates/prompt.pop.ejs'],
+        header_template: JST['app/scripts/common/templates/grey-header.ejs'],
+        prompt_pop_dialog_msg: JST['app/scripts/common/templates/prompt.pop.ejs'],
         events: {
             'click .nav-circle-outline.nav-icon-edit': 'edit_devices',
             'click #header-rule-creator #nav-back-btn': 'user_close_this',
@@ -91,7 +95,9 @@ define([
             this.device_rule_setting.destroy();
             this.device_rule_setting = undefined;
             
+            this.device_explorer.destroy();
             this.device_explorer = undefined;
+
             this.rule_config = undefined;
             this.options = undefined;
             $(this.el).empty();
@@ -104,6 +110,7 @@ define([
 
             // flag for changes
             this.has_changes = false;
+            this.is_edit = false;
 
             $(this.el).html(this.template({
                 config: this.rule_config, 
@@ -136,50 +143,47 @@ define([
                     })
                 }))
 
-	            this.device_explorer = new RuleDeviceExplorer({el: $('#device-explorer'), prompt_message: this.options.parent.prompt_message, base_url: _base_url});
+	            this.device_explorer = new RuleDeviceExplorer({el: $('#device-explorer'), prompt_message: this.options.parent.prompt_message.bind(this.options.parent), base_url: _base_url});
 	            this.device_explorer.on('busy', function() { this.trigger('busy') }.bind(this));
 	            this.device_explorer.on('idle', function() { this.trigger('idle') }.bind(this));
 
 	            this.device_rule_setting = new RuleDeviceSetting({el: $('#device-setting')});
 	            this.device_rule_setting.on('done', function(setting_config) {
+                    var lookAtSection = this.section === 'if' ? 'condition' : 'execution';
                     if (setting_config.get('methods').length > 0) {
-                        // empty element to force summary to refresh
-                        if (this.section === 'if') {
-                            this.condition_summary.$el.empty();
-                        } else {
-                            this.execution_summary.$el.empty();
-                        }
+                        this._unsaved_device_rule_setting = setting_config;
+                        this.save_the_unsaved_rule_device_setting();
 
-                        // update data
-                        console.log('setting saved', setting_config);
-                        var section = (this.section === 'if') ? 'condition' : 'execution';
-                        this.rule_config.get(section).add(setting_config, {merge: true});
-
-                        // flag for changes
-                        this.has_changes = true;
-
-                        // update ui
-                        this.update_trigger();
                     }
+                    var section_item_length = this.rule_config.get(lookAtSection).length;
 
-                    this.go_main();
-                    // action set compiled
-                    // hide add interface
-                    /*this.device_rule_setting.close();
-
-                    // save configuration on member
-                    var model_prop = (this.section === 'if') ? 'condition' : 'execution';
-                    if (mode === 'add') {
-                        this.rule_config.get(model_prop).add(setting_config, {merge: true});
+                    console.log('--> chk item length', lookAtSection, section_item_length, eval('RULE_' + lookAtSection.toUpperCase() + '_LIMIT'))
+                    if (section_item_length < eval('RULE_' + lookAtSection.toUpperCase() + '_LIMIT')) {
+                        // hasn't reach limit
+                        var pop_conf = {};
+                        pop_conf.ok_btn_label = 'btn_add';
+                        pop_conf.cancel_btn_label = 'btn_done';
+                        pop_conf.title = 'msg_rule_title_add_more';
+                        pop_conf.message = 'msg_rule_add_more_'+this.section;
+                        
+                        Shell.show_pop_message(this.prompt_pop_dialog_msg(pop_conf), {
+                            'click #modal-ok-btn': this.on_user_continue_add_more_device.bind(this),
+                            'click #modal-cancel-btn': this.on_user_done_edit.bind(this)
+                        },
+                        function() {
+                            Shell.hide_pop_message();
+                        })
                     } else {
-                        this.rule_config.get(model_prop).set(setting_config);
+                        // ok, check out next section
+                        this.on_user_done_edit();
                     }
+                    
+                }.bind(this));
 
-                    // determine if event based action inside the configuration
-                    this.update_trigger();
-        
-                    this.go_main();
-                    $('#main-container').addClass('container');*/
+                this.device_rule_setting.on('cancel', function() {
+                    // prompt to add more
+                    // this.go_main();
+                    window.history.back();
                 }.bind(this));
 
                 // summary for condition
@@ -269,6 +273,8 @@ define([
                         // Shell.removePreloadingEvents();
                         this.$('#rule-content').hide();
 
+                        // reset body pos
+                        $('body').scrollTop(0);
                         // get the list
                         this.device_explorer.list_device(this.section, query.group, query.name);
                         if (this.device_rule_setting.$el.is(':visible')) {
@@ -386,30 +392,35 @@ define([
                  this.$('#then-container').hide();
              }
 
-            
-
               // validate edit button
              if (this.rule_config.get('condition').length > 0 || this.rule_config.get('execution').length > 0){
                  $('.nav-icon-edit').removeClass('icon-off');
+                 $('.nav-icon').attr('touch', 'true');
              }else{
                  $('.nav-icon-edit').addClass('icon-off');
+                 $('.nav-icon').removeAttr('touch');
              }
 
-            /*if (this.rule_config.get('condition').length > 0 || this.rule_config.get('execution').length > 0){
-                $('#action-gp').show();
-                $('.dialog-box').hide();
+             // validate add icon
+             if (this.rule_config.get('condition').length >= RULE_CONDITION_LIMIT) {
+                this.$('#if-content').addClass('disabled').on('click', function() {return false;})
+                this.$('#if-desc').hide();
+                this.$('#if-content').removeAttr('touch');
+             } else {
+                this.$('#if-content').removeClass('disabled').off('click');
+                this.$('#if-desc').show();
+                this.$('#if-content').attr('touch', 'true');
+             }
 
-                this.update_device_rule_list();
-            }else{
-                $('.dialog-box').show();
-            }*/
-
-            // validate edit button
-           /* if (this.rule_config.get('execution').length > 0) {
-                $('.nav-icon-edit').removeClass('icon-off');
-            } else {
-                $('.nav-icon-edit').addClass('icon-off');
-            }*/
+             if (this.rule_config.get('execution').length >= RULE_EXECUTION_LIMIT) {
+                this.$('#then-content').addClass('disabled').on('click', function() {return false;})
+                this.$('#then-desc').hide();
+                this.$('#then-content').removeAttr('touch');
+             } else {
+                this.$('#then-content').removeClass('disabled').off('click');
+                this.$('#then-desc').show();
+                this.$('#then-content').attr('touch', 'true');
+             }
 
             // validate save button
             this.validate_save_btn();
@@ -419,9 +430,11 @@ define([
             if($('#edit-name').val().length <= 0 || this.rule_config.get('execution').length <= 0  || this.rule_config.get('condition').length <= 0 ){
                  console.log('disabled btn');
                 $('#rule-done-btn').addClass('disabled');
+                $('#rule-done-btn').attr('disabled', 'disabled');
             }else{
                  console.log('enabled btn');
                 $('#rule-done-btn').removeClass('disabled');
+                $('#rule-done-btn').removeAttr('disabled');
             }
         },
 
@@ -429,8 +442,8 @@ define([
             this.rule_config = new RuleConfig.model();
         },
         update_device_rule_list: function() {
-            this.condition_summary.render(this.rule_config.get('condition'), this.uid)
-            this.execution_summary.render(this.rule_config.get('execution'), this.uid)
+            this.condition_summary.render(this.rule_config.get('condition'), this.uid, this.is_edit)
+            this.execution_summary.render(this.rule_config.get('execution'), this.uid, this.is_edit)
         },
 
         render_options: function(option, selected_option) {
@@ -527,10 +540,18 @@ define([
                 var $then_methods = this.$('#then-container').find('.delete-action');
 
                 // console.log('test hidden', $device_els.is('hidden'))
-                $if_devices.toggle();
-                $if_methods.toggle();
-                $then_devices.toggle();
-                $then_methods.toggle();
+                this.is_edit = !this.is_edit;
+                if (this.is_edit) {
+                    $if_devices.show();
+                    $if_methods.show();
+                    $then_devices.show();
+                    $then_methods.show();
+                } else {
+                    $if_devices.hide();
+                    $if_methods.hide();
+                    $then_devices.hide();
+                    $then_methods.hide();
+                }
             }
         },
 
@@ -651,16 +672,39 @@ define([
             var $e = $(e.currentTarget);
             var did = $e.parent().parent().prop('id');
             var section = $e.parent().parent().parent().prop('id');
+            var setting_modal = this.rule_config.get((section === 'if') ? 'condition' : 'execution').get(did)
 
-            // set config to rule setting
-            // this.device_rule_setting.options.config = this.rule_config.get((section === 'if') ? 'condition' : 'execution').get(did);
-            this.device_rule_setting.options.user_device = this.rule_config.get((section === 'if') ? 'condition' : 'execution').get(did);
+            if (setting_modal.get('status') !== 1) {
+                // assume device is available/ not yet being removed
+                
+                // set config to rule setting
+                // this.device_rule_setting.options.config = this.rule_config.get((section === 'if') ? 'condition' : 'execution').get(did);
+                this.device_rule_setting.options.user_device = setting_modal;
 
-            this.go_main({
-                section: section,
-                action: 'select',
-                did: did
-            })
+                this.go_main({
+                    section: section,
+                    action: 'select',
+                    did: did
+                })
+            } else {
+                // tell user is has being removed
+                var $p = Shell.show_pop_message(
+                    this.prompt_pop_dialog_msg({
+                        title: '',
+                        message: 'msg_rule_device_explorer_device_delete_access_denied',
+                        ok_btn_label: 'btn_ok',
+                        cancel_btn_label: ''
+                    }),
+                    {
+                        'click #modal-ok-btn': this.on_user_acknowledge_prompt_message.bind(this),
+                        'click #modal-cancel-btn': this.on_user_acknowledge_prompt_message.bind(this)
+                    },
+                    this.on_user_acknowledge_prompt_message.bind(this)
+                )
+
+                $p.find('#modal-cancel-btn').hide();
+            }
+
         },
 
         go_main: function(param) {
@@ -734,6 +778,113 @@ define([
 
             // and go back
             window.location = '#/rule';
+        },
+
+        on_user_continue_add_more_device: function() {
+            // assume user want to continue add more device on the same section
+
+            // navigate
+            window.location = '#/rule/add?section='+this.section+'&action=list-types';
+            Shell.hide_pop_message();
+        },
+
+        on_user_done_edit: function() {
+            // assume don want continue to add more device
+            console.log('--- done eidt???!!!!')
+
+            var cb = function() {
+                this.go_main();
+            }.bind(this);
+
+            
+            if (this.section === 'if') {
+                // check if then is empty?
+                if (this.rule_config.get('execution').length <= 0) {
+                    // prompt want to continue to add more in other section
+                    cb = function() {
+                        Shell.show_pop_message(
+                            this.prompt_pop_dialog_msg({
+                                title: 'msg_rule_title_add_exec_section',
+                                message: 'msg_rule_msg_add_func_exec',
+                                ok_btn_label: 'btn_yes',
+                                cancel_btn_label: 'btn_do_later'
+                            }),
+                            {
+                                'click #modal-ok-btn': this.on_user_continue_add_other_section.bind(this),
+                                'click #modal-cancel-btn': this.on_user_complete_edit.bind(this)
+                            },
+                            function() {
+                                Shell.hide_pop_message();
+                            }
+                        )
+                    }.bind(this)
+                }
+            } else {
+                // check then is empty?
+                if (this.rule_config.get('condition').length <= 0) {
+                    // prompt want to continue to add more in other section?
+                    cb = function() {
+                        Shell.show_pop_message(
+                            this.prompt_pop_dialog_msg({
+                                title: 'msg_rule_title_add_cond_section',
+                                message: 'msg_rule_msg_add_func_cond',
+                                ok_btn_label: 'btn_yes',
+                                cancel_btn_label: 'btn_do_later'
+                            }),
+                            {
+                                'click #modal-ok-btn': this.on_user_continue_add_other_section.bind(this),
+                                'click #modal-cancel-btn': this.on_user_complete_edit.bind(this)
+                            },
+                            function() {
+                                Shell.hide_pop_message();
+                            }
+                        )
+                    }.bind(this)
+                }
+            }
+
+            Shell.hide_pop_message(cb);
+        },
+
+        on_user_continue_add_other_section: function() {
+
+            var nxt_section;
+            if (this.section === 'if') {
+                nxt_section = 'then';
+            } else {
+                nxt_section = 'if';
+            }
+            window.location = '#/rule/add?section='+nxt_section+'&action=list-types';
+
+            Shell.hide_pop_message();
+        },
+
+        on_user_complete_edit: function() {
+            Shell.hide_pop_message();
+            this.go_main();
+        },
+
+        save_the_unsaved_rule_device_setting: function() {
+            console.log('------ save unsaved rule!!!!!')
+            // empty element to force summary to refresh
+            if (this.section === 'if') {
+                this.condition_summary.$el.empty();
+            } else {
+                this.execution_summary.$el.empty();
+            }
+
+            // update data
+            console.log('setting saved', this._unsaved_device_rule_setting);
+            var section = (this.section === 'if') ? 'condition' : 'execution';
+            this.rule_config.get(section).add(this._unsaved_device_rule_setting, {merge: true});
+
+            // flag for changes
+            this.has_changes = true;
+
+            delete this._unsaved_device_rule_setting;
+
+            // update ui
+            this.update_trigger();
         }
     });
 

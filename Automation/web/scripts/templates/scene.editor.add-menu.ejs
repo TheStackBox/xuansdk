@@ -1,0 +1,13 @@
+<ul class="pop-menu">
+	<%
+		data.each(function(item) {
+	%>
+		<li class="pop-menu-item" data-id="<%= item.id %>" touch="true">
+			<div lang="df" class="title"><%= item.get('label') %></div>
+			<div lang="df" class="desc"><%= item.get('desc') %></div>
+		</li>
+	<%
+		})
+	%>
+
+</ul>

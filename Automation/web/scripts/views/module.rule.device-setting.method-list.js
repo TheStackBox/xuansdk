@@ -1,28 +1,29 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global define*/
 
 define([
     'jquery',
     'underscore',
-    'views/module.rule.device-setting.status-item-list',
+    'common/status-item/views/list',
     'templates',
-    'views/component.status-item',
+    'common/status-item/views/item-renderer/item',
     'views/module.rule.device-setting.method-enabler'
 ], function ($, _, RuleDeviceStatusListView, JST, StatusItemRenderer, MethodEnablerView) {
     'use strict';
@@ -57,9 +58,25 @@ define([
                 required: 'is_required'
             }
 
+            // render buttons
+            this.render_action_buttons(this.$('#footer'), {
+                'done-btn': 'on_user_done',
+                'reset-btn': 'on_user_reset'
+            });
+
             device.get('methods').each(function(method, index) {
                 this.$('#setting-content').append(this.render_item(method, prop).$el);
             }.bind(this));
+
+            // lastly add spacer
+            this.$('#setting-content').append(this.render_spacer(this.$('#footer button')));
+
+            // determine done button availability
+            if (this.user_methods === undefined || this.user_methods.length < 1) {
+                this.$('#footer #done-btn').addClass('disabled');
+            } else {
+                this.$('#footer #done-btn').removeClass('disabled');
+            }
 
     	},
 
@@ -86,7 +103,7 @@ define([
                 } else if (model.get('ui_components').length === 1) {
                     // direct route to component view
                     window.location += '&mid='+model.id+'&pid='+model.get('ui_components').models[0].id;
-                } else {   
+                } else {
                     // route to param list
 				    window.location = window.location+'&mid='+model.get('id');
                 }
@@ -104,14 +121,15 @@ define([
                 // show active method
                 if (this.user_methods.get(id).get('ui_components').length > 1) {
                     // show edit
-                    status_item.set_value('Tap To Edit');
+                    status_item.set_edit_value();
                 } else if (this.user_methods.get(id).get('ui_components').length === 0) {
                     // just enabled
-                    status_item.set_value('Tap To Edit');
+                    status_item.set_edit_value();
                 } else {
                     // set value
                     var param = this.user_methods.get(id).get('ui_components').models[0];
-                    status_item.set_value(param.toDisplayValue());
+                    console.log('---> param....', param)
+                    status_item.set_value(param);
                 }
             } else {
                 // has no user setting
@@ -120,7 +138,17 @@ define([
         },
 
         on_user_navigate_back: function(e) {
-            this.trigger('cancel')
+            this.trigger('cancel');
+        },
+
+        on_user_done: function(e) {
+            if (!this.$('#footer #done-btn').hasClass('disabled')) {
+                this.trigger('done');
+            }
+        },
+
+        on_user_reset: function(e) {
+            this.trigger('reset')
         }
     })
 

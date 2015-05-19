@@ -1,36 +1,37 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global define*/
 
 define([
     'jquery',
     'underscore',
-    'views/module.rule.device-setting.status-item-list',
+    'common/status-item/views/list',
     'templates',
-    'models/kbx.unsupported'
+    'common/components/models/kbx.unsupported'
 ], function ($, _, RuleDeviceStatusListView, JST, UnsupportedComponent) {
     'use strict';
 
     var spr = RuleDeviceStatusListView.prototype;
     var OptionalParamListView = RuleDeviceStatusListView.extend({
         method_header: JST['app/scripts/templates/module.rule.device-setting.method-header.ejs'],
-        prompt_dialog_msg: JST['app/scripts/templates/prompt.dialog.ejs'],
-        prompt_pop_dialog_msg: JST['app/scripts/templates/prompt.pop.ejs'],
+        prompt_dialog_msg: JST['app/scripts/common/templates/prompt.dialog.ejs'],
+        prompt_pop_dialog_msg: JST['app/scripts/common/templates/prompt.pop.ejs'],
         render: function(method_id, device, user) {
             this.method_id = method_id;
             this.device = device;
@@ -124,9 +125,9 @@ define([
                 status_item = this.get_status_item(id);
             }
 
-            if (this.user_params.get(id).get('value')) {
+            if (this.user_params.get(id).get('value') !== undefined) {
                 // has user setting
-                status_item.set_value(this.user_params.get(id).toDisplayValue());
+                status_item.set_value(this.user_params.get(id));
             } else {
                 // has no user setting
                 status_item.set_value();
@@ -157,7 +158,7 @@ define([
             var validated = true;
             this.user_params.each(function(param) {
                 if (param.get('is_required')) {
-                    if (param.get('value') === undefined || param.get('value') === '') {
+                    if (!param.isValueValid()) {
                         validated = false;
                         console.log('param',param.id,'error')
                         

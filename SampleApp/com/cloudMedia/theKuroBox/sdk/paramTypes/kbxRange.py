@@ -1,37 +1,38 @@
 ##############################################################################################
-# Copyright 2014 Cloud Media Sdn. Bhd.
+# Copyright 2014-2015 Cloud Media Sdn. Bhd.
 #
 # This file is part of Xuan Application Development SDK.
 #
-#    Xuan Application Development SDK is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+# Xuan Application Development SDK is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#    This project is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
+# Xuan Application Development SDK is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxNumber import KBXNumber
+
+from com.cloudMedia.theKuroBox.sdk.ex.systemException import SystemException
+from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxNumber import KBXNumberType
+from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamType import KBXParamType
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParamWrapper import KBXParamWrapper
+from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
+from com.cloudMedia.theKuroBox.sdk.util.util import Util
+from com.cloudMedia.theKuroBox.sdk.util.validator.numberValidator import NumberValidator
 
+class KBXRangeType(KBXNumberType):
 
-class KBXRange(KBXNumber, KBXParamWrapper):
+    TYPE_NAME = "kbxRange"
 
-
-    ''' Read-only: Name of the component. '''
-    TYPE_NAME = "kbxNumber.kbxRange"
-
-    ''' Read-only: Keys used when KBXParams is converted into dictionary with get_properties() '''
     PROP_KBX_PARAM_STEP = "kbxParamStep"
-    
-    
-    def __init__(self, kbxParamName, kbxParamMinValue, kbxParamMaxValue, kbxParamIsRequired=True,
-                 kbxParamDecimal=0, kbxParamStep=1, **kbxParamProps):
+
+    def __init__(self, kbxParamMinValue, kbxParamMaxValue, kbxParamIsRequired=True,
+                 kbxParamDecimal=0, kbxParamStep=1):
         '''
         Parameter that accepts only number value.
 
@@ -46,6 +47,12 @@ class KBXRange(KBXNumber, KBXParamWrapper):
         '''
         pass
 
+    def set_kbx_param_max_value(self, value):
+        pass
+
+    def set_kbx_param_min_value(self, value):
+        pass
+
     def set_kbx_param_step(self, value):
         '''
         Set the step of the movement of the value
@@ -54,7 +61,7 @@ class KBXRange(KBXNumber, KBXParamWrapper):
         value:Integer - [Required] Value to indicates the step of the movement of the value.
         '''
         pass
-        
+
     def get_kbx_param_step(self):
         '''
         Get the step of the movement of the value.
@@ -62,5 +69,14 @@ class KBXRange(KBXNumber, KBXParamWrapper):
         Returns:
         Value that indicates the step of the movement of the value.
         '''
+        pass
+
+    def cast(self, value):
+        pass
+
+class KBXRange(KBXRangeType, KBXParamWrapper):
+
+    def __init__(self, kbxParamName, kbxParamMinValue, kbxParamMaxValue, kbxParamIsRequired=True,
+                 kbxParamDecimal=0, kbxParamStep=1, **kbxParamProps):
         pass
 

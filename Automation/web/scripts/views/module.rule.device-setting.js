@@ -1,21 +1,22 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global define*/
 
 define([
     'jquery',
@@ -26,12 +27,17 @@ define([
     'views/module.rule.device-setting.method-list',
     'views/module.rule.device-setting.opt-param-list',
     'views/module.rule.device-setting.req-param-list',
-    'views/module.rule.device-setting.param-component',
+    'common/rule/views/module.rule.device-setting.param-component',
     'views/module.rule.device-setting.method-enabler',
-    'models/kbx.toggle'
+    'common/components/models/kbx.toggle'
 ], function ($, _, Backbone, JST, RuleDevice, MethodListView, OptionalParamListView, RequiredParamListView, ComponentView, MethodEnablerView, kbxToggle) {
     'use strict';
     var ModuleRuleDeviceSettingView = Backbone.View.extend({
+        _MethodListView: MethodListView,
+        _OptionalParamListView: OptionalParamListView,
+        _RequiredParamListView: RequiredParamListView,
+        _ComponentView: ComponentView,
+        _MethodEnablerView: MethodEnablerView,
         destroy: function() {
             this.rule_device = undefined;
             this.close();
@@ -68,9 +74,9 @@ define([
                 this.param_list.close();
             }
 
-            if (this.comp_view !== undefined) {
+            /*if (this.comp_view !== undefined) {
                 this.comp_view.close();
-            }
+            }*/
 
             if (this.method_enabler !== undefined) {
                 this.method_enabler.close();
@@ -78,15 +84,17 @@ define([
         },
 
         initialize: function() {
-            this.method_list = new MethodListView({el: this.create_new_div({id: 'methods_container'})});
+            this.method_list = new this._MethodListView({el: this.create_new_div({id: 'methods_container'})});
+            this.method_list.on('done', this.on_method_list_save, this);
+            this.method_list.on('reset', this.on_method_list_reset, this);
             this.method_list.on('cancel', this.on_method_list_cancelled, this);
 
-            this.comp_view = new ComponentView({el: this.create_new_div({id: 'component_container'})});
+            this.comp_view = new this._ComponentView({el: this.create_new_div({id: 'component_container'})});
             this.comp_view.on('done', this.on_component_view_value_confirmed, this);
             this.comp_view.on('reset', this.on_component_view_value_reset, this);
             this.comp_view.on('cancel', this.on_component_view_cancel, this);
 
-            this.method_enabler = new MethodEnablerView({el: this.create_new_div({id: 'method_enabler_container'})})
+            this.method_enabler = new this._MethodEnablerView({el: this.create_new_div({id: 'method_enabler_container'})})
             this.method_enabler.on('done', this.on_method_enabler_value_confirmed, this);
             this.method_enabler.on('cancel', this.on_method_enabler_cancel, this);
         },
@@ -108,18 +116,9 @@ define([
                 this.rule_device.list_methods({
                     success: function() {
                         if (this.options.user_device === undefined) {
-                            console.log('------ new setting')
                             // create new
-                            this.options.user_device = new RuleDevice.model({
-                                section: this.rule_device.get('section'),
-                                description: this.rule_device.get('description'),
-                                id: this.rule_device.get('id'),
-                                name: this.rule_device.get('name'),
-                                status: this.rule_device.get('status'),
-                                icon: this.rule_device.get('icon'),
-                            })
+                            this.generate_new();
                         } else {
-                            console.log('------ exisitng setting')
                             // clone
                             this.options.user_device = this.options.user_device.clone();
                         }
@@ -138,16 +137,33 @@ define([
             }
         },
 
+        generate_new: function() {
+            this.options.user_device = new RuleDevice.model({
+                section: this.rule_device.get('section'),
+                description: this.rule_device.get('description'),
+                id: this.rule_device.get('id'),
+                name: this.rule_device.get('name'),
+                status: this.rule_device.get('status'),
+                icon: this.rule_device.get('icon'),
+            })
+        },
+
         render_ui: function(query) {
             this.clear();
 
+            console.log('render ui---->', query)
+
             if (query.pid !== undefined) {
                 // render param ui component
-                console.log('component view')
                 this._handling_param(query);
                 
             } else if (query.mid !== undefined) {
                 // render arguments of method
+
+                // clear component view
+                if (this.comp_view !== undefined) {
+                    this.comp_view.close();
+                }
 
                 // determine how many arguments
                 var ui_comp = this.rule_device.get('methods').get(query.mid).get('ui_components');
@@ -164,7 +180,7 @@ define([
                         window.location.replace(window.location +'&pid='+MethodEnablerView.ID);
                     } else if (req_param_len === 0) {
                         // assume there is optional param
-                        this.param_list = new OptionalParamListView({el: this.create_new_div({id: 'param_container'})});
+                        this.param_list = new this._OptionalParamListView({el: this.create_new_div({id: 'param_container'})});
                     } else {
                         // assume there's required param
                         if (ui_comp.length === 1) {
@@ -175,7 +191,7 @@ define([
                             return;
                         } else {
                             // there's multiple param
-                            this.param_list = new RequiredParamListView({el: this.create_new_div({id: 'param_container'})});
+                            this.param_list = new this._RequiredParamListView({el: this.create_new_div({id: 'param_container'})});
                         }
                     }
                     this.param_list.render(query.mid, this.rule_device, this.options.user_device);
@@ -184,6 +200,11 @@ define([
                 }
 
             } else if (query.did !== undefined) {
+
+                if (this.comp_view !== undefined) {
+                    this.comp_view.close();
+                }
+
                 // destroy param list
                 if (this.param_list !== undefined) {
                     this.param_list.destroy();
@@ -216,7 +237,7 @@ define([
                 // parameter component ----
                 if (this.param_list !== undefined) {
                     // from param list
-                    this.comp_view.render(query.mid, query.pid, this.rule_device, this.param_list.user_params.get(query.pid));
+                    this.comp_view.render(query.mid, query.pid, this.rule_device, this.param_list.user_params.get(query.pid), query.c);
                 } else {
                     // direct from method list
                     // mean only have 1 param in the device
@@ -227,7 +248,7 @@ define([
                     }
                     param = this.options.user_device.get('methods').get(query.mid).get('params').get(query.pid);
 
-                    this.comp_view.render(query.mid, query.pid, this.rule_device, param, this.rule_device.get('methods').get(query.mid))
+                    this.comp_view.render(query.mid, query.pid, this.rule_device, param, this.rule_device.get('methods').get(query.mid), query.c)
                 }
             }
         },
@@ -264,12 +285,18 @@ define([
                 // update param list
                 this.param_list.update(param_id);
             } else {
-                // update method view
-                this._cloned_method_id = undefined;
-                this.method_list.update(method_id);
 
-                // update flag
-                this._has_setting_changed = true;
+                if (this.hasListener('method:done') == true) {
+                    this.trigger('method:done', this.options.user_device)
+                    return;
+                } else {
+                    // update method view
+                    this._cloned_method_id = undefined;
+                    this.method_list.update(method_id);
+
+                    // update flag
+                    this._has_setting_changed = true;
+                }
             }
 
             window.history.back();
@@ -282,14 +309,20 @@ define([
                 this.param_list.update(param_id);
             } else {
                 // update method view
-                // remove newly created methods
-                this._remove_user_method(method_id)
-                this._cloned_method_id = undefined;
+                if (this.hasListener('method:reset') == true) {
+                    this.trigger('method:reset', method_id);
+                    return;
+                } else {
+                    // remove newly created methods
+                    this._remove_user_method(method_id)
+                    this._cloned_method_id = undefined;
 
-                this.method_list.update(method_id);
+                    this.method_list.update(method_id);
 
-                // update flag
-                this._has_setting_changed = true;
+                    // update flag
+                    this._has_setting_changed = true;
+                    
+                }
             }
 
             window.history.back();
@@ -313,11 +346,18 @@ define([
 
             this.options.user_device.get('methods').get(method_id).set('params', params)
 
-            // update method list
-            this.method_list.update(method_id);
+            if (this.hasListener('method:done') == true) {
+                // dispatch event only
+                this.trigger('method:done', this.options.user_device);
+                return;
+            } else {
 
-            // update flag
-            this._has_setting_changed = true;
+                // update method list
+                this.method_list.update(method_id);
+
+                // update flag
+                this._has_setting_changed = true;
+            }
 
             this.param_list.destroy();
             this.param_list = undefined
@@ -326,15 +366,23 @@ define([
         },
 
         on_param_reset: function(method_id) {
-            // update method list
-            this.method_list.update(method_id);
 
-            // update flag
-            this._has_setting_changed = true;
+            // update method view
+            if (this.hasListener('method:reset') == true) {
+                // dispatch reset
+                this.trigger('method:reset', method_id);
+                return;
+            } else {
+                // update method list
+                this.method_list.update(method_id);
 
-            this.param_list.destroy();
-            this.param_list = undefined
-            
+                // update flag
+                this._has_setting_changed = true;
+
+                this.param_list.destroy();
+                this.param_list = undefined
+            }
+
             window.history.back();
         },
 
@@ -369,7 +417,22 @@ define([
         },
 
         on_method_list_cancelled: function() {
-            this.trigger('done', this.options.user_device);
+            this.trigger('cancel');
+        },
+
+        on_method_list_save: function() {
+            this.trigger('done', this.options.user_device);  
+        },
+
+        on_method_list_reset: function() {
+            this.generate_new();
+            this.render_ui({
+                did: this.rule_device.get('id')
+            });
+        },
+
+        hasListener: function(name) {
+            return !!this._events[name]
         }
     });
 

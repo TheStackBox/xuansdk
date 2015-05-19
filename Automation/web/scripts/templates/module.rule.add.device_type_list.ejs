@@ -1,21 +1,9 @@
-<!-- Darien, Please use below code for new Device Explorer-->
 <% collection.each(function(model) { %>
-	<div data-id="<%= model.get('id') %>" class="device-explorer rule-<%= type %>-item device1">
-		<span class="icon"><%= (typeof model.get('icon') === 'undefined') ? '&#xe61c' : model.get('icon') %></span>
+	<div data-id="<%= model.get('id') %>" class="device-explorer rule-<%= type %>-item device1" touch="true">
+		<span class="icon"><%= (typeof model.get('icon') === 'undefined') ? '&#xe617' : model.get('icon') %></span>
 		<span>
 			<h4 id="item-label"><%= (typeof model.get('label') === 'undefined') ? model.get('name') : model.get('label') %></h4>
 			<div><%= model.get('description') %></div>
 		</span>
 	</div>
 <%})%>
-
-<!--<% collection.each(function(model) { %>
-	<div>
-		<div class="icon rule-<%= type %>-item" data-id="<%= model.get('id') %>"><%= (typeof model.get('icon') === 'undefined') ? '&#xe61c' : model.get('icon') %></div>
-		<p><%= (typeof model.get('label') === 'undefined') ? model.get('name') : model.get('label') %></p>
-	</div>
-<%})%>-->
-
-
-
-

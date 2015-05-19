@@ -1,33 +1,47 @@
 ##############################################################################################
-# Copyright 2014 Cloud Media Sdn. Bhd.
+# Copyright 2014-2015 Cloud Media Sdn. Bhd.
 #
 # This file is part of Xuan Application Development SDK.
 #
-#    Xuan Application Development SDK is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+# Xuan Application Development SDK is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#    This project is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
+# Xuan Application Development SDK is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
+
+from _collections import deque
+import json
+import threading, signal
+
+from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
+from com.cloudMedia.theKuroBox.sdk.app.kbxLang import KBXLang
+from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
+from com.cloudMedia.theKuroBox.sdk.ex.systemException import SystemException
+from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxParam import KBXParam
+from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
+from com.cloudMedia.theKuroBox.sdk.util.util import Util
+from com.cloudMedia.theKuroBox.sdk.util.validator.booleanValidator import BooleanValidator
+from com.cloudMedia.theKuroBox.sdk.util.validator.numberValidator import NumberValidator
+from com.cloudMedia.theKuroBox.sdk.util.validator.stringValidator import StringValidator
+
 class Module(object):
     '''
     Module Base Class
     '''
-    __unset__ = []
 
     def __init__(self, kbxModuleName, parentModulePath):
         '''
         Constructor
         '''
         pass
-
 
     def register_module(self, module):
         '''
@@ -37,8 +51,33 @@ class Module(object):
         '''
         pass
 
+    def register_protocol(self, protocol):
+        '''
+        Register the protocol developer want to expose to external user
+        protocolName - The protocol name
+        protocol - The protocol class
+        '''
+        pass
+
+    def register_device_controller(self, deviceController):
+        '''
+        Register the device controller developer want to expose to external user
+        deviceControllerName - The device controller name
+        deviceController - The device controller class
+        '''
+        pass
+
+    def register_advance_device_controller(self, advDeviceController):
+        '''
+        Register the advance device controller developer want to expose to external user
+        advDeviceControllerName - The advance device controller name
+        advDeviceController - The advance device controller class
+        '''
+        pass
+
     def register_method(self, kbxMethodName, kbxMethodFunc, kbxMethodIsPrivate=False,
-                        kbxMethodLabel=None, kbxMethodDesc=None, kbxMethodParams=None, **kbxMethodProps):
+                        kbxMethodLabel=None, kbxMethodDesc=None, kbxMethodParams=None, 
+                        kbxMethodStatus=SharedMethod.METHOD_STATUS_ACTIVE, **kbxMethodProps):
         '''
         Expose a method to web server as a service.
 
@@ -49,6 +88,7 @@ class Module(object):
         kbxMethodLabel:String - [Optional] Label for the method.
         kbxMethodDesc:String - [Optional] Description for the method.
         kbxMethodParams:List<KBXParam> - Description of the arguments the method expected to receive.
+        kbxMethodStatus:Integer - [Optional] Initial status of the method. It always revert to active status if invalid status is given.
         **kbxMethodProps - Any extra key-values. They must be able to be converted into json string altogether
 
         Returns:
@@ -56,53 +96,38 @@ class Module(object):
         '''
         pass
 
-    def update_method(self, kbxMethodName, kbxMethodFunc=__unset__, kbxMethodIsPrivate=__unset__,
-                        kbxMethodLabel=__unset__, kbxMethodDesc=__unset__, kbxMethodParams=__unset__,
+    def update_method(self, kbxMethodName, kbxMethodFunc=SharedMethod.get_empty_placeholder(), kbxMethodIsPrivate=SharedMethod.get_empty_placeholder(),
+                        kbxMethodLabel=SharedMethod.get_empty_placeholder(), kbxMethodDesc=SharedMethod.get_empty_placeholder(), kbxMethodParams=SharedMethod.get_empty_placeholder(),
                         **kbxMethodProps):
-        '''
-        Update an exposed method to web server as a service.
-
-        Params:
-        kbxMethodName:String - [Required] An identifiable string of the method for web server.
-        kbxMethodFunc:Callable - [Required] Reference to a callable instance.
-        kbxMethodIsPrivate:Boolean - [Optional] Private method is not visible (but callable) to third party. False by default.
-        kbxMethodLabel:String - [Optional] Label for the method.
-        kbxMethodDesc:String - [Optional] Description for the method.
-        kbxMethodParams:List<KBXParam> - Description of the arguments the method expected to receive.
-        **kbxMethodExtra - Any extra key-values. They must be able to be converted into json string altogether
-        '''
-
         pass
 
     def activate_method(self, kbxMethodName):
-        '''
-        Activate an exposed method to web server as a service.
-
-        Params:
-        kbxMethodName:String - [Required] An identifiable string of the method for web server.
-        '''
         pass
 
     def deactivate_method(self, kbxMethodName):
-        '''
-        Deactivate an exposed method to web server as a service.
-
-        Params:
-        kbxMethodName:String - [Required] An identifiable string of the method for web server.
-        '''
         pass
 
     def delete_method(self, kbxMethodName):
+        pass
+
+    def get_method(self, kbxMethodName):
         '''
-        Delete an exposed method to web server as a service.
+        Get registered method properties.
+        You can only get methods registered by this module.
+        
+        "kbxMethodFunc" is NOT included in return dictionary.
 
         Params:
-        kbxMethodName:String - [Required] An identifiable string of the method for web server.
+        kbxMethodName:String - [Required] Method name.
+        
+        Returns
+        Dictionary contains of method properties.
         '''
         pass
 
     def register_shared_method(self, kbxMethodName, kbxMethodFunc, kbxMethodIsPrivate=False, kbxGroupId=None,
-                               kbxMethodLabel=None, kbxMethodDesc=None, kbxMethodTag=None, kbxMethodParams=None, **kbxMethodProps):
+                               kbxMethodLabel=None, kbxMethodDesc=None, kbxMethodTag=None, kbxMethodParams=None, 
+                               kbxMethodStatus=SharedMethod.METHOD_STATUS_ACTIVE, **kbxMethodProps):
         '''
         Expose a method to external application as a service.
 
@@ -115,22 +140,24 @@ class Module(object):
         kbxMethodDesc:String - [Optional] Description for the method.
         kbxMethodTag:List<String> - Semantic tags for the method.
         kbxMethodParams:List<KBXParam> - Description of the arguments the method expected to receive.
+        kbxMethodStatus:Integer - [Optional] Initial status of the method. It always revert to active status if invalid status is given.
         **kbxMethodProps - Any extra key-values. They must be able to be converted into json string altogether.
 
         Returns:
-        Unique method id if kbxMethodIsPrivate = False.
+        Unique method id.
 
         Automation:
         kbxMethodTag:String - [Required] "automation_action" or "automation_condition" so that automation app is able to identify this method.
         kbxMethodEvent:String - [Optional] Inform automation app that this method does fire event as a trigger.
-
+        kbxMethodIdentifier:String - [Optional] Identifier used to inform automation app which device is involved (when multiple devices share the same event tag).
+        
         * For "automation_condition", include a key named "value" which has boolean value for automation app to determine if the criteria for this condition has been met.
         '''
         pass
 
-    def update_shared_method(self, kbxMethodName, kbxGroupId=None, kbxMethodFunc=__unset__, kbxMethodIsPrivate=__unset__,
-                             kbxMethodLabel=__unset__, kbxMethodDesc=__unset__,
-                             kbxMethodTag=__unset__, kbxMethodParams=__unset__, **kbxMethodProps):
+    def update_shared_method(self, kbxMethodName, kbxGroupId=None, kbxMethodFunc=SharedMethod.get_empty_placeholder(), kbxMethodIsPrivate=SharedMethod.get_empty_placeholder(),
+                             kbxMethodLabel=SharedMethod.get_empty_placeholder(), kbxMethodDesc=SharedMethod.get_empty_placeholder(),
+                             kbxMethodTag=SharedMethod.get_empty_placeholder(), kbxMethodParams=SharedMethod.get_empty_placeholder(), **kbxMethodProps):
         '''
         Update registered shared method by method properties.
 
@@ -146,21 +173,9 @@ class Module(object):
         pass
 
     def activate_shared_method(self, kbxMethodName, kbxGroupId=None):
-        '''
-        Activate an exposed method to external application as a service.
-
-        Params:
-        kbxMethodName:String - [Required] An identifiable string of the shared method.
-        '''
         pass
 
     def deactivate_shared_method(self, kbxMethodName, kbxGroupId=None):
-        '''
-        Deactivate an exposed method to external application as a service.
-
-        Params:
-        kbxMethodName:String - [Required] An identifiable string of the shared method.
-        '''
         pass
 
     def delete_shared_method(self, kbxMethodName, kbxGroupId=None):
@@ -171,6 +186,24 @@ class Module(object):
         kbxMethodName:String - [Required] Method name.
         kbxGroupId:Integer - [Required] Method group id.
         kbxModuleName:String - [Required] Module name.
+        '''
+        pass
+
+    def get_shared_method(self, kbxMethodName, kbxGroupId=None):
+        '''
+        Get registered shared method properties.
+        You can only get shared methods registered by this module.
+        For shared methods registered by other modules or apps, see APIs in SharedMethod.py.
+        
+        "kbxMethodId" is included in return dictionary.
+        "kbxMethodFunc" is NOT included in return dictionary.
+
+        Params:
+        kbxMethodName:String - [Required] Method name.
+        kbxGroupId:Integer - [Required] Method group id.
+        
+        Returns
+        Dictionary contains of shared method properties.
         '''
         pass
 
@@ -193,7 +226,7 @@ class Module(object):
         pass
 
     def update_shared_method_group(self, kbxGroupName, kbxGroupParentId=None,
-                                   kbxGroupLabel=__unset__, kbxGroupDesc=__unset__, **kbxGroupProps):
+                                   kbxGroupLabel=SharedMethod.get_empty_placeholder(), kbxGroupDesc=SharedMethod.get_empty_placeholder(), **kbxGroupProps):
         '''
         Update registered shared method group by group properties.
 
@@ -202,6 +235,17 @@ class Module(object):
         kbxGroupParentId:Integer - [Required] Parent group id of the group
         kbxMethodLabel:String - [Optional] New label for the group.
         kbxMethodDesc:String - [Optional] New description for the group.
+        '''
+        pass
+
+    def update_shared_method_group_parent_id(self, newKBXGroupParentId, kbxGroupName, kbxGroupParentId=None):
+        '''
+        Update shared method group's kbxGroupParentId.
+        
+        Params:
+        newKBXGroupParentId:Integer - [Required] New parent group id.
+        kbxGroupName:String - [Required] Name of the group to be updated.
+        kbxGroupParentId:Integer - [Required] Current parent group id.
         '''
         pass
 
@@ -215,12 +259,28 @@ class Module(object):
         '''
         pass
 
-    def get_abs_module_path(self):
+    def get_shared_method_group(self, kbxGroupName, kbxGroupParentId=None):
         '''
-        Return the absoulte module path name
+        Get properties of registered shared method group. 
+        You can get group registered at different module as long as it is within the same app. 
+        To get groups registered by other apps, see APIs in SharedMethod.py.
+        
+        "kbxGroupId" is included in return dictionary.
+        
+        Params:
+        kbxGroupName:String - [Required] Name of the group.
+        kbxGroupParentId:Integer - [Required] Parent group id of the group.
+        
+        Returns:
+        Dictionary which contains of group properties.
         '''
         pass
 
+    def get_abs_module_path(self):
+        '''
+        Return the absolute path of this module
+        '''
+        pass
 
     def get_module_name(self):
         '''
@@ -230,7 +290,8 @@ class Module(object):
 
     def on_system_connected(self):
         '''
-        Daemon App should override this method to implement its body
+        Daemon App should override this method to implement its body.
+        NOTE: If you override this method, remember to call super().on_system_connected().
 
         Developer should put their code for dealing with system here, such as:
         - Register Event
@@ -244,10 +305,11 @@ class Module(object):
     def post_system_connected(self):
         '''
         Daemon App should override this method to implement its body
+        NOTE: If you override this method, remember to call super().post_system_connected().
+        
         This timing is located after on_system_connected timing in application and all modules, as well as Application.post_system_connected
         '''
         pass
-
 
     def send_response(self, data, requestId, returnValue=100, returnMessage=""):
         '''
@@ -255,13 +317,11 @@ class Module(object):
         '''
         pass
 
-
     def send_web_server_event(self, eventTag, eventData):
         '''
         Fire event to external instance listening to web server event
         '''
         pass
-
 
     def send_system_event(self, eventTag, eventData):
         '''
@@ -302,3 +362,4 @@ class Module(object):
         callback : Callback function
         '''
         pass
+

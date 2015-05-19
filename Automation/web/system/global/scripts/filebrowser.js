@@ -1,20 +1,20 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
 (function ($)
 {
@@ -27,7 +27,7 @@
     var PREV_OBJECT = null;
     var CURRENT_OBJECT = null;
     
-    var $_title = 'Select File';
+    var $_title = 'SELECT FILE';
     
     var $_itemSelectLimit = 0;
     var $_type = null;
@@ -35,6 +35,7 @@
     var $_limit = null;
     var $_offSet = null;
     var $_exclude = null;
+    var $_fileFilter = null;
     var $_fileSelectionOnly = false;
     
     var $mainLayout;
@@ -47,7 +48,7 @@
     // log all ajax send URL
     $(document).ajaxSend(function (evt, request, settings)
     {
-        console.log('####AJAX_SEND #: ' + settings.url);
+        // console.log('####AJAX_SEND #: ' + settings.url);
     });
 
     /******************************************* LOCAL METHOD *******************************************/
@@ -77,7 +78,7 @@
                 
                 if (exception === 'abort')
                 {
-                	console.log(error = 'Ajax request aborted.');
+                    console.log(error = 'Ajax request aborted.');
                 }
                 else if (jqXHR.status === 0) 
                 {
@@ -115,10 +116,10 @@
                 if($el('#fileBrowser-loading').is(':visible'))
                     $el('#fileBrowser-loading').hide();
                 
-                console.log('----------------------');
+                /*console.log('----------------------');
                 console.log('AJAX RESPONSE');
                 console.log(JSON.stringify(data));
-                console.log('');
+                console.log('');*/
                 
                 response(data);
             }
@@ -190,6 +191,11 @@
                     {
                         $(this).removeClass('fileBrowser-ticked fileBrowserIco-tick').addClass('fileBrowser-unticked fileBrowserIco-untick');
                         $el('.fileBrowser-selectedItem').html((selectedItemCount - 1) + ' selected item(s)');
+
+                        if (selectedItemCount-1 <= 0) {
+                            // disable done button
+                            $el('#done-btn').addClass('disabled');
+                        }
                     }
                     else
                     {
@@ -201,6 +207,9 @@
                         {
                             $(this).addClass('fileBrowser-ticked fileBrowserIco-tick').removeClass('fileBrowser-unticked fileBrowserIco-untick');
                             $el('.fileBrowser-selectedItem').html((selectedItemCount + 1) + ' selected item(s)');
+
+                            // enable done button
+                            $el('#done-btn').removeClass('disabled');
                         }
                     }
                 });
@@ -208,21 +217,21 @@
 
             if (type !== 'view')
             {
-            	$el('#fileID' + i).unbind('click').bind('click', function ()
+                $el('#fileID' + i).unbind('click').bind('click', function ()
                 {
-            		if (CURRENT_OBJECT['files'][(this.id).split('ID')[1]].isDirectory === true || CURRENT_OBJECT['files'][(this.id).split('ID')[1]].isDirectory === 'true')
+                    if (CURRENT_OBJECT['files'][(this.id).split('ID')[1]].isDirectory === true || CURRENT_OBJECT['files'][(this.id).split('ID')[1]].isDirectory === 'true')
                     {
                         $el('#fileBrowser-loading').show();
                         var headerTitle = CURRENT_OBJECT['files'][(this.id).split('ID')[1]].filename;
 
-                        ajax('browse_file&offset='+$_offSet+'&limit='+$_limit+'&type='+$_type+'&excludeFiles='+$_exclude+'&path='+CURRENT_OBJECT['files'][(this.id).split('ID')[1]].path,function (data){
+                        ajax('browse_file&offset='+$_offSet+'&limit='+$_limit+'&type='+$_type+'&excludeFiles='+$_exclude+'&path='+CURRENT_OBJECT['files'][(this.id).split('ID')[1]].path+'&fileFilter='+$_fileFilter,function (data){
                             if(data.theKuroBox.returnValue == '100')
                             {
-                            	fileBrowser_setSelectedList(true);
+                                fileBrowser_setSelectedList(true);
                                 fileBrowser_listFile('list', JSON.stringify(data.theKuroBox.response), headerTitle);
-							}
+                            }
                             else
-                                fileBrowser_showMessage('Error : '+data.theKuroBox.returnMessage,'error',null);
+                                filebrowser_showApiErrorMessage(data);
                         });
                     }
                 });
@@ -254,8 +263,8 @@
         if (type == 'view')
         {
             //view selected file
-            $el('.fileBrowserIco-done').hide();
-            $el('.fileBrowserIco-close').hide();
+            $el('#action-buttons').hide();
+            $el('.fileBrowserIco-refresh').hide();
             $el('.fileBrowser-viewSelectedItem').hide();
             $el('.fileBrowser-deselectAll').show();
             $el('.fileBrowser-header-name').html('SELECTED ITEMS');
@@ -266,8 +275,8 @@
             CURRENT_OBJECT['headerTitle'] = displayName;
             
             //list file or back
-            $el('.fileBrowserIco-done').show();
-            $el('.fileBrowserIco-close').show();
+            $el('#action-buttons').show();
+            $el('.fileBrowserIco-refresh').show();
             $el('.fileBrowser-viewSelectedItem').show();
             $el('.fileBrowser-deselectAll').hide();
             $el('.fileBrowser-header-name').html(displayName || $_title);
@@ -318,7 +327,7 @@
 
                     $el('.fileBrowser-selectedItem').html(fileSelectedCount + ' selected item(s)');
                 }
-                else if (type == 'previous')
+                else if (type == 'previous' || type == 'list')
                 {
                     if (STATIC_OBJECT[filePath] === true)
                     {
@@ -340,7 +349,7 @@
                     showFileClick = ''
                 }
 
-                fileList += '<li class="fileBrowser-content-li"><article class="fileBrowser-li-article">' + '<div id="tickID' + i + '" class="fileBrowser-fileTick ' + showFileTicked + ' fileBrowser-fileTick' + i + '"></div>' + '<div id="fileID' + i + '" class="fileBrowser-fileInfo">' + '<div class="' + fileIcon + ' fileBrowser-fileName fileBrowser-fileName' + i + '">' + '<span>' + files[i].filename + '</span>' + showFilePath + '</div>' + showFileClick + '</div></article></li>';
+                fileList += '<li class="fileBrowser-content-li" touch="true"><article class="fileBrowser-li-article">' + '<div id="tickID' + i + '" class="fileBrowser-fileTick ' + showFileTicked + ' fileBrowser-fileTick' + i + '"></div>' + '<div id="fileID' + i + '" class="fileBrowser-fileInfo">' + '<div class="' + fileIcon + ' fileBrowser-fileName fileBrowser-fileName' + i + '">' + '<span>' + files[i].filename + '</span>' + showFilePath + '</div>' + showFileClick + '</div></article></li>';
             }
         }
 
@@ -397,12 +406,20 @@
                     console.log('--add path:'+current_files[i].path);
                     current_selected_files.push(current_files[i]);
                     STATIC_OBJECT[current_files[i].path] = true;
+
+                    // enable done button
+                    $el('#done-btn').removeClass('disabled');
                 }
             }
             else
             {
                 //un-tick, try remove from STATIC_OBJECT if previously selected
                 addOrRemove(false, path);
+
+                if (current_selected_files.length <= 0) {
+                    // disable done button
+                    $el('#done-btn').addClass('disabled');
+                }
             }
         }
 
@@ -437,9 +454,52 @@
         return STATIC_OBJECT;
     }
 
+    goBack = function() {
+        fileBrowser_setSelectedList(false);
+        
+        if(PREV_ARRAY.length > 0)
+        {
+            var prevArray = PREV_ARRAY.pop();
+            fileBrowser_listFile('previous', JSON.stringify(prevArray), prevArray['headerTitle']);
+        } else {
+            closeFilebrowser();
+        }
+    }
+
+    closeFilebrowser = function () {
+        $mainLayout.hide();
+
+        $fileBrowserContainer.hide().empty();
+
+        restore_android_back();
+        
+        // cancel data
+        STATIC_OBJECT['files'] = [];
+        deferredBrowse.resolve();
+    }
+
     // open: display file browser and list file
+    override_android_back = function() {
+        if (Kurobox === undefined) throw 'Kurobox corelib is not initialized';
+        window.fileBrowser_back = function() {
+            goBack();
+        };
+        Kurobox.native('overwriteBackButtonCallback', function() {
+        }, 'fileBrowser_back();');
+    }
+
+    restore_android_back = function() {
+        setTimeout(function() {
+            if (typeof NativeMethod !== 'undefined' && NativeMethod.clearBackButtonCallback !== undefined) {
+                NativeMethod.clearBackButtonCallback();
+            }
+        }, 200)
+    }
+
     fileBrowser_open = function ()
     {
+        $mainLayout.show();
+
         PREV_ARRAY = [];
         PREV_OBJECT = new Object();
         CURRENT_OBJECT = new Object();
@@ -460,20 +520,29 @@
                 '</div>' + 
                 '</header>' + '<ul id="fileBrowser-container-content"></ul>') 
          * */
+
+        // wrap window.history.back
+        override_android_back();
         
-        
-        $fileBrowserContainer.empty().append($('<header id="fileBrowser-container-header"><div class="fileBrowser-container-headerRow1"><span class="fileBrowserIco-prev2" style="cursor:pointer;width:15px;display:inline-block; "></span><span class="fileBrowser-header-name" style="text-transform:uppercase;">Select File</span></div><div class="fileBrowser-container-headerRow2" style="position:relative"><div class="fileBrowser-selectedItem" style="position:relative; margin-top:15px; width:130px; padding:0; height:20px;text-align:left; float:left;">0 selected item(s)</div><div class="fileBrowser-viewSelectedItem" style="cursor:pointer; position:relative;padding:0; margin-top:15px; width:40px;height:20px;text-align:left; float:left">View</div><div class="fileBrowserIco-done" style="cursor:pointer; position:relative; margin-top:17px;  margin-right:20px; width:10px;height:20px;text-align:center; float:right; font-size:10pt;"></div><div class="fileBrowserIco-close" style="cursor:pointer; position:relative; margin-top:17px; margin-right:8px; width:10px;height:20px;text-align:center; float:right; font-size:10pt;"></div><div class="fileBrowser-deselectAll" style="cursor:pointer; position:relative;padding:0; margin-top:17px; margin-right:8px; width:120px;height:20px;text-align:right; float:right">Deselect all</div></div></header><ul id="fileBrowser-container-content"></ul>'));
+        $fileBrowserContainer.empty().append($('<header id="fileBrowser-container-header"><div class="fileBrowser-container-headerRow1"><span class="fileBrowserIco-prev2" touch="true"></span><span class="fileBrowser-header-name">SELECT FILE</span></div><div class="fileBrowser-container-headerRow2" style="position:relative"><div class="fileBrowser-selectedItem">0 selected item(s)</div><div class="fileBrowser-viewSelectedItem" touch="true">View</div><div class="fileBrowser-deselectAll" style="cursor:pointer; position:relative;margin-right: 10px;height: 50px!important;padding-top: 17px;text-align:right; float:right">Deselect all</div>'+
+            '<span class="fileBrowserIco-refresh fileBrowserCirle" touch="true"></span>' +
+            '</div></header><ul id="fileBrowser-container-content"></ul>'));
+        $fileBrowserContainer.append($('<div id="action-buttons" class="fileBrowser-btn-2-stretch">' +
+            '<button type="button" class="disabled" id="done-btn" lang="df">btn_done</button>' +
+            '<button type="button" id="cancel-btn" lang="df">btn_cancel</button>' +
+        '</div>'))
 
         var $fileBrowserHeader = $el('#fileBrowser-container-header');
         var $fileBrowserHeader1 = $el('.fileBrowser-container-headerRow1');
         var $fileBrowserHeader2 = $el('.fileBrowser-container-headerRow2');
         var $fileBrowserGoBack = $el('.fileBrowserIco-prev2');
         var $fileBrowserList = $el('#fileBrowser-container-content');
-        var $fileBrowserDone = $el('.fileBrowserIco-done');
-        var $fileBrowserClose = $el('.fileBrowserIco-close');
+        var $fileBrowserDone = $el('#done-btn');
+        var $fileBrowserClose = $el('#cancel-btn');
         var $fileBrowserView = $el('.fileBrowser-viewSelectedItem');
         var $fileBrowserDeselect = $el('.fileBrowser-deselectAll');
-        
+        var $fileBrowserRefresh = $el('.fileBrowserIco-refresh');
+
         $fileBrowserGoBack.hide();
         
         $fileBrowserGoBack.hover(function ()
@@ -484,7 +553,7 @@
             $(this).css('margin-left', '0px');
         });
         
-        $fileBrowserDone.hover(function ()
+        /*$fileBrowserDone.hover(function ()
         {
             $(this).css('color', '#8b8b8b');
         }, function ()
@@ -498,7 +567,7 @@
         }, function ()
         {
             $(this).css('color', '#e51a5a');
-        });
+        });*/
         
         $fileBrowserDeselect.hover(function ()
         {
@@ -510,22 +579,15 @@
         
         $fileBrowserView.hover(function ()
         {
-            $(this).css('color', '#8b8b8b');
+            // temporary disable hover eff due to hover effect will not reset at mobile
+            //$(this).css('color', '#8b8b8b');
         }, function ()
         {
-            $(this).css('color', '#e51a5a');
+            // temporary disable hover eff due to hover effect will not reset at mobile
+           // $(this).css('color', '#e51a5a');
         });
         
-        $fileBrowserGoBack.unbind('click').bind('click', function ()
-        {
-            fileBrowser_setSelectedList(false);
-            
-            if(PREV_ARRAY.length > 0)
-            {
-                var prevArray = PREV_ARRAY.pop();
-                fileBrowser_listFile('previous', JSON.stringify(prevArray), prevArray['headerTitle']);
-            }
-        });
+        $fileBrowserGoBack.unbind('click').bind('click', goBack);
 
         $fileBrowserDeselect.unbind('click').bind('click', function ()
         {
@@ -542,25 +604,37 @@
                 fileBrowser_showMessage('0 selected item(s)','warning',null);
         });
 
-        $fileBrowserClose.unbind('click').bind('click', function ()
-        {
-            $fileBrowserContainer.hide().empty();
-            
-            // cancel data
-            STATIC_OBJECT['files'] = [];
-            deferredBrowse.resolve();
-        });
+        $fileBrowserClose.unbind('click').bind('click', closeFilebrowser)
 
         $fileBrowserDone.unbind('click').bind('click', function ()
         {
-            STATIC_OBJECT = fileBrowser_closeAndView(false); // isView false
+            if (!$fileBrowserDone.hasClass('disabled')) {
+                STATIC_OBJECT = fileBrowser_closeAndView(false); // isView false
                     
-            if(STATIC_OBJECT)
-            {
-                $fileBrowserContainer.hide().empty();
-                deferredBrowse.resolve();
+                if(STATIC_OBJECT)
+                {
+                    $fileBrowserContainer.hide().empty();
+                    deferredBrowse.resolve();
+                }
             }
         });
+
+        $fileBrowserRefresh.unbind('click').bind('click', function() {
+
+            $el('#fileBrowser-loading').show();
+            var headerTitle = $el('.fileBrowser-header-name').text();
+            var path = (CURRENT_OBJECT.path) ? CURRENT_OBJECT.path : '';
+
+            ajax('browse_file&offset='+$_offSet+'&limit='+$_limit+'&type='+$_type+'&excludeFiles='+$_exclude+'&path='+path+'&fileFilter='+$_fileFilter,function (data){
+                if(data.theKuroBox.returnValue == '100')
+                {
+                    fileBrowser_setSelectedList(true);
+                    fileBrowser_listFile('list', JSON.stringify(data.theKuroBox.response), headerTitle);
+                }
+                else
+                    filebrowser_showApiErrorMessage(data);
+            });
+        })
 
         $fileBrowserList.css(
         {
@@ -583,17 +657,18 @@
         
         // ajax to browse file
         $el('#fileBrowser-loading').show();
-        ajax('browse_file&offset='+$_offSet+'&limit='+$_limit+'&type='+$_type+'&excludeFiles='+$_exclude+'&path='+$_path,function (data){
+        $el('#fileBrowser-file-message').hide();
+        ajax('browse_file&offset='+$_offSet+'&limit='+$_limit+'&type='+$_type+'&excludeFiles='+$_exclude+'&path='+$_path+'&fileFilter='+$_fileFilter,function (data){
             
-            console.log('----------------------');
+            /*console.log('----------------------');
             console.log('FILE BROWSER BROWSE');
             console.log(JSON.stringify(data));
-            console.log('');
+            console.log('');*/
             
             if(data.theKuroBox.returnValue == '100')
                 fileBrowser_listFile('list', JSON.stringify(data.theKuroBox.response),null);
             else
-                fileBrowser_showMessage('Error : '+data.theKuroBox.returnMessage,'error',null);
+                filebrowser_showApiErrorMessage(data);
         });
     }
     
@@ -619,9 +694,26 @@
         return true;
     }
 
+    filebrowser_showApiErrorMessage = function(data) {
+        var msg = 'Error : '+data.theKuroBox.returnMessage;
+        var sticky = false;
+
+        switch (data.theKuroBox.returnValue) {
+            case 401:
+            case 403:
+            case 405:
+                msg += '. <a href="/system" style="color:white;">Tap here to relogin</a>';
+                sticky = true;
+                break;
+        }
+        fileBrowser_showMessage(msg,'error',null,sticky);
+    }
+
     // showMessage: notify app msg eg. success, error, warning 
-    fileBrowser_showMessage = function (message,type,callback)
+    fileBrowser_showMessage = function (message,type,callback,isSticky)
     {
+        isSticky = (isSticky !== undefined) ? isSticky : false;
+
         if (type == 'success') color = '#84a403';
         else if (type == 'warning') color = '#e51a5a';
         else if (type == 'error') color = '#BF1919';
@@ -629,32 +721,34 @@
 
         if(!$fileEveMsgContainer.hasClass('animating'))
         {
-		    $el('#eventMsgClose').remove();
+            $el('#eventMsgClose').remove();
             $fileEveMsgContainer.html(message);
-			$fileEveMsgContainer.append('<span id="eventMsgClose" class="fileBrowserEventMsgIco-close" style="cursor:pointer; position:relative; width:10px; height:20px; text-align:center; margin-right:10px; float:right; font-size:10pt;"></span>')
+            $fileEveMsgContainer.append('<span id="eventMsgClose" class="fileBrowserEventMsgIco-close" style="cursor:pointer; position:relative; width:10px; height:20px; text-align:center; margin-right:10px; float:right; font-size:10pt;"></span>')
             $fileEveMsgContainer.addClass('animating')
             $fileEveMsgContainer.css('background', color);
             $fileEveMsgContainer.css('opacity', 0.9);
             $fileEveMsgContainer.css("top", 0);
             
-			$el('#eventMsgClose').unbind('click').bind('click', function ()
-			{
-				$fileEveMsgContainer.removeClass('animating');
-				$fileEveMsgContainer.css("top", (-1 * $fileEveMsgContainer.height()));
-				$fileEveMsgContainer.html('');
-				if(typeof(callback) == 'function') callback();
-			});
+            $el('#eventMsgClose').unbind('click').bind('click', function ()
+            {
+                $fileEveMsgContainer.removeClass('animating');
+                $fileEveMsgContainer.css("top", (-1 * $fileEveMsgContainer.height()));
+                $fileEveMsgContainer.html('');
+                if(typeof(callback) == 'function') callback();
+            });
 
             $fileEveMsgContainer.unbind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd');
             $fileEveMsgContainer.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function ()
             {
                 if($fileEveMsgContainer.hasClass('animating'))
                 {
-                    setTimeout(function ()
-                    {
-                        $fileEveMsgContainer.removeClass('animating');
-                        $fileEveMsgContainer.css("top", (-1 * $fileEveMsgContainer.height()));
-                    }, 2000);
+                    if (isSticky === false) {
+                        setTimeout(function ()
+                        {
+                            $fileEveMsgContainer.removeClass('animating');
+                            $fileEveMsgContainer.css("top", (-1 * $fileEveMsgContainer.height()));
+                        }, 2000);
+                    }
                 }
                 else
                 {
@@ -678,15 +772,22 @@
             $('#tickID' + i).removeClass('fileBrowser-ticked fileBrowserIco-tick').addClass('fileBrowserIco-untick');
         
         $('.fileBrowser-selectedItem').html('0 selected item(s)');
+
+        // hide apply button
+        $el('.fileBrowserIco-done').hide();
     }
     
     // maxZindex: get max z-index of html element : to make sure file-browser container show on top of it 
     fileBrowser_maxZindex = function ()
     {
-        return Math.max.apply(null, $.map($('body > *'), function (e, n)
-        {
-            if ($(e).css('position') == 'absolute' || $(e).css('position') == 'fixed') return (parseInt($(e).css('z-index')) + 1) || 1;
-        }));
+        var highest = -999;
+
+        $("*").each(function() {
+            var current = parseInt($(this).css("z-index"), 10);
+            if(current && highest < current) highest = current;
+        });
+
+        return highest;
     }
     
     function $el(query) {
@@ -695,17 +796,19 @@
     
     fileBrowser_init = function ()
     {
-    	$('body').append($mainLayout = $('<main style="margin:0;padding:0;top:0;bottom:0;left:0;right:0;"><div id="fileBrowser-container" class="fileBrowser-container"></div><div id="fileBrowser-event-message"></div><div id="fileBrowser-file-message">Folder is empty</div><div id="fileBrowser-loading"></div></main>'));
-    	$fileBrowserContainer = $el('.fileBrowser-container');
-    	$fileEveMsgContainer = $el('#fileBrowser-event-message');
-    	$el('#fileBrowser-loading').append('<table height="100%" width="100%"><tr><td align="center" valign="middle"><img src="/system/global/images/filebrowser/loading.gif" alt="loading..." height="56" width="46"><br/><button id="btnAbortAjax" style="float:none;">Cancel</button></td></tr></table>')
-    	$fileBrowserContainer.css("z-index", fileBrowser_maxZindex()).height("height", $(document).height()).width("width", $(document).width()).hide();
-    	$fileEveMsgContainer.css("z-index", fileBrowser_maxZindex()+1).height(30);
+        $('body').append($mainLayout = $('<main style="margin:0;padding:0;top:0;bottom:0;left:0;right:0;"><div id="fileBrowser-container" class="fileBrowser-container"></div><div id="fileBrowser-event-message"></div><div id="fileBrowser-file-message">Folder is empty</div><div id="fileBrowser-loading"></div></main>'));
+        $fileBrowserContainer = $el('.fileBrowser-container');
+        $fileEveMsgContainer = $el('#fileBrowser-event-message');
+        $mainLayout.hide();
+        $el('#fileBrowser-loading').append('<table height="100%" width="100%"><tr><td align="center" valign="middle"><img src="/system/global/images/filebrowser/loading.gif" alt="loading..." height="56" width="46"><br/><button id="btnAbortAjax" style="float:none;">Cancel</button></td></tr></table>')
+        $fileBrowserContainer.height("height", $(document).height()).width("width", $(document).width()).hide();
+        //disable it use class to control 
+        //$fileEveMsgContainer.css("z-index", fileBrowser_maxZindex()+1).height(30);
 
-    	$el('#btnAbortAjax').unbind('click').bind('click', function ()
+        $el('#btnAbortAjax').unbind('click').bind('click', function ()
         {
             if (ajaxReq !== null)
-            	ajaxReq.abort();
+                ajaxReq.abort();
         });
     }
 
@@ -751,20 +854,22 @@
     })
     
     /*Browse*/
-    $.kbx_filebrowser.browse = (function (type, path, limit, offSet, exclude, fileSelectionOnly, callback)
+    $.kbx_filebrowser.browse = (function (type, path, limit, offSet, exclude, fileFilter, fileSelectionOnly, callback)
     {
         ajaxReqURL = Kurobox.host + '/cgi-bin/syb_reqresp_cgi?app_id=2000100&module=file_browser_module&method=';
 
        $_type = type+''; 
        $_path = path+''; 
-       $_limit = limit+''; 
+       $_limit = '1000';
        $_offSet = offSet+''; 
        $_exclude = exclude+'';
+       $_fileFilter = fileFilter+'';
        $_fileSelectionOnly = (fileSelectionOnly === 'true' || fileSelectionOnly === true);
         
        deferredBrowse = null;
-       deferredBrowse = $.Deferred(),
+       deferredBrowse = $.Deferred();
 
+       $fileBrowserContainer.css("z-index", fileBrowser_maxZindex())
        fileBrowser_open();
 
        $.when(deferredBrowse).done(function () {
@@ -786,6 +891,7 @@
     $.kbx_filebrowser.set_select_limit = (function (limit)
     {
         $_itemSelectLimit = limit;
+        // if ($_itemSelectLimit == 1) $el('.fileBrowser-viewSelectedItem').hide();
     })
 
     /* 

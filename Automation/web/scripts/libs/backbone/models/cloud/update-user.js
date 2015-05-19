@@ -1,21 +1,22 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global define*/
 
 define([
     'jquery',
@@ -50,28 +51,47 @@ define([
                 paramObj.email = email;
 
                 //generate url
-                var str = '';
-                for (var v in paramObj) {
-                    if (str != '') {
-                        str += '&';
-                    }
-                    str += v + '=' + paramObj[v];
-                }
-                this.dev_opt.param.url = Kurobox.cloudhost+'/c/client/updateUser;jsessionid='+this.session+'?'+str;
+                this.dev_opt.param.url = Kurobox.cloudhost+'/c/client/updateUser;jsessionid='+this.session+'?'+this.objToParam(paramObj);
                 
                 //generate sum
-                var a = [];
-                for (var i in paramObj) {
-                    a.push(paramObj[i]);
-                }
-                this.dev_opt.param.concate = a.sort().join('');
+                this.dev_opt.param.concate = this.concatParam(paramObj);
 
                 //call
                 console.log(options);
                 KuroboxModel.prototype.fetch.call(this, options);
             }.bind(this), null, 'en')
-        }
+        },
 
+        objToParam:function (paramObj) {
+            //generate url
+            var str = '';
+            for (var v in paramObj) {
+                if (str != '') {
+                    str += '&';
+                }
+                str += v + '=' + paramObj[v];
+            }
+
+            return str;
+        },
+
+        concatParam:function (paramObj) {
+            var sortParamASC = [];
+
+            for(var data in paramObj){
+                sortParamASC.push([data, paramObj[data]]);
+            }
+
+            sortParamASC.sort();
+
+            var concatParam = '';
+
+            for (var i = 0; i < sortParamASC.length; i++) {
+                concatParam += sortParamASC[i][1] || '';
+            };
+
+            return concatParam;
+        }
     });
 
     return CloudUser;

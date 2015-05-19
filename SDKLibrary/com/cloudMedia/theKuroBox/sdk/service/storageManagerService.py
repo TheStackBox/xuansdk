@@ -1,24 +1,24 @@
 ##############################################################################################
-# Copyright 2014 Cloud Media Sdn. Bhd.
+# Copyright 2014-2015 Cloud Media Sdn. Bhd.
 #
 # This file is part of Xuan Application Development SDK.
 #
-#    Xuan Application Development SDK is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+# Xuan Application Development SDK is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#    This project is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
+# Xuan Application Development SDK is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
-
+from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 class StorageManagerService():
     
@@ -29,7 +29,6 @@ class StorageManagerService():
         group:String :- group of the data.
         key:String :- the id of the data.
         value:String :- the value of the data
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"lastRowId": 1}
         '''
         pass
@@ -42,19 +41,17 @@ class StorageManagerService():
         key:String :- the id of the data.
         limit:Number :- limit of data to get
         offset:Number :- offset of data to get
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"totalRecord": 1, "data": [{"appId": 2222222, "id": 1, "appDataKey": "1", "appDataGroup": "99", "appDataValue": "test"}]}
         '''
         pass
-        
+
     @staticmethod    
     def del_data(group=None, key="", language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         permanent delete persistent storage key and data
         group:String :- the group of data.
         key:String :- the id of the data.
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status": "success"}
         '''
         pass
-        
+

@@ -1,12 +1,31 @@
+/**
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+*/
 define([
     'jquery',
     'underscore',
     'backbone',
     'templates',
+    'models/categories',
     'models/rule.device-type',
     'models/rule.device',
-    'utils/common.utils'
-], function ($, _, Backbone, JST, RuleDeviceType, RuleDevice, CommonUtils) {
+    'utils/common.utils',
+], function ($, _, Backbone, JST, CategoriesModel, RuleDeviceType, RuleDevice, CommonUtils) {
 	'use strict';
 
 	var SERVICES = [
@@ -18,11 +37,15 @@ define([
 	var util = new CommonUtils();
 
 	return Backbone.View.extend({
+		id: 'device_explorer',
+		className: 'container',
+		item_renderer: JST['app/scripts/templates/module.rule.device_explorer.item.ejs'],
+
 		type_tmpl: JST['app/scripts/templates/module.rule.add.device_type_list.ejs'],
 		no_devices: JST['app/scripts/templates/module.rule.add.no_device.ejs'],
 		header_content: JST['app/scripts/templates/module.rule.device-explorer.header.ejs'],
-        header_template: JST['app/scripts/templates/module.rule.grey-header.ejs'],
-        pop_message: JST['app/scripts/templates/prompt.pop.ejs'],
+        header_template: JST['app/scripts/common/templates/grey-header.ejs'],
+        pop_message: JST['app/scripts/common/templates/prompt.pop.ejs'],
 		events: {
 			'click .rule-type-item': 'user_select_type',
 			'click .rule-device-item': 'user_select_device',
@@ -34,13 +57,107 @@ define([
 			this.el = $(this.options.el);
 			this.type_collection = new RuleDeviceType.collection();
 			this.device_collection = new RuleDevice.collection();
+
+			// listen to group events
+			/*
+			"AUTOMATION_GROUP_ADDED" - {"kbxGroupId":2, "kbxGroupParentId":1, "enabled":true}
+			"AUTOMATION_GROUP_DELETED" - {"kbxGroupId":2, "kbxGroupParentId":1}
+			"AUTOMATION_GROUP_UPDATED" - {"kbxGroupId":2, "kbxGroupParentId":1, "enabled":false}
+			*/
+			Kurobox.socket.verbose = true;
+			Kurobox.socket.on('socket:AUTOMATION_GROUP_ADDED', this.on_device_added, this);
+			Kurobox.socket.on('socket:AUTOMATION_GROUP_DELETED', this.on_device_deleted, this);
+			// Kurobox.socket.on('socket:AUTOMATION_GROUP_UPDATED', this.on_device_updated, this);
+			if (!Kurobox.socket.connected) {
+				Kurobox.socket.start();
+			}
+		},
+		render: function() {
+			// @NOTE: render will cause existing events reset
+			// used this class as item renderer and data retriever
+			this.events = {
+				'click .device-explorer': 'user_select_item',
+			}
+			this.undelegateEvents();
+			this.delegateEvents();
+		},
+		destroy: function() {
+			this.close();
+
+			// close group event
+			Kurobox.socket.off('socket:AUTOMATION_GROUP_ADDED', this.on_device_added, this);
+			Kurobox.socket.off('socket:AUTOMATION_GROUP_DELETED', this.on_device_deleted, this);
+			// Kurobox.socket.off('socket:AUTOMATION_GROUP_UPDATED', this.on_device_updated, this);
+			// Kurobox.socket.stop();
+			
+			this.$el.remove();
 		},
 		close: function() {
 			this.type_collection.destroy();
 			this.device_collection.destroy();
 			this.$el.hide();
+
 		},
+		navigate: function(options) {
+			console.log('navigating...', options);
+			if (this.$el.is(':hidden')) this.$el.show();
+
+			if (this.collection == undefined) {
+				// this.collection = new CategoriesModel();
+				this.collection = new RuleDevice.collection();
+			}
+			// var locationId = options.locationId, 
+				// parentGroupId = options.parentGroupId
+
+			// assume to retrieve
+			this.collection.fetch(options.section || 'then', options.parentGroupId || undefined, {
+			// this.collection.fetch(options.filter, locationId, parentGroupId, {
+				success: function() {
+					// render view
+
+					this.render_list(this.collection, options.filter);
+					// this.$('#content').html(this.type_tmpl({collection: this.collection, type:'device'}));
+
+				}.bind(this),
+				error: function() {
+					window.history.back();
+				}.bind(this)
+			})
+		},
+
+		render_list: function(collection, filters) {
+			
+			this.$el.empty();
+
+			collection.each(function(model) {
+				switch (model.constructor) {
+					case RuleDevice.model:
+					this.$el.append(this.item_renderer({
+						id: model.id,
+						type: 'device',
+						icon: model.get('icon'),
+						label: model.get('name'),
+						desc: model.get('extra_info').zoneName || model.get('description')
+					}))
+					break;
+				}
+			}.bind(this))
+		},
+
+		user_select_item: function(e) {
+			var $e = $(e.currentTarget);
+			var model = this.collection.get($e.data('id'))
+			this.trigger('select', model, e);
+		},
+
+		// =============================================================
+			// deplicating methods
+		// =============================================================
 		list_type: function(section) {
+			console.warn('deplicated!!!!')
+
+			this.parent_id = undefined;
+
 			if (this.$el.is(':hidden')) this.$el.show();
 
 			// clear content
@@ -97,10 +214,37 @@ define([
 				});
 				break;
 			}
+
+			this._return_function = function() {
+				window.location = this.options.base_url;
+			}.bind(this);
 		},
 		list_device: function(section, group, group_name) {
 
+			if (section !== undefined) {
+				this._section = section;
+			} else {
+				section = this._section;
+			}
+			if (group !== undefined) {
+				this._group = group;
+			} else {
+				group = this._group;
+			}
+
+			if (group_name !== undefined) {
+				this._group_name = group_name;	
+			} else {
+				group_name = this._group_name;
+			}
+
+			this.parent_id = group;
+
 			if (this.$el.is(':hidden')) this.$el.show();
+
+			// save top
+			var _top = $('body').scrollTop();
+			console.log('_top', _top);
 
 			// clear content
 			this.el.find('#content').empty();
@@ -121,7 +265,7 @@ define([
 						this.el.find('#header').html(this.header_template({
 							content: this.header_content({
 								title: this.section.toUpperCase(),
-								subtitle: 'Which %%name%%'.replace('%%name%%', this.device_collection.group.get('label')),
+								subtitle: 'select_a_device',
 								description: this.device_collection.group.get('description') || '',
 							})
 						}))
@@ -135,6 +279,10 @@ define([
 						} else {
 							this.el.find('#content').html(this.no_devices());
 						}
+
+						_.defer(function() {
+							$('body').scrollTop(_top);
+						}.bind(this))
 						// templating over the ui
 						this.trigger('idle');
 					}.bind(this),
@@ -144,6 +292,10 @@ define([
 					}.bind(this)
 				});
 				break;
+			}
+
+			this._return_function = function() {
+				window.history.back();
 			}
 		},
 		retrieve_device: function(did) {
@@ -160,6 +312,28 @@ define([
 		user_select_device: function(e) {
 			var $e = $(e.currentTarget);
 			var device = this.device_collection.get($e.data('id'));
+
+			var acknowledged_action = function() {
+				Shell.hide_pop_message();
+				this.delegateEvents();
+			}.bind(this)
+
+			// deleted?
+			if (device.get('deleted')) {
+				var $prompt_content = Shell.show_pop_message(this.pop_message({
+					title: '',
+                    message: 'msg_rule_device_explorer_device_delete_access_denied',
+                    ok_btn_label: 'btn_ok',
+                    cancel_btn_label: ''
+				}), {
+					'click #modal-ok-btn': acknowledged_action
+				}, acknowledged_action)
+
+				// ask cancel button to fuck off
+				$prompt_content.find('#modal-cancel-btn').hide();
+				return;
+			}
+
 			if (typeof device.get('extra_info').kbxService !== 'undefined' && device.get('extra_info').kbxService.isRequireSetup === true) {
 				this.undelegateEvents();
 
@@ -180,15 +354,11 @@ define([
 
 				} else {
 					// is on internet
-					var acknowledged_action = function() {
-						Shell.hide_pop_message();
-						this.delegateEvents();
-					}.bind(this)
 
 					var $prompt_content = Shell.show_pop_message(this.pop_message({
 						title: '',
                         message: 'error_service_setup_remote_access_denied',
-                        ok_btn_label: 'Ok',
+                        ok_btn_label: 'btn_ok',
                         cancel_btn_label: ''
 					}), {
 						'click #modal-ok-btn': acknowledged_action
@@ -207,7 +377,89 @@ define([
 		},
 
 		user_navigate_back: function(e) {
-			window.history.back();
+			this._return_function();
+			// window.history.back();
 		},
+
+		on_device_added: function(data) {
+			console.log('!!! device added', data)
+			if (this.$('.rule-device-item').length > 0 && !this.el.is(':hidden')) {
+				// update data
+				//"AUTOMATION_GROUP_ADDED" - {"kbxGroupId":2, "kbxGroupParentId":1, "enabled":true}
+				if (this.parent_id == data.kbxGroupParentId) {
+					// prompt to refresh
+					Shell.show_pop_message(this.pop_message({
+						title: 'msg_rule_device_explorer_device_update_title',
+                        message: 'msg_rule_device_explorer_device_add',
+                        ok_btn_label: 'btn_ok',
+                        cancel_btn_label: 'btn_cancel'
+					}), {
+						'click #modal-ok-btn': function() {
+							// update the list
+
+							// refetch data
+							this.list_device();
+							Shell.hide_pop_message();
+
+						}.bind(this),
+						'click #modal-cancel-btn': function() {
+							// do nothing
+							Shell.hide_pop_message();
+						}.bind(this)
+					})
+				}
+			}
+		},
+
+		on_device_deleted: function(data) {
+			console.log('!!! device deleted', data)
+			if (this.$('.rule-device-item').length > 0 && !this.el.is(':hidden')) {
+				// update data
+				//"AUTOMATION_GROUP_ADDED" - {"kbxGroupId":2, "kbxGroupParentId":1, "enabled":true}
+				if (this.parent_id == data.kbxGroupParentId) {
+					// prompt to refresh
+					Shell.show_pop_message(this.pop_message({
+						title: 'msg_rule_device_explorer_device_update_title',
+                        message: 'msg_rule_device_explorer_device_deleted',
+                        ok_btn_label: 'btn_ok',
+                        cancel_btn_label: 'btn_cancel'
+					}), {
+						'click #modal-ok-btn': function() {
+							// update the list
+
+							// refetch data
+							this.list_device();
+							Shell.hide_pop_message();
+
+						}.bind(this),
+						'click #modal-cancel-btn': function() {
+							// do nothing
+							Shell.hide_pop_message();
+
+							// exclaim the device
+							this.$('.rule-device-item[data-id="'+data.kbxGroupId+'"] #item-label').addClass('error');
+
+							// set deleted flag in data model
+							this.device_collection.get(data.kbxGroupId).set('deleted', true);
+						}.bind(this)
+					})
+				}
+			}
+		},
+
+		on_device_updated: function(data) {
+			console.log('!!! device updated', data)
+			if (this.$('.rule-device-item').length > 0) {
+				// check for data
+				//"AUTOMATION_GROUP_UPDATED" - {"kbxGroupId":2, "kbxGroupParentId":1, "enabled":false}
+				if (this.parent_id == data.kbxGroupParentId) {
+					var dev = this.device_collection.get(data.kbxGroupId);
+					if (dev) {
+						// update data
+						dev.set('enabled', data.enabled);
+					}
+				}
+			}
+		}
 	});
 });

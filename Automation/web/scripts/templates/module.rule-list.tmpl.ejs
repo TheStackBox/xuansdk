@@ -1,31 +1,28 @@
 
   <!-- check rule status-->
-  <% if(model.get('enabled')){%>
-    <div class="rule-itm" data-id="<%= model.get('id') %>">
-  <%} else {%>
-    <div class="rule-itm disable" data-id="<%= model.get('id') %>">
-  <%}%>
-
-      <section>
-          <% if(model.get('status') > 0){%><span class="error">&#xe634</span><%}%>
-          <%= model.get('name') %>
-      </section>
+      <div class="rule-name-holder">
+        <% if(model.get('status') > 0){%><span class="error">&#xe634</span><%}%>
+          
+          <span class="rule-name"><%= model.get('name') %></span>
+      </div>
       <div class="rule-row">
         <%var condTotal = model.get('condition').length;%>
         <%var actionTotal = model.get('execution').length;%>
         <!-- Handle 2 group div clip according to both total -->
         <% if (condTotal<=3){%>
-          <span>
+          <span class="iconClip-">
         <%} else if(actionTotal == 3){%>
           <span class="iconClip-0">
         <%} else if(actionTotal == 2){%>
            <span class="iconClip-1">
         <%} else if(actionTotal == 1){%>
-           <% if (condTotal<5){%>
+           <% if (condTotal<=4){%>
               <span class="iconClip-1">
            <%} else {%>
               <span class="iconClip-2">
           <%}%>
+        <%} else{%>
+             <span class="iconClip-0">
         <%}%>
 
 
@@ -39,30 +36,27 @@
 
          <!-- Handle 2 group div clip according to both total -->
         <% if (actionTotal<=3){%>
-          <span>
+          <span class="iconClip-">
         <%} else if(condTotal == 3){%>
           <span class="iconClip-0">
         <%} else if(condTotal == 2){%>
            <span class="iconClip-1">
         <%} else if(condTotal == 1){%>
-           <% if (actionTotal<5){%>
+           <% if (actionTotal<=4){%>
               <span class="iconClip-1">
            <%} else {%>
               <span class="iconClip-2">
           <%}%>
+        <%} else{%>
+             <span class="iconClip-0">
         <%}%>
 
           <% for (var i = 0; i < actionTotal; i++) {%>
             <!-- check device status-->
             <span class="icon"><%=model.get('execution').at(i).get('icon')%></span>
-           <!--  <% if(model.get('execution').at(i).get('status') == "off"){%>
-              <span class="icon off"><%=model.get('execution').at(i).get('icon')%></span>
-            <%} else {%>
-              <span class="icon"><%=model.get('execution').at(i).get('icon')%></span>
-            <%}%>   -->
-
           <%};%>
         </span>
+
       </div>
-      <div class="device-option"><div class="rule-icon-option rule-cirle-option"></div></div>  
-  </div>
+       <span style="position:relative; float:right;"><span class="device-option" touch="true"><span class="rule-icon-option rule-cirle-option"></span></span></span>
+      <!-- <div class="device-option"><div class="rule-icon-option rule-cirle-option"></div></div>   -->

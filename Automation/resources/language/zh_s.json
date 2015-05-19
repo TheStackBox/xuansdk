@@ -1,0 +1,63 @@
+{
+    "group_notification_automation_condition":"例子： 接收到新电邮时...",
+    "group_service_automation_condition":"例子： 天气预报将会下雨时...",
+    
+    "group_notification_automation_action":"例子： 发送文字信息...",
+    "group_service_automation_action":"例子：进行特定指令...",
+    
+    "group_-291_label":"延迟",    
+    "method_-291_label":"时限",
+    
+    "timer.groupLabel":"时限",
+    "timer.groupDesc":"为您的规则设定时限",
+    "timer.date_time_range.label":"日期时间范围",
+    "timer.date_time_range.desc":"例子:十二月十号上午十时正至同月十三号下午三时正",
+    "timer.time_range.label":"时间范围 (每日)",
+    "timer.time_range.desc":"例子:下午三时正至下午五时正",
+    "timer.day_of_week.label":"周天",
+    "timer.day_of_week.desc":"每个周末",
+
+    "ser_noti_link_label":"更多",
+    "ser_noti_exec_completed":"':scenename:'激活完毕",
+    "ser_noti_exec_completed_with_error":"'scenename'激活完毕(有错误)",
+
+    
+    "11097_invalid_parameter":"参数相关错误",
+    "11099_unexpected_exception":"未知错误",
+    
+    "11501_invalid_timer_type":"参数 ‘type’的数值无效",
+    "11502_invalid_timer_value":"参数 ‘value’的数值无效",
+    
+    "11601_unexpected_system_behavior":"中央系统报错",
+    "11602_kbx_method_not_in_use":"该函数未被应用",
+    "11603_kbx_group_not_in_use":"该组合未被应用",
+    
+    "11702_rule_not_found":"指定规则不存在",
+    "11703_rule_update_in_progress":"指定规则正在被更新或创建过程中",
+    "11704_rule_creation_or_update_failed":"规则创建或更新相关错误",
+    "11705_rule_set_items_too_many":"规则的每种项目不能多于:max_item_size:个",
+    "11706_rule_set_rules_too_many":"规则的总数被限制在:max_rule_size:个",
+    
+    "11800_timer_condition_not_fulfilled":"定时器的条件不满足",
+    
+    "11901_scene_execution_in_progress":"指定场景激活正在运行",
+    "11902_scene_not_found":"指定场景不存在",
+    "11903_scene_update_in_progress":"指定场景正在被更新或创建过程中",
+    "11904_scene_creation_or_update_failed":"场景创建或更新相关错误",
+    "11905_no_execution_in_progress":"指定场景激活不在运行过程中",
+    "11906_scene_deletion_failed":"指定场景移除相关错误",
+	"11907_scene_set_items_too_many":"场景的项目不能多于:max_item_size:个",
+    "11908_scene_set_scenes_too_many":"场景的总数被限制在:max_scene_size:个",
+    
+    "12000_ser_not_found":"指定场景激活运行结果不存在",
+    "12001_seri_not_found":"指定场景激活运行结果事项不存在",
+    "12002_ser_no_retry_item":"指定场景激活运行结果不存在任何需重试的事项",
+    "12003_seri_not_error":"指定场景激活运行结果事项无需被重试",
+    "12004_ser_retry_in_progress":"指定场景激活运行结果事项在重试过程中",
+    
+    "13000_favorited_scene_not_found":"场景未被收藏",
+    "13001_favorited_scene_creation_or_update_failed":"场景收藏相关错误",
+    "13002_favorited_scene_deletion_failed":"取消收藏场景相关错误"
+    
+    
+}

@@ -1,0 +1,251 @@
+/**
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+*/
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+$kuroboxFont: 'FontKurobox', sans-serif;
+
+// color 
+$primary-color:#fa2283;
+$secondary-color:#92c602;
+$dark-gray:#424242;
+$light-gray:#666;
+$dim:#a7a7a7;
+$controlPanel-color:#8b8b8b;
+$alert-color:#feb501;
+$hover-bg:#e6e6e6;
+// z-index 
+
+$zProtocolPane:60;
+$zListFloat:90;
+$zNavBar:100;
+$zNavIcon:130;
+$zTopBarThick:101;
+$zDarkLayer:900;
+$zBottomTab:899;
+$zOptionPane:1001;
+$zMsg:1031;
+$zConfirmBox:1100;
+$zFixBtn:50;
+
+// @import 'sass-bootstrap/lib/bootstrap';
+
+@font-face {
+    font-family: 'FontKurobox';
+    src:url('/system/global/styles/fonts/FontKurobox.eot');
+    src:url('/system/global/styles/fonts/FontKurobox.eot?#iefix') format('embedded-opentype'),
+        url('/system/global/styles/fonts/FontKurobox.woff') format('woff'),
+        url('/system/global/styles/fonts/FontKurobox.ttf') format('truetype'),
+        url('/system/global/styles/fonts/FontKurobox.svg#FontKurobox') format('svg');
+    font-weight: normal;
+    font-style: normal;
+} 
+
+/* =========== Mixin =========== */
+
+@mixin kurobox-icon {
+    font-family: 'FontKurobox', sans-serif;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 25px;
+    display: inline-block;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin kurobox-webicon {
+    font-family: 'FontKurobox', sans-serif;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    display: inline-block;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin dotdot{
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    word-wrap: break-word;
+}
+
+@mixin dotdot-multiline($line){
+    display: block; /* Fallback for non-webkit */
+    display: -webkit-box;
+    -webkit-line-clamp: $line;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
+
+@mixin shape($bL, $bR, $tL, $tR){
+     border-bottom-left-radius:$bL;
+    border-bottom-right-radius:$bR;
+        border-top-left-radius:$tL;
+       border-top-right-radius:$tR; 
+}
+
+@mixin border-radius($radius){
+    -webkit-border-radius: $radius; 
+       -moz-border-radius: $radius; 
+        -ms-border-radius: $radius;
+            border-radius: $radius; 
+}
+
+
+
+@mixin blur($blur){
+    -webkit-filter: blur($blur);
+       -moz-filter: blur($blur);
+         -o-filter: blur($blur);
+         ms-filter: blur($blur);
+            filter: blur($blur);
+    //-webkit-transition: -webkit-filter .50s;
+}
+
+@mixin opacity($value){
+    opacity: #{"." + $value};
+    filter: alpha(opacity=$value);
+    -ms-filter: "alpha(opacity=$value)";
+    -khtml-opacity: #{"." + $value};
+    -moz-opacity: #{"." + $value};
+}
+
+@mixin shadow($hOffset, $vOffset, $blurRadius, $spreadRadius, $color){
+        -moz-box-shadow: $hOffset $vOffset $blurRadius $spreadRadius $color;
+     -webkit-box-shadow: $hOffset $vOffset $blurRadius $spreadRadius $color;
+             box-shadow: $hOffset $vOffset $blurRadius $spreadRadius $color;
+ }
+
+@mixin keyframes($animation-name) {
+      @-webkit-keyframes $animation-name {
+        @content;
+      }
+      @-moz-keyframes $animation-name {
+        @content;
+      }  
+      @-ms-keyframes $animation-name {
+        @content;
+      }
+      @-o-keyframes $animation-name {
+        @content;
+      }  
+      @keyframes $animation-name {
+        @content;
+      }
+}
+
+@mixin animation($str) {
+  -webkit-animation: #{$str};
+  -moz-animation: #{$str};
+  -ms-animation: #{$str};
+  -o-animation: #{$str};
+  animation: #{$str};      
+}
+
+@mixin slider-track(){
+    -webkit-appearance: none;
+    height:1px;
+    background-color:#bbbbbb;
+    border-top: 2px solid #bbbbbb;
+    border-bottom: 2px solid #bbbbbb;
+    border-left: 0px solid transparent;
+    border-right: 0px solid transparent;
+    @include shape(20, 20, 20, 20);
+    padding-left: 0;
+    padding-right: 0;
+    padding: 1px;
+}
+
+@mixin slider-head(){
+    -webkit-appearance: none;
+    position: relative;
+    border: 1px solid red;
+    z-index: 1;
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    border:1px solid grey;
+    @include border-radius(50%);
+}
+
+@mixin disable{
+     -webkit-filter: grayscale(1);
+     -moz-filter: grayscale(1);
+     filter: grayscale(1);
+     opacity:0.2;
+}
+
+@mixin fade-out(){
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+
+@mixin disable{
+     -webkit-filter: grayscale(1);
+     -moz-filter: grayscale(1);
+     filter: grayscale(1);
+     opacity:0.2;
+}
+
+@mixin hover-bg($bg:$hover-bg){
+   background-color:$bg!important;
+}
+
+@mixin hover-fg($fg:$secondary-color){
+   @include opacity(50);
+}
+
+@mixin hover-btn($fg:$secondary-color){
+    //@include fade-out();
+    @include opacity(70);   
+}
+
+%vertical-middle {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+@include keyframes(fadeIn-40) {
+  0% { opacity: 0; }
+  40% { opacity: 0.4; }
+}
+
+@include keyframes(fadeIn-70) {
+  0% { opacity: 0; }
+  70% { opacity: 0.7; }
+}
+
+@include keyframes(fadeIn-90) {
+  0% { opacity: 0; }
+  90% { opacity: 0.9; }
+}

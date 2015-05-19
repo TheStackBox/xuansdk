@@ -1,79 +1,106 @@
 ##############################################################################################
-# Copyright 2014 Cloud Media Sdn. Bhd.
+# Copyright 2014-2015 Cloud Media Sdn. Bhd.
 #
 # This file is part of Xuan Automation Application.
 #
-#    Xuan Automation Application is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+# Xuan Automation Application is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#    This project is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
+# Xuan Automation Application is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-import json
 
 from com.cloudMedia.theKuroBox.sdk.app.kbxLang import KBXLang
 
 
 class AutomationException(Exception):
-
     '''
-    1500 - 1599: DTO Related Error
-    1600 - 1699: API Service Error
-    1700 - 1799: Rule Service Error
-    1800 - 1899: Timer Module Error
+    All exceptions raised by automation are recorded here.
+    
+    1000 - 1099: Module Errors
+    1500 - 1599: Trigger Related Errors
+    1600 - 1699: API Service Errors
+    1700 - 1799: Rule Service Errors
+    1800 - 1899: Timer Module Errors
+    1900 - 1999: Scene Service Errors
+    2000 - 2999: Scene Execution Result Service Errors
     '''
+    
+    
     __all_exceptions = {
-        1095: KBXLang("error_1095"), # "Interpreter Exception", # only possible to be raised if python interpreter goes wrong.
-        1096: KBXLang("error_1096"), # "System app is not behaving correctly", # everything related to system app issue.
-        1097: KBXLang("error_1097"), # "Invalid parameter", # very common error raised when unexpected value is passed in.
-        1098: KBXLang("error_1098"), # "Module Exception",
-        1099: KBXLang("error_1099"), # "Unhandled Exception",
+        11097: "11097_invalid_parameter",
+        11099: "11099_unexpected_exception",
+        
+        11501: "11501_invalid_timer_type",
+        11502: "11502_invalid_timer_value",
+        
+        11601: "11601_unexpected_system_behavior",
+        11602: "11602_kbx_method_not_in_use",
+        11603: "11603_kbx_group_not_in_use",
 
-        1501: KBXLang("error_1501"), # "Invalid timer type",
-        1502: KBXLang("error_1502"), # "Invalid timer value",
-
-        1701: KBXLang("error_1701"), # "Invalid json string",
-        1702: KBXLang("error_1702"), # "Unable to create trigger timer",
-        1703: KBXLang("error_1703"), # "Trigger object does not have setter information",
-        1704: KBXLang("error_1704"), # "Rule updating",
-        1705: KBXLang("error_1705"), # "Invalid Params Current Value",
-        1706: KBXLang("error_1706"), # "Method size exceeded allowed value (%s)",
-        1707: KBXLang("error_1707"), # "RuleId not found",
-        1708: KBXLang("error_1708") # "Rule size reached limit",
+        11702: "11702_rule_not_found",
+        11703: "11703_rule_update_in_progress",
+        11704: "11704_rule_creation_or_update_failed",
+        11705: "11705_rule_set_items_too_many",
+        11706: "11706_rule_set_rules_too_many",
+        
+        11800: "11800_timer_condition_not_fulfilled",
+                
+        11901: "11901_scene_execution_in_progress",
+        11902: "11902_scene_not_found",
+        11903: "11903_scene_update_in_progress",
+        11904: "11904_scene_creation_or_update_failed",
+        11905: "11905_no_execution_in_progress",
+        11906: "11906_scene_deletion_failed",
+        11907: "11907_scene_set_items_too_many",
+        11908: "11908_scene_set_scenes_too_many",
+        
+        12000: "12000_ser_not_found",
+        12001: "12001_seri_not_found",
+        12002: "12002_ser_no_retry_item",
+        12003: "12003_seri_not_error",
+        12004: "12004_ser_retry_in_progress",
+        
+        13000: "13000_favorited_scene_not_found",
+        13001: "13001_favorited_scene_creation_or_update_failed",
+        13002: "13002_favorited_scene_deletion_failed"
     }
+    
 
-    def __init__(self, exCode, exExtra=None):
+    def __init__(self, exCode, exDebug=None, exFunc=None):
         try:
-            exCode = int(str(exCode))
-            if not exCode in AutomationException.__all_exceptions:
-                raise Exception()
-            else:
-                self.__code = exCode
+            exCode = int(exCode)
+            exMessage = AutomationException.__all_exceptions[exCode]
+            super().__init__(exMessage)
         except Exception:
-            self.__code = 1099
-        self.__code = exCode
-        self.__extra = exExtra
-        super().__init__(AutomationException.__all_exceptions.get(exCode, ""))
+            super().__init__("invalid exception code")
+            exCode = 99999
+            self.__exDebug = "exCode: " + str(exCode) + ", exDebug:" + str(exDebug)
+        
+        self.__exCode = exCode
+        self.__exDebug = str(exDebug)
+        self.__exFunc = exFunc
 
     def err_to_dict(self):
-        exCode = self.__code
-        return {"returnValue": exCode, "returnMesssage":AutomationException.__all_exceptions.get(exCode, ""), "debugMessage":self.__extra}
-
-    def err_to_json_str(self):
-        return json.dumps(self.err_to_dict(), sort_keys=True)
+        return {"returnValue":self.__exCode,
+                "returnMessage":self.get_error_message(),
+                "debugMessage":self.__exDebug}
 
     def get_error_code(self):
-        return self.__code
+        return self.__exCode
 
     def get_error_message(self):
-        return AutomationException.__all_exceptions.get(self.__code)
+        return "invalid exception code" \
+                if self.__exCode == 99999 \
+                else KBXLang(AutomationException.__all_exceptions[self.__exCode], self.__exFunc)
 
     def get_debug_message(self):
-        return self.__extra
+        return self.__exDebug
+

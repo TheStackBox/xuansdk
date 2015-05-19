@@ -1,23 +1,24 @@
 ##############################################################################################
-# Copyright 2014 Cloud Media Sdn. Bhd.
+# Copyright 2014-2015 Cloud Media Sdn. Bhd.
 #
 # This file is part of Xuan Application Development SDK.
 #
-#    Xuan Application Development SDK is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+# Xuan Application Development SDK is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#    This project is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
+# Xuan Application Development SDK is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
-from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
 
+from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
+from com.cloudMedia.theKuroBox.sdk.app.sharedMethod import SharedMethod
 
 class FTDIService():
 
@@ -27,30 +28,27 @@ class FTDIService():
         Initialize ftdi command to device.
         deviceId:Number :- target device id
         cmdStr:String :- command string write to ftdi device
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status":"success"}
         '''
         pass
-    
+
     @staticmethod
     def write_to_ftdi(deviceId, cmdStr="", language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Write ftdi command to device.
         deviceId:Number :- target device id
-        cmdStr:String :- command string write to ftdi device
-        language:String - [Optional] Preferred language. Default is en.
+        cmdStr:String :- command string write to ftdi device  
         return:Dictionary :eg- {"status":"success"}
         '''
         pass
-    
+
     @staticmethod
     def read_from_ftdi(deviceId, till, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Write ftdi command to device perform read.
         deviceId:Number :- target device id
         till:String :- read until
-        language:String - [Optional] Preferred language. Default is en.
         return:Dictionary :eg- {"status":true}
         '''
         pass
-    
+

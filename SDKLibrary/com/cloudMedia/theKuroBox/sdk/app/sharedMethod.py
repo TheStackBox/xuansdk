@@ -1,32 +1,55 @@
 ##############################################################################################
-# Copyright 2014 Cloud Media Sdn. Bhd.
+# Copyright 2014-2015 Cloud Media Sdn. Bhd.
 #
 # This file is part of Xuan Application Development SDK.
 #
-#    Xuan Application Development SDK is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+# Xuan Application Development SDK is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#    This project is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
+# Xuan Application Development SDK is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
+
+from collections import deque
+import json
+from threading import Event
+import traceback
+
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
+from com.cloudMedia.theKuroBox.sdk.app.ipcClient import IPCClient
+from com.cloudMedia.theKuroBox.sdk.ex.appException import AppException
+from com.cloudMedia.theKuroBox.sdk.ex.systemException import SystemException
+from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
+from com.cloudMedia.theKuroBox.sdk.util.methodCallGroup import MethodCallGroup
+from com.cloudMedia.theKuroBox.sdk.util.validator.booleanValidator import BooleanValidator
+from com.cloudMedia.theKuroBox.sdk.util.validator.numberValidator import NumberValidator
+from com.cloudMedia.theKuroBox.sdk.util.validator.stringValidator import StringValidator
+
+from com.cloudMedia.theKuroBox.sdk.app.kbxLang import KBXLang
 
 class SharedMethod(object):
-    
-    ''' Currently callable shared method'''
+    '''
+    Shared Method.
+    '''
+
+    ''' Currently callable shared method '''
     METHOD_STATUS_ACTIVE = 1
     ''' Shared method which is registered but not callable currently '''
     METHOD_STATUS_INACTIVE = 0
 
-    __unset__ = []
-    
+    __empty_placeholder = {} # KEEP_FOR_SDK
+
+    @staticmethod
+    def get_empty_placeholder():
+        pass
+
     @staticmethod
     def get_system_id():
         '''
@@ -57,7 +80,7 @@ class SharedMethod(object):
         **kwargs - Any extra key value pairs will be passed as arguments when calling the targeted method. They must be able to be converted into json string altogether.
 
         Returns:
-        A dictionary of target method's corresponsing response.
+        A dictionary of target method's corresponding response.
         '''
         pass
 
@@ -71,7 +94,7 @@ class SharedMethod(object):
         **kwargs - Any extra key value pairs will be passed as arguments when calling the targeted method. They must be able to be converted into json string altogether.
 
         Returns:
-        A dictionary of target method's corresponsive response.
+        A dictionary of target method's corresponding response.
         '''
         pass
 
@@ -106,8 +129,8 @@ class SharedMethod(object):
         pass
 
     @staticmethod
-    def list_shared_methods(kbxMethodId=__unset__, kbxMethodAppId=__unset__, kbxModuleName=__unset__, kbxMethodName=__unset__,
-                            kbxGroupId=__unset__, kbxMethodTag=__unset__, kbxMethodStatus=METHOD_STATUS_ACTIVE, limit=50, offset=0,
+    def list_shared_methods(kbxMethodId=__empty_placeholder, kbxMethodAppId=__empty_placeholder, kbxModuleName=__empty_placeholder, kbxMethodName=__empty_placeholder,
+                            kbxGroupId=__empty_placeholder, kbxMethodTag=__empty_placeholder, kbxMethodStatus=METHOD_STATUS_ACTIVE, limit=50, offset=0,
                             language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Retrieve list of registered shared methods based on given criteria.
@@ -125,13 +148,13 @@ class SharedMethod(object):
         language:String - [Optional] Preferred language.
 
         Returns:
-        A tuple constains of a list of method properties (dictionaries) and total number of records.
+        A dictionary contains of a list of method properties [methodList] and total number of records [totalItem].
         '''
         pass
 
     @staticmethod
-    def get_shared_methods_count(kbxMethodId=__unset__, kbxMethodAppId=__unset__, kbxModuleName=__unset__, kbxMethodName=__unset__,
-                            kbxGroupId=__unset__, kbxMethodTag=__unset__, kbxMethodStatus=METHOD_STATUS_ACTIVE, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def get_shared_methods_count(kbxMethodId=__empty_placeholder, kbxMethodAppId=__empty_placeholder, kbxModuleName=__empty_placeholder, kbxMethodName=__empty_placeholder,
+                            kbxGroupId=__empty_placeholder, kbxMethodTag=__empty_placeholder, kbxMethodStatus=METHOD_STATUS_ACTIVE, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Get total count of registered shared methods which matched given criteria.
 
@@ -146,12 +169,12 @@ class SharedMethod(object):
         language:String - [Optional] Preferred language.
 
         Returns:
-        An integer of total records count.
+        A dictionary contains of total records count [totalItem].
         '''
         pass
 
     @staticmethod
-    def list_shared_methods_by_app_id(kbxMethodAppId, kbxMethodIds=__unset__, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def list_shared_methods_by_app_id(kbxMethodAppId, kbxMethodIds, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         List method configuration of given method unique IDs. 
         This is a faster approach compared to "list_shared_methods" because you know the unique app IDs of the methods.
@@ -221,8 +244,8 @@ class SharedMethod(object):
         pass
 
     @staticmethod
-    def list_shared_method_groups(kbxGroupId=__unset__, kbxGroupAppId=__unset__, kbxGroupName=__unset__,
-                                  kbxGroupParentId=__unset__, kbxMethodTag=__unset__, enableTagCount=False, limit=50, offset=0, language=AppInfo.DEFAULT_API_LANGUAGE):
+    def list_shared_method_groups(kbxGroupId=__empty_placeholder, kbxGroupAppId=__empty_placeholder, kbxGroupName=__empty_placeholder,
+                                  kbxGroupParentId=__empty_placeholder, kbxMethodTag=__empty_placeholder, enableTagCount=False, limit=50, offset=0, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
         Retrieve list of registered shared methods based on given criteria.
 
@@ -233,13 +256,12 @@ class SharedMethod(object):
         kbxGroupParentId:List<String> - [Optional] Filter based on group parent ids. For groups that does not have a parent id, use None.
         limit:Integer - Maximum number of records per retrieve. 50 by default.
         offset:Integer - Starting index of the list of records. 0 by default.
-        language:String - [Optional] Preferred language.
 
         Returns:
-        A tuple contains of a list of group properties (dictionaries) and total number of records.
+        A dictionary contains of a list of group properties [groupList] and total number of records [totalItem].
         '''
         pass
-    
+
     @staticmethod
     def list_shared_method_groups_by_app_id(kbxGroupAppId, kbxGroupIds, language=AppInfo.DEFAULT_API_LANGUAGE):
         '''
@@ -264,3 +286,4 @@ class SharedMethod(object):
         {24: None}
         '''
         pass
+

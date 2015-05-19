@@ -1,49 +1,62 @@
 {
-	"group_speaker_desc_cond":"e.g. when the speaker playback state changed ...",
-	"group_switch_desc_cond":"e.g. when the switch turned off or on ...",
-	"group_door_lock_desc_cond":"e.g. when the door is locked/ unlocked ...",
-	"group_hue_desc_cond":"e.g. when hue color change to ...",
-	"group_dimmer_desc_cond":"e.g when the dimmer to this level ...",
-	"group_horn_desc_cond":"e.g. when horn is on...",
-	"group_ipcamera_desc_cond":"",
-	"group_power_strip_desc_cond":"e.g. when all switches turned off or on ...",
-	"group_sensor_desc_cond":"e.g. when there's motion here...",
-	"group_notification_desc_cond":"e.g. when mail arrive ...",
-	"group_service_desc_cond":"e.g. when It's going to rain",
-	
-	"group_speaker_desc_exec":"e.g. then play, stop or mute the music ...",
-	"group_switch_desc_exec":"e.g. then turn it off or on ...",
-	"group_door_lock_desc_exec":"e.g. then lock or unlock it ...",
-	"group_hue_desc_exec":"e.g. then change hue color  to ...",
-	"group_dimmer_desc_exec":"e.g. then adjust the level to ...",
-	"group_horn_desc_exec":"e.g. then turn it on or off ...",
-	"group_ipcamera_desc_exec":"e.g. then take a snap shoot",
-	"group_power_strip_desc_exec":"e.g. then turn all switches on or off ...",
-	"group_sensor_desc_exec":"",
-	"group_notification_desc_exec":"e.g. then text me at ...",
-	"group_service_desc_exec":"",
-	
-    "error_1095":"Interpreter Exception",
-    "error_1096":"System app is not behaving correctly",
-    "error_1097":"Invalid parameter",
-    "error_1098":"Module Exception",
-    "error_1099":"Unhandled Exception",
+    "group_notification_automation_condition":"e.g. when mail arrive ...",
+    "group_service_automation_condition":"e.g. when it's going to rain ...",
     
-    "error_1501":"Invalid trigger parameter 'type'",
-    "error_1502":"Invalid trigger parameter 'value'",
+    "group_notification_automation_action":"e.g. then text me at ...",
+    "group_service_automation_action":"e.g. then do something ...",
 
-    "error_1701":"Invalid JSON string",
-    "error_1702":"Unable to create trigger timer",
-    "error_1703":"Trigger object does not have setter information",
-    "error_1704":"Rule is under processing",
-    "error_1705":"Invalid Params Current Value",
-    "error_1706":"Method size exceeded allowed value",
-    "error_1707":"Rule not found",
-    "error_1708":"Total rules amount reached allowed value",
+    "group_-291_label":"Delay",    
+    "method_-291_label":"Duration",
     
     "timer.groupLabel":"Timer",
-    "timer.groupDesc":"Timer service",
-    "timer.dailyTask.label":"At this time",
-	"timer.dailyTask.desc":"At this time."
-	
+    "timer.groupDesc":"Specify a trigger time for your rules",
+    "timer.date_time_range.label":"Date Time Range",
+    "timer.date_time_range.desc":"e.g. when it's 7th March 12:22 PM ...",
+    "timer.time_range.label":"Time Range (Daily)",
+    "timer.time_range.desc":"e.g. when it's between 12:00PM - 3:00PM ...",
+    "timer.day_of_week.label":"Day of Week",
+    "timer.day_of_week.desc":"e.g. when it's Monday ...",
+    
+    "ser_noti_link_label":"Details",
+    "ser_noti_exec_completed":"':scenename:' has been executed successfully",
+    "ser_noti_exec_completed_with_error":"':scenename:' failed to execute completely",
+        
+    
+    "11097_invalid_parameter":"Invalid parameter",
+    "11099_unexpected_exception":"Unexpected Exception",
+    
+    "11501_invalid_timer_type":"Invalid timer type",
+    "11502_invalid_timer_value":"Invalid timer value",
+    
+    "11601_unexpected_system_behavior":"Unexpected system behavior",
+    "11602_kbx_method_not_in_use":"Method not in use",
+    "11603_kbx_group_not_in_use":"Group not in use",
+    
+    "11702_rule_not_found":"Rule not found",
+    "11703_rule_update_in_progress":"Rule update in progress",
+    "11704_rule_creation_or_update_failed":"Rule creation or update failed",
+    "11705_rule_set_items_too_many":"IF and THEN cannot exceed :max_item_size: items respectively",
+    "11706_rule_set_rules_too_many":"Total size of rules cannot exceed :max_rule_size:",
+    
+    "11800_timer_condition_not_fulfilled":"Timer condition not fulfilled",
+    
+    "11901_scene_execution_in_progress":"Scene execution in progress",
+    "11902_scene_not_found":"Scene not found",
+    "11903_scene_update_in_progress":"Scene update in progress",
+    "11904_scene_creation_or_update_failed":"Scene creation or update failed",
+    "11905_no_execution_in_progress":"No execution in progress",
+    "11906_scene_deletion_failed":"Scene deletion failed",
+	"11907_scene_set_items_too_many":"A scene cannot have more than :max_item_size: actions",
+    "11908_scene_set_scenes_too_many":"Total size of scenes cannot exceed :max_scene_size:",
+    
+    "12000_ser_not_found":"Scene execution result not found",
+    "12001_seri_not_found":"Scene execution result item(s) not found",
+    "12002_ser_no_retry_item":"Scene execution result has no item with error to retry",
+    "12003_seri_not_error":"Scene execution result item is not error",
+    "12004_ser_retry_in_progress":"Scene execution result retry in progress",
+    
+    "13000_favorited_scene_not_found":"Favorited scene not found",
+    "13001_favorited_scene_creation_or_update_failed":"Favorited scene creation or update failed",
+    "13002_favorited_scene_deletion_failed":"Favorited scene deletion failed"
+    
 }

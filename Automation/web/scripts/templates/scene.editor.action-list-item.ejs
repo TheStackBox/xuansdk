@@ -1,0 +1,9 @@
+<li class="action-item" data-row="<%= idx %>" data-col="1" data-sizex="1" data-sizey="1">
+	<div class="icon" style="display:<%= (!is_error) ? 'block' : 'none' %>"><%= icon || '&#xe64b' %></div>
+	<div class="icon warning" style="display:<%= (is_error) ? 'block': 'none' %>"></div>
+	<div class="content">
+		<div class="action-desc"></div>
+		<span class="location"><%= location %></span>
+		<span class="option-btn" data-idx="<%= idx %>"><span class="device-icon-option device-cirle-option" data-idx="<%= idx %>" touch="true"></span>
+	</div>
+</li>

@@ -1,21 +1,22 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global define*/
 
 define([
     'underscore',
@@ -42,15 +43,15 @@ define([
             KuroboxModel.prototype.save.call(this, key, val, options);
         },
 
-        change_user: function (key, val, options) {
+        change_user: function (old_username, new_username, old_password, new_password, persistent, options) {
             this.url = 'change_user';
             this.dev_opt = {
                 bypassSession: true,
                 method: 'GET',
-                param_attr: {old_username: 'old_username', old_password: 'old_password', new_username: 'new_username', new_password: 'new_password'}
+                param: {old_username: old_username, new_username: new_username, old_password: old_password, new_password: new_password, persistent: persistent}
             };
 
-            KuroboxModel.prototype.save.call(this, key, val, options);
+            KuroboxModel.prototype.fetch.call(this, options);
         },
 
         delete: function (username, options) {
@@ -76,13 +77,24 @@ define([
             KuroboxModel.prototype.fetch.call(this, options);   
         },
 
-        login: function (username, password, options) {
+        login: function (username, password, persistent, options) {
             this.url = 'login';
             this.dev_opt = {
                 bypassSession: true,
                 method: 'GET',
                 redirectLogin: false,
-                param: {username: username, password: password}
+                param: {username: username, password: password, persistent: persistent}
+            };
+
+            KuroboxModel.prototype.fetch.call(this, options);   
+        },
+
+        login_token: function (token, persistent, options) {
+            this.url = 'login_token';
+            this.dev_opt = {
+                bypassSession: true,
+                method: 'GET',
+                param: {token: token, persistent:persistent}
             };
 
             KuroboxModel.prototype.fetch.call(this, options);   
@@ -104,6 +116,9 @@ define([
         },        
 
         parse: function(data) {
+            return {
+                token: data.response.token
+            };
         }
     });
 

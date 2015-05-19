@@ -1,24 +1,26 @@
 /**
- * Copyright 2014 Cloud Media Sdn. Bhd.
- * 
- * This file is part of Xuan Automation Application.
- * 
- * Xuan Automation Application is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright 2014-2015 Cloud Media Sdn. Bhd.
+*
+* This file is part of Xuan Automation Application.
+*
+* Xuan Automation Application is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Xuan Automation Application is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Xuan Automation Application.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*global require*/
 'use strict';
 
 require.config({
+    waitSeconds: 0,
     shim: {
         underscore: {
             exports: '_'
@@ -80,6 +82,10 @@ require.config({
                 // 'mobiscroll_widget_wp',
             ],
             exports: 'mobiscroll'
+        },
+        gridster: {
+            deps: ['jquery'],
+            exports: 'gridster'
         }
     },
     paths: {
@@ -91,11 +97,11 @@ require.config({
         toggleswitch: 'libs/jquery/jquery.toggleswitch',
         Kurobox: '/system/global/scripts/kurobox',
         KuroboxFilebrowser: '/system/global/scripts/filebrowser',
-        eventsource: '../bower_components/EventSource/eventsource',
         knob: '../bower_components/jquery-knob/js/jquery.knob',
         moment: '../bower_components/momentjs/min/moment.min',
         lang: '../bower_components/jquery-lang-js/js/jquery-lang',
         farbtastic: '../bower_components/farbtastic-color-picker/farbtastic',
+        routefilter: '../bower_components/routefilter/dist/backbone.routefilter.min',
 
         mobiscroll_core: '../bower_components/mobiscroll/js/mobiscroll.core',
         mobiscroll_datetime: '../bower_components/mobiscroll/js/mobiscroll.datetime',
@@ -104,18 +110,25 @@ require.config({
         mobiscroll_select: '../bower_components/mobiscroll/js/mobiscroll.select',
         mobiscroll_widget: '../bower_components/mobiscroll/js/mobiscroll.widget',
         mobiscroll: '../bower_components/mobiscroll/js/mobiscroll.select',
+
+        touchEffect: '../scripts/libs/utils/touch-effect',
+        gridster: '../bower_components/gridster/dist/jquery.gridster'
     }
 });
 
 require([
-    'backbone', 'router', 'lang', 'Kurobox'
+    'backbone', 'router', 'lang', 'Kurobox', 'libs/utils/external-link-injection','touchEffect'
 ], function (Backbone, AppRouter) {
+
+    //@note: at r.1208 before split
+
     // setup Kurobox
     Kurobox.app_id = '2000300';
+    Kurobox.redirectUrlAfterLogin = '/system/myapp';
 
     // setup host name (for development)
     if (typeof PRODUCTION === 'undefined') {
-        Kurobox.host = 'https://192.168.0.93';//19'//72';
+        Kurobox.host = 'https://192.168.0.20';//71';
     }
 
     var init_app = function() {
@@ -125,8 +138,6 @@ require([
         
         Backbone.history.start();
     }
-
-    console.warn('TODO: read time format')
 
     console.log('getting language...')
     Kurobox.native('getLanguage', function(currLang){
@@ -147,7 +158,7 @@ require([
                         mylang.loadPack('en', function(){
                             init_app();
                             mylang.change('en');
-                        }.bind(this))
+                        }.bind(this));
                     }
                 }else{
                     init_app();
@@ -155,6 +166,14 @@ require([
                     mylang.change(currLang);
                 }
            }.bind(this))
+
+        _.defer(function() {
+            // begin socket connection
+            Kurobox.socket.verbose = true;
+            Kurobox.socket.start();
+        })
+
+        // assign lang in global    
+        window.lang = mylang
     }, undefined, 'en')
-   // Backbone.history.start();
 });
