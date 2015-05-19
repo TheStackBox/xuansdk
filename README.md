@@ -15,4 +15,4 @@ You can also visit our product site at http://thexuan.com .
 
 ## License
 
-See the [LICENSE](LICENSE.md) file for license under GPL 3.
+See the [LICENSE](LICENSE) file for license under GPL 3.
