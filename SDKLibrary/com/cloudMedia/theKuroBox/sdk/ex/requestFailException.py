@@ -17,29 +17,7 @@
 # along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 
-from com.cloudMedia.theKuroBox.sdk.app.kbxLang import KBXLang
-from com.cloudMedia.theKuroBox.sdk.paramComponents.kbxParamComponent import KBXParamComponent
-from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxString import KBXString
-from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
-from com.cloudMedia.theKuroBox.sdk.util.util import Util
-from com.cloudMedia.theKuroBox.sdk.util.validator.stringValidator import StringValidator
-
-class KBXTextArea(KBXString, KBXParamComponent):
-
-    COM_NAME = "kbxTextArea"
-
-    PROP_KBX_PARAM_PLACEHOLDER = "kbxParamPlaceholder"
-
-    def __init__(self, kbxParamName, kbxParamIsRequired=True, kbxParamMinLength=None, kbxParamMaxLength=None,
-                 kbxParamDefaultValue=None, kbxParamLabel=None, kbxParamDesc=None, kbxParamPlaceholder=None, **kbxParamProps):
-        pass
-
-    def set_kbx_param_default_value(self, value):
-        pass
-
-    def set_kbx_param_placeholder(self, value):
-        pass
-
-    def get_kbx_param_placeholder(self):
+class RequestFailException(Exception):
+    def __init__(self, value):
         pass
 

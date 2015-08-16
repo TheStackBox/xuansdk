@@ -17,7 +17,13 @@
 # along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 
-import inspect, os, threading, traceback, sys
+from datetime import datetime
+import inspect, os, threading, traceback, sys, json
+import fcntl
+
+from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
+from com.cloudMedia.theKuroBox.sdk.app.event import Event
+from com.cloudMedia.theKuroBox.sdk.util.httpUtil import HttpUtil
 
 class Logger(object):
     '''
@@ -27,6 +33,7 @@ class Logger(object):
     @staticmethod
     def set_enable_debug(enable):
         '''
+        (OBSOLETED)
         Set whether to enable debug or not
         enable:Boolean        - Set whether to activate logger feature
         '''
@@ -110,6 +117,35 @@ class Logger(object):
                                                                     1. filename:String        - The filename of the trace
                                                                     2. line:Number            - The line number of the execution
                                                                     3. function:String        - The function name of the execution
+        '''
+        pass
+
+    @staticmethod
+    def _listen_spine_event():
+        '''
+        Listen to spine notifications.
+        '''
+        pass
+
+    @staticmethod
+    def _sync_debug_status_from_fw():
+        '''
+        Sync debug status from firmware.
+        -- Calls to get_log_path, 
+        -- ENABLE logging when successfully retrieves a valid logPath;
+        -- DISABLE logging on vice versa.
+        '''
+        pass
+
+    @staticmethod
+    def _register_event():
+        pass
+
+    @staticmethod
+    def _ipc_logger_status_changed(eventObj):
+        '''
+        For enabled, sample eventData format: {"isEnabled":false, "logPath":"mnt/sdcard/file", "forLogLevel":12}
+        For disabled, sample eventData format: {"isEnabled":false}
         '''
         pass
 

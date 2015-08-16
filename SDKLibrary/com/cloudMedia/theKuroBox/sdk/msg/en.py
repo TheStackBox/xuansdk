@@ -22,7 +22,7 @@ class EN():
     English Messages.
     '''
 
-	'''
+    '''
     returnValue_100: OK or success
     returnValue_[101-199]: Firmware General
     returnValue_[401-449]: Firmware WebServer
@@ -109,6 +109,7 @@ class EN():
            "1222":"Connecting to another speaker.",
            "1223":"Failed to connect to speaker.",
            "1224":"Failed to disconnect from speaker.",
+           "1225":"Switched to another speaker.",
 
            "1301":"Protocol exist",
            "1302":"Protocol not exist",
@@ -250,9 +251,8 @@ class EN():
            "2510":"Invalid Application Id.",
            "2511":"Method is not allow to access by this application.",
            "2512":"Invalid PIN.",
-           "2513":"Maximum attempt reached. Please re-tap/click the recovery passcode button.",
+           "2513":"Maximum attempt reached.",
            "2514":"Invalid change request token.",
-           "2515":"Maximum attempt reached. Please wait for awhile and try again.",
            
            "2601":"This location already exist in the provided zone.",
            "2602":"This zone already exist."

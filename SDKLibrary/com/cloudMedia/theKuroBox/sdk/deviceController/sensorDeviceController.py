@@ -17,6 +17,8 @@
 # along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 
+from threading import Lock
+
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
 from com.cloudMedia.theKuroBox.sdk.app.deviceController import DeviceController
 from com.cloudMedia.theKuroBox.sdk.app.event import Event
