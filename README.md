@@ -2,7 +2,7 @@
 
 The STACK Box - Xuan Development SDK
 
-Version: v1.1.25 Beta
+Version: v1.1.25.1 Beta
 
 Please refer to http://developer.thexuan.com for information.
 
