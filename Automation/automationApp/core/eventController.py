@@ -31,7 +31,6 @@ class EventDataHandler:
     Keep track of event tags to be registered and unregistered.
     '''
     
-    
     def __init__(self):
         self.__db = sqlite3.connect(":memory:", check_same_thread=False)
         self.__db.row_factory = sqlite3.Row
@@ -105,7 +104,7 @@ class EventDataHandler:
                 self.on_event_deleted(kbxMethodEvent)
             except Exception as e:
                 Logger.log_warning("EventController.__on_record_added ex:", e, "- tag:", kbxMethodEvent)
-                
+    
     def __on_record_updated(self, kbxMethodId, oldKBXMethodEvent, oldKBXMethodIdentifier, newKBXMethodEvent, newKBXMethodIdentifier):
         self.__on_record_deleted(kbxMethodId, oldKBXMethodEvent, oldKBXMethodIdentifier)
         self.__on_record_added(kbxMethodId, newKBXMethodEvent, newKBXMethodIdentifier)
@@ -177,7 +176,8 @@ class EventController(EventDataHandler):
         if not Util.is_empty(kbxMethodIdentifier):
             kbxMethodEvent = str(eventTag)
             kbxMethodIdentifier = str(kbxMethodIdentifier)
-            result = self.list_method_ids(kbxMethodEvent, kbxMethodIdentifier)
+            with self.__lock:
+                result = self.list_method_ids(kbxMethodEvent, kbxMethodIdentifier)
             for row in result:
                 kbxMethodId = row["kbxMethodId"]
                 self.__aFunc(kbxMethodId, kbxMethodEvent, eventData)

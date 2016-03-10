@@ -246,7 +246,7 @@ class Application(object):
     @staticmethod
     def send_response(data, requestId, returnValue=100, returnMessage=""):
         '''
-        Respond data to a particular request
+        Respond data to a particular request (from WebServer class and IPC Client)
         data : The data to respond (must be dictionary and is a valid JSON object)
         requestId : The request ID to respond
         returnValue : 100 for success, 10000 and above for error
@@ -256,7 +256,7 @@ class Application(object):
     @staticmethod
     def send_web_server_event(eventTag, eventData):
         '''
-        Fire an event out to any external interface registered through web server
+        Fire an event out to any external interface registered through web server (JavaScript Event Source class)
         eventTag : A string to indicate what event to fire
         eventData : The data / content of the event
         '''
@@ -265,7 +265,7 @@ class Application(object):
     @staticmethod
     def send_system_event(eventTag, eventData):
         '''
-        Fire an event to system to broadcast to any python app listening to this event
+        Fire an event to system to broadcast to any python app listening to this event (IPC Event)
         eventTag : A string to indicate what event to fire
         eventData : The data / content of the event
         '''
@@ -274,7 +274,7 @@ class Application(object):
     @staticmethod
     def register_event(eventTag):
         '''
-        Register an event tag
+        Register an event tag (IPC Event)
         eventTag : The eventTag type tag
 
         Return : true if the register is successful, false otherwise
@@ -284,7 +284,7 @@ class Application(object):
     @staticmethod
     def unregister_event(eventTag):
         '''
-        Unregister an event tag
+        Unregister an event tag (IPC Event)
         eventTag : The eventTag type tag
         '''
         pass
@@ -292,7 +292,7 @@ class Application(object):
     @staticmethod
     def register_event_listener(eventTag, callback):
         '''
-        Register an event listener
+        Register an event listener (IPC Event)
         eventTag : The eventTag type tag
         callback : Callback function
 
@@ -303,7 +303,7 @@ class Application(object):
     @staticmethod
     def unregister_event_listener(eventTag, callback):
         '''
-        Unregister an event listener
+        Unregister an event listener (IPC Event)
         eventTag : The eventTag type tag
         callback : Callback function
         '''

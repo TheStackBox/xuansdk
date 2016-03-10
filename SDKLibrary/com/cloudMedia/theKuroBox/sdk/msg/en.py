@@ -104,6 +104,7 @@ class EN():
            "1206":"Fail to scan device",
            "1207":"Scan device timeout",
            "1208":"Fail to remove device",
+           "1209":"Error encountered. Please remove and pair the device again.",
            
            "1221":"Connected to another speaker.",
            "1222":"Connecting to another speaker.",
@@ -251,8 +252,9 @@ class EN():
            "2510":"Invalid Application Id.",
            "2511":"Method is not allow to access by this application.",
            "2512":"Invalid PIN.",
-           "2513":"Maximum attempt reached.",
+           "2513":"Maximum attempt reached. Please re-tap/click the recovery passcode button.",
            "2514":"Invalid change request token.",
+           "2515":"Maximum attempt reached. Please wait for awhile and try again.",
            
            "2601":"This location already exist in the provided zone.",
            "2602":"This zone already exist."

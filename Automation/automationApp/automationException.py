@@ -24,13 +24,13 @@ class AutomationException(Exception):
     '''
     All exceptions raised by automation are recorded here.
     
-    1000 - 1099: Module Errors
-    1500 - 1599: Trigger Related Errors
-    1600 - 1699: API Service Errors
-    1700 - 1799: Rule Service Errors
-    1800 - 1899: Timer Module Errors
-    1900 - 1999: Scene Service Errors
-    2000 - 2999: Scene Execution Result Service Errors
+    11000 - 11099: Module Errors
+    11500 - 11599: Trigger Related Errors
+    11600 - 11699: API Service Errors
+    11700 - 11799: Rule Service Errors
+    11800 - 11899: Timer Module Errors
+    11900 - 11999: Scene Service Errors
+    12000 - 12999: Scene Execution Result Service Errors
     '''
     
     

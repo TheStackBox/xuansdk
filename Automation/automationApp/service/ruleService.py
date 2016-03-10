@@ -146,10 +146,10 @@ class RuleService:
             ruleIdsFromCond = self.__ruleController.list_rule_ids_which_has_kbx_method_id_as_condition(kbxMethodId)
             ruleIdsFromExec = self.__ruleController.list_rule_ids_which_has_kbx_method_id_as_execution(kbxMethodId)
                 
-            # Executes rules with conditions affected.
-            if newKBXMethodStatus == SharedMethod.METHOD_STATUS_ACTIVE:
-                for ruleId in ruleIdsFromCond:
-                    self.__ruleExecThreadPool.submit(self.__trigger_rule_implementation, ruleId=ruleId, checkCondition=True)
+#             # Executes rules with conditions affected.
+#             if newKBXMethodStatus == SharedMethod.METHOD_STATUS_ACTIVE:
+#                 for ruleId in ruleIdsFromCond:
+#                     self.__ruleExecThreadPool.submit(self.__trigger_rule_implementation, ruleId=ruleId, checkCondition=True)
             
             # Broadcast rules updated messages.
             for ruleId in set(ruleIdsFromCond + ruleIdsFromExec):
@@ -297,6 +297,8 @@ class RuleService:
                 self.__broadcast_message__rule_update_failed(ruleId, ruleName)
                 Logger.log_error("RuleService __update_rule failed:", e, "-- rolledback")
             else:
+                self.__triggerController.register_listener(ruleId, rule["trigger"])
+                
                 # Process for Timer Module
                 TimerModule.delete_scheduler(ruleId)
                 
@@ -433,6 +435,12 @@ class RuleService:
                 self.__ruleController.count()
                 
     def run_all_enabled_rules(self):
+        '''
+        Add the following 2 lines of code at AutomationModuleWrapper.py - start(), 
+        after last statement, to enable run all rules on bootup.
+        # Logger.log_info("Attempts to execute all enabled rules ...")
+        # self.__ruleService.run_all_enabled_rules()
+        '''
         ruleIds = self.__ruleController.list_rule_ids_which_are_enabled()
         for ruleId in ruleIds:
             self.__ruleExecThreadPool.submit(self.__trigger_rule_implementation, ruleId=ruleId, checkCondition=True)
@@ -495,6 +503,8 @@ class RuleService:
         '''
         Triggers a rule by given ruleId.
         '''
+        Logger.log_info("trigger rule id:", ruleId)
+        
         # Check if rule is "updated" AND enabled.
         statusProcessed, enabled = self.__ruleController.get_status_processed_and_enabled(ruleId)
         if statusProcessed != AppConstants.RULE_STATUS_UPDATED or enabled != True:
@@ -537,6 +547,11 @@ class RuleService:
                         kwargs["kbxModuleName"] = row["kbxModuleName"]
                         kwargs["kbxGroupId"] = row["kbxGroupId"]
                         kwargs["kbxMethodAppId"] = row["kbxMethodAppId"]
+                        
+                        # Update ruleId if it is required by the method
+                        if "ruleId" in kwargs:
+                            kwargs["ruleId"] = str(ruleId)
+                        
                         callId = hash(str(kwargs)) # Generate condition checking ID
                         kwargs[AppConstants.KEY_CONDITION_TIMESTAMP] = methodCheckingTime # So that timestamp will not caused the generated id to be different
                         methodListToCheck.append({"callId":callId,
@@ -586,6 +601,10 @@ class RuleService:
                     kwargs["kbxModuleName"] = row["kbxModuleName"]
                     kwargs["kbxGroupId"] = row["kbxGroupId"]
                     kwargs["kbxMethodAppId"] = row["kbxMethodAppId"]
+                    
+                    # Update ruleId if it is required by the method
+                    if "ruleId" in kwargs:
+                        kwargs["ruleId"] = str(ruleId)
                     
                     callId = hash(str(kwargs)) # Generate execution id
                     kwargs[AppConstants.KEY_ACTION_TIMESTAMP] = methodExecTime

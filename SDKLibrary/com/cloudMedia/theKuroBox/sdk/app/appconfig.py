@@ -102,3 +102,10 @@ class AppConfig():
         '''
         pass
 
+    @staticmethod
+    def set_encoding(encoding="utf-8"):
+        '''
+        encoding: set the data encoding method. Default value is utf-8.
+        '''
+        pass
+

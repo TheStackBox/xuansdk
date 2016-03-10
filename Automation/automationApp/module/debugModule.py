@@ -28,7 +28,7 @@ from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
 class DebugModule(Module):
     
     
-    DEBUG_AUTOMATION_VERSION = "2.1 (update 4)"
+    DEBUG_AUTOMATION_VERSION = "2.1 (update 7)"
     
     DEBUG_ON_SYSTEM_CONNECTED = deque()
     DEBUG_POST_SYSTEM_CONNECTED = deque()

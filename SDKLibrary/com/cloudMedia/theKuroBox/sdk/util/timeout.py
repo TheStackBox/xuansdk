@@ -18,7 +18,6 @@
 ##############################################################################################
 
 from threading import Thread
-import sys
 
 '''
 Timeout an call
@@ -27,9 +26,6 @@ timeout:Number    - Timeout in seconds
 '''
 
 def timelimit(timeout):
-    '''
-    Wrap a function call with timeout control. Can be used as annotation as well.
-    '''
     def internal(function):
         def internal2(*args, **kw):
             class Calculator(Thread):

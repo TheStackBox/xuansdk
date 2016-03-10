@@ -8,7 +8,7 @@
     <cateCodes>|app|</cateCodes>
     <cate>|App|</cate>
     <typeCodes>|ui|daemon|</typeCodes>
-    <version>2.0.6</version>
+    <version>2.0.21</version>
     <description>Python app for automation</description>
     <author>CloudMedia</author>
     <entryPoint>automationApp.automationApp.AutomationApp</entryPoint>

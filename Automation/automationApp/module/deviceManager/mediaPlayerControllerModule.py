@@ -103,6 +103,7 @@ class MediaPlayerControllerModule(Module):
         
         self.register_event_listener(Event.EVENT_MEDIA_PLAYER_PLAYBACK_STATE_CHANGED, self.__receive_system_event)
         self.register_event_listener(Event.EVENT_MEDIA_PLAYER_MUTE_STATE_CHANGED, self.__receive_system_event)
+        self.register_event_listener(Event.EVENT_MEDIA_PLAYER_PLAYBACK_STATUS_RECEIVED, self.__receive_system_event)
         
 
     def __receive_system_event(self, eventObj):

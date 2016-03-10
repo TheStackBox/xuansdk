@@ -20,12 +20,14 @@
 import json
 
 from concurrent.futures import ThreadPoolExecutor
+from threading import Lock
 from threading import Thread, Event
 from urllib.parse import urlencode, parse_qs
 
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
 from com.cloudMedia.theKuroBox.sdk.ex.systemException import SystemException
 from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
+from com.cloudMedia.theKuroBox.sdk.util.timeout import timelimit
 
 class IPCRequest(object):
     '''

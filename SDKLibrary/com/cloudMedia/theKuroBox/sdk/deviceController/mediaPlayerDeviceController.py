@@ -29,6 +29,8 @@ from com.cloudMedia.theKuroBox.sdk.dto.deviceDTO import DeviceDTO
 from com.cloudMedia.theKuroBox.sdk.ex.systemException import SystemException
 from com.cloudMedia.theKuroBox.sdk.paramComponents.kbxHidden import KBXHidden
 from com.cloudMedia.theKuroBox.sdk.paramComponents.kbxOption import KBXOption
+from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxBoolean import KBXBoolean
+from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxNumber import KBXNumber
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxString import KBXString
 from com.cloudMedia.theKuroBox.sdk.util.logger import Logger
 
@@ -83,6 +85,24 @@ class MediaPlayerDeviceController(DeviceController):
         pass
 
     def get_player_play_status(self, pairedDeviceId):
+        pass
+
+    def set_player_send_key(self, pairedDeviceId, keyCode):
+        pass
+
+    def set_player_play_link(self, pairedDeviceId, link, mediaType, playFromBeginning):
+        pass
+
+    def get_recently_played_list(self, pairedDeviceId):
+        pass
+
+    def set_player_play_recently_played(self, pairedDeviceId, playbackArgs):
+        pass
+
+    def set_player_volume(self, pairedDeviceId, volume):
+        pass
+
+    def set_player_time_seek_vod(self, pairedDeviceId, timeToSeek):
         pass
 
     def on_device_enable(self, pairedDeviceId, deviceDTO, groupName, groupId):

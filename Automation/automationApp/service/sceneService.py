@@ -561,6 +561,8 @@ class SceneService:
         '''
         ** Call execute_scene; DO NOT call this function directly.
         '''
+        Logger.log_info("execute scene id:", sceneId)
+        
         def execution_func(sceneThreadEvent, kbxMethodId, seri, **kwargs):
             try:
                 if kbxMethodId == -291:

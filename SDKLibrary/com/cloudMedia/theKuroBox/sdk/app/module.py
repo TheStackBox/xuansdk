@@ -17,7 +17,7 @@
 # along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 
-from _collections import deque
+from collections import deque
 import json
 import threading, signal
 

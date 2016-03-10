@@ -112,7 +112,8 @@ class DeviceManagerModule(Module):
                                               KBXNumber(kbxParamName="protocolId", kbxParamIsRequired=False),
                                               KBXNumber(kbxParamName="deviceTypeId", kbxParamIsRequired=False),
                                               KBXBoolean(kbxParamName="enable", kbxParamIsRequired=False),
-                                              KBXNumber(kbxParamName="locationId", kbxParamIsRequired=False)])
+                                              KBXNumber(kbxParamName="locationId", kbxParamIsRequired=False),
+                                              KBXBoolean(kbxParamName="cachedDTO", kbxParamIsRequired=False)])
 
         self.register_method(kbxMethodName="set_device_unpair",
                              kbxMethodFunc=self.set_device_unpair,
@@ -193,7 +194,9 @@ class DeviceManagerModule(Module):
         self.register_event_listener(Event.EVENT_UNPAIR_DEVICE_ERROR_UNKNOWN, self.__receive_system_event)
         self.register_event_listener(Event.EVENT_UNPAIR_DEVICE_ABORT, self.__receive_system_event)
         self.register_event_listener(Event.EVENT_PAIR_DEVICE_ERROR_AUTHENTICATION_FAIL, self.__receive_system_event)
-
+        
+        self.register_event_listener(Event.EVENT_ZWAVE_ADD_SECURE_NODE_FAILED, self.__receive_system_event)
+        
         self.register_event_listener(Event.EVENT_SCAN_DEVICE_UPNP_FOUND, self.__receive_system_event)
         self.register_event_listener(Event.EVENT_SCAN_DEVICE_BLUETOOTH_FOUND, self.__receive_system_event)
         self.register_event_listener(Event.EVENT_SCAN_DEVICE_WEMO_FOUND, self.__receive_system_event)
@@ -326,8 +329,9 @@ class DeviceManagerModule(Module):
             deviceTypeId = request.get_arg("deviceTypeId")
             enable = request.get_arg("enable")
             locationId = request.get_arg("locationId")
+            cachedDTO = request.get_value("cachedDTO")
             language = request.get_arg(AppInfo.REQUEST_KEY_LANGUAGE)
-            returnStr = DeviceManagerService.get_paired_device_list(offset, limit, protocolId=protocolId, deviceTypeId=deviceTypeId, enable=enable, language=language, locationId=locationId)
+            returnStr = DeviceManagerService.get_paired_device_list(offset, limit, protocolId=protocolId, deviceTypeId=deviceTypeId, enable=enable, language=language, locationId=locationId, cachedDTO=cachedDTO)
             self.send_response(returnStr, request.requestId)
         except SystemException as se:
             self.send_response(se.value, request.requestId, se.value["returnValue"], se.value["returnMessage"])

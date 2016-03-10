@@ -79,9 +79,6 @@ class AutomationModuleWrapper:
         self.__sceneService = SceneService()
         self.__serService = SceneExecutionResultService.instance()
         
-        Logger.log_info("Attempts to execute all enabled rules ...")
-        self.__ruleService.run_all_enabled_rules()
-
     def list_groups(self, request):
         '''
         List all groups, parentId is optional.
@@ -139,7 +136,7 @@ class AutomationModuleWrapper:
         try:
             methodList, groupDict = self.__apiService.list_methods(section=section, groupId=groupId, language=language)
 
-            self.send_response(request.requestId, data={"group":groupDict, "data":methodList})
+            self.send_response(request.requestId, data={"group":groupDict, "data":sorted(methodList, key=lambda method: method.get("kbxMethodSort", 0))})
             
         except Exception as e:
             if not isinstance(e, AutomationException):

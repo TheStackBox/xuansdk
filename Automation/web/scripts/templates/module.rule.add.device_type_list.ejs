@@ -1,9 +1,0 @@
-<% collection.each(function(model) { %>
-	<div data-id="<%= model.get('id') %>" class="device-explorer rule-<%= type %>-item device1" touch="true">
-		<span class="icon"><%= (typeof model.get('icon') === 'undefined') ? '&#xe617' : model.get('icon') %></span>
-		<span>
-			<h4 id="item-label"><%= (typeof model.get('label') === 'undefined') ? model.get('name') : model.get('label') %></h4>
-			<div><%= model.get('description') %></div>
-		</span>
-	</div>
-<%})%>

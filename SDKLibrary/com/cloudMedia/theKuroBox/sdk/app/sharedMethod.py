@@ -17,7 +17,6 @@
 # along with Xuan Application Development SDK.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################################
 
-from collections import deque
 import json
 from threading import Event
 import traceback
@@ -31,7 +30,6 @@ from com.cloudMedia.theKuroBox.sdk.util.methodCallGroup import MethodCallGroup
 from com.cloudMedia.theKuroBox.sdk.util.validator.booleanValidator import BooleanValidator
 from com.cloudMedia.theKuroBox.sdk.util.validator.numberValidator import NumberValidator
 from com.cloudMedia.theKuroBox.sdk.util.validator.stringValidator import StringValidator
-
 from com.cloudMedia.theKuroBox.sdk.app.kbxLang import KBXLang
 
 class SharedMethod(object):
@@ -287,3 +285,62 @@ class SharedMethod(object):
         '''
         pass
 
+class SharedMethodManagerModuleConstants(object):
+
+    MODULE = "shared_method_manager"
+
+    FUNC_CALL_METHOD_BY_ID = "call_method_by_id"
+
+    FUNC_REGISTER_METHOD = "register_method"
+    FUNC_LIST_METHODS = "list_methods"
+    FUNC_COUNT_METHODS = "get_methods_count"
+    FUNC_UPDATE_METHOD_BY_ID = "update_method_by_id"
+    FUNC_UPDATE_METHOD_BY_NAME = "update_method_by_name"
+    FUNC_DELETE_METHOD_BY_ID = "delete_method_by_id"
+    FUNC_DELETE_METHOD_BY_NAME = "delete_method_by_name"
+    FUNC_DELETE_METHODS_BY_APP_ID = "delete_methods_by_app_id"
+
+    FUNC_REGISTER_GROUP = "register_group"
+    FUNC_UPDATE_GROUP_PARENT_ID_BY_NAME = "update_group_parent_id_by_name"
+    FUNC_LIST_GROUPS = "list_groups"
+    FUNC_DELETE_GROUP_BY_ID = "delete_group_by_id"
+    FUNC_DELETE_GROUP_BY_NAME = "delete_group_by_name"
+    FUNC_DELETE_GROUPS_BY_APP_ID = "delete_groups_by_app_id"
+
+    FUNC_FIRE_EVENT = "shared_method_fire_event"
+
+    EVENT_TAG = "eventTag"
+    EVENT_DATA = "eventData"
+
+    GROUP_ID = "kbxGroupId"
+    GROUP_APP_ID = "kbxGroupAppId"
+    GROUP_LABEL = "kbxGroupLabel"
+    GROUP_NAME = "kbxGroupName"
+    GROUP_DESC = "kbxGroupDesc"
+    GROUP_PARENT_ID = "kbxGroupParentId"
+    GROUP_NEW_PARENT_ID = "newKBXGroupParentId"
+
+    METHOD_ID = "kbxMethodId"
+    METHOD_APP_ID = "kbxMethodAppId"
+    METHOD_GROUP_ID = "kbxGroupId"
+    METHOD_NAME = "kbxMethodName"
+    METHOD_MODULE_NAME = "kbxModuleName"
+    METHOD_LABEL = "kbxMethodLabel"
+    METHOD_DESC = "kbxMethodDesc"
+    METHOD_TAG = "kbxMethodTag"
+    METHOD_PARAM = "kbxMethodParams"
+    METHOD_STATUS = "kbxMethodStatus"
+
+    LIMIT = "limit"
+    OFFSET = "offset"
+    LANG = AppInfo.REQUEST_KEY_LANGUAGE
+
+    KEY = "kbxArgTransportKey"
+
+    METHOD_LIST = "methodList"
+    GROUP_LIST = "groupList"
+    TOTAL_COUNT = "totalItem"
+    STATUS = "status"
+
+    EVENT_TYPE_DELETE = "delete"
+    EVENT_TYPE_UPDATE = "update"

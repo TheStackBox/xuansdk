@@ -199,7 +199,7 @@ class Database:
                 raise e
             finally:
                 cursor.close()
-            
+    
     def execute_and_fetch_one(self, stmt, bindings=None):
         '''
         Returns an sqlite.Row instance.
@@ -220,7 +220,7 @@ class Database:
                 raise e
             finally:
                 cursor.close()
-            
+    
     def rollback(self):
         with self.__rlock:
             try:
@@ -228,7 +228,7 @@ class Database:
             except Exception as e:
                 Logger.log_error("Database.rollback ex:", e)
                 traceback.print_exc()
-
+                
     def commit(self):
         with self.__rlock:
             try:
@@ -332,7 +332,7 @@ class Database:
         Logger.log_info("Database v1 update: Indexes built")
                 
         Logger.log_info("Database v1 update completed")
-        
+    
     def db_2_update(self, resourcePath):
         self.__execute_script("/".join([resourcePath, "tablestructure.sql"]))
         Logger.log_info("Database v2 update: Table structures built")
@@ -375,7 +375,7 @@ class Database:
     # @UPDATE: Add custom functions right here
     #===========================================================================
     def db_1_functions(self):
-        # Internally processed relationships among tables.
+        # Foreign key constrains
         self.__con.create_function("kbx_group_after_update_on_kbxGroupIcon", 1, self.kbx_group_after_update_on_kbxGroupIcon)
         self.__con.create_function("kbx_method_after_update_on_kbxGroupId", 3, self.kbx_method_after_update_on_kbxGroupId)
         self.__con.create_function("kbx_method_after_delete", 2, self.kbx_method_after_delete)
@@ -405,7 +405,7 @@ class Database:
         As per observed, only if kbxGroupIcon updated requires to notify.
         '''
         Database.KBX_GROUP_AFTER_UPDATE_ON_KBX_GROUP_ICON(kbxGroupId)
-
+        
     # ----- kbx_method -----
     def kbx_method_after_update_on_kbxGroupId(self, kbxMethodId, oldKBXGroupId, newKBXGroupId):
         if oldKBXGroupId != newKBXGroupId:
@@ -423,7 +423,7 @@ class Database:
             Database.KBX_METHOD_AFTER_DELETE(kbxMethodId)
         except Exception as e:
             Logger.log_warning("Database.KBX_METHOD_AFTER_DELETE raised error:", e)
-            
+         
     # ----- rule -----
     def rule_after_delete(self, ruleId):
         # Remove entries from "rule_condition" and "rule_execution".
@@ -434,24 +434,25 @@ class Database:
     def scene_after_delete(self, sceneId):
         # Remove entries from "scene_execution".
         self.__con.execute('DELETE FROM "scene_execution" WHERE seSceneId=?', (sceneId,))
-        
+    
     # ----- rule_condition -----
     def rule_condition_after_delete(self, kbxMethodId):
         self.__delete_kbx_method_if_neccessary(kbxMethodId)
-        
+    
     # ----- rule_execution -----
     def rule_execution_after_delete(self, kbxMethodId):
         self.__delete_kbx_method_if_neccessary(kbxMethodId)
-        
+    
     # ----- scene_execution -----
     def scene_execution_after_delete(self, kbxMethodId):
         self.__delete_kbx_method_if_neccessary(kbxMethodId)
-        
+    
+    # ----- v2 ------    
     def rule_after_update_on_statusProcessed_enabled(self, ruleId, oldEnabled, newEnabled, oldStatusProcessed, newStatusProcessed):
         Database.RULE_AFTER_UPDATE_ON_STATUS_PROCESSED_ENABLED(ruleId, DatabaseAdapter.CONVERT_BOOLEAN(oldEnabled), 
                                                                DatabaseAdapter.CONVERT_BOOLEAN(newEnabled), 
                                                                oldStatusProcessed, newStatusProcessed)
-        
+    
     def kbx_method_after_update_on_kbxMethodStatus(self, kbxMethodId, oldKBXMethodStatus, newKBXMethodStatus):
         Database.KBX_METHOD_AFTER_UPDATE_ON_KBX_METHOD_STATUS(kbxMethodId, oldKBXMethodStatus, newKBXMethodStatus)
         

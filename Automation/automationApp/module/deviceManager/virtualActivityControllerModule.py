@@ -19,6 +19,7 @@
 
 from com.cloudMedia.theKuroBox.sdk.app.appinfo import AppInfo
 from com.cloudMedia.theKuroBox.sdk.app.module import Module
+from com.cloudMedia.theKuroBox.sdk.app.event import Event
 from com.cloudMedia.theKuroBox.sdk.ex.systemException import SystemException
 from com.cloudMedia.theKuroBox.sdk.paramTypes.kbxString import KBXString
 from com.cloudMedia.theKuroBox.sdk.service.deviceManager.virtualActivityControllerService import VirtualActivityControllerService
@@ -55,6 +56,8 @@ class VirtualActivityControllerModule(Module):
         
     def post_system_connected(self):
         super().post_system_connected()
+        self.register_event_listener(Event.EVENT_LOGITECH_HARMONY_ACTIVITY_STARTED, self.__receive_system_event)
+        self.register_event_listener(Event.EVENT_LOGITECH_HARMONY_ACTIVITY_START_TIMEOUT, self.__receive_system_event)
         
     def __receive_system_event(self, eventObj):
         Logger.log_debug("HueControllerModule.__receive_system_event: ", eventObj)

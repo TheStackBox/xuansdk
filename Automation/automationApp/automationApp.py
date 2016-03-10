@@ -43,26 +43,37 @@ class AutomationApp(Application):
 
 
     def __init__(self):
-#         Logger.set_enable_debug(True)
         self.__automationModule = None
 
     def on_start(self):
+        Logger.log_info("on_start begins...")
+        
         AppInfo.JSON_ENCODER_CLS = AutomationJSONEncoder
         
         Database.instance().initialize()
         
         self.register_module(DebugModule("debug_module", None))
+        Logger.log_info("registered module: debug_module")
         
         self.register_module(ControllerModule("controller_module", None))
+        Logger.log_info("registered module: debug_module")
         self.register_module(TimerModule("timer_module", None))
+        Logger.log_info("registered module: debug_module")
 
         self.register_module(DeviceManagerModule("device_manager", None))
+        Logger.log_info("registered module: debug_module")
         self.register_module(ZWaveModule("zwave_module", None))
+        Logger.log_info("registered module: zwave_module")
         
         self.register_module(LocationManagerModule("location_manager", None))
+        Logger.log_info("registered module: location_manager")
+        
+        Logger.log_info("on_start ends...")
         
     def on_system_connected(self):
         super().on_system_connected()
+        
+        Logger.log_info("on_system_connected begins...")
         
         DebugModule.DEBUG_ON_SYSTEM_CONNECTED.append(time.time())
         self.__automationModule = AutomationModuleWrapper()
@@ -125,7 +136,7 @@ class AutomationApp(Application):
                                               KBXBoolean(kbxParamName="enabled", kbxParamIsRequired=True)])
 
         # Scenes
-        paramSceneId = KBXNumber(kbxParamName="sceneId", kbxParamdecimal=0, kbxParamMinValue=1)
+        paramSceneId = KBXNumber(kbxParamName="sceneId", kbxParamDecimal=0, kbxParamMinValue=1)
 
         self.register_method(kbxMethodName="set_scene", kbxMethodIsPrivate=True,
                              kbxMethodFunc=self.__automationModule.set_scene)
@@ -167,7 +178,7 @@ class AutomationApp(Application):
         self.register_method(kbxMethodName="set_favorited_scene", kbxMethodIsPrivate=True,
                              kbxMethodFunc=self.__automationModule.set_favorited_scene,
                              kbxMethodParams=[paramSceneId,
-                                              KBXNumber(kbxParamName="prevSceneId", kbxParamIsRequired=False, kbxParamdecimal=0, kbxParamMinValue=1)])
+                                              KBXNumber(kbxParamName="prevSceneId", kbxParamIsRequired=False, kbxParamDecimal=0, kbxParamMinValue=1)])
         self.register_method(kbxMethodName="delete_favorited_scene", kbxMethodIsPrivate=True,
                              kbxMethodFunc=self.__automationModule.delete_favorited_scene,
                              kbxMethodParams=[paramSceneId])
@@ -175,13 +186,19 @@ class AutomationApp(Application):
                              kbxMethodFunc=self.__automationModule.list_favorited_scenes,
                              kbxMethodParams=[paramLimit,
                                               paramOffset])
+        
+        Logger.log_info("on_system_connected ends...")
 
     def post_system_connected(self):
         super().post_system_connected()
+        
+        Logger.log_info("post_system_connected starts...")
 
         DebugModule.DEBUG_POST_SYSTEM_CONNECTED.append(time.time())
         
         self.__automationModule.start()
+        
+        Logger.log_info("post_system_connected ends...")
 
     def __get_default_group_ids(self):
         try:
